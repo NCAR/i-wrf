@@ -1,0 +1,28 @@
+{"name": "alert: NEED MORE DEFINITION","color": "ffff33","description": "Not yet actionable, additional definition required"}
+{"name": "alert: NEED PROJECT ASSIGNMENT","color": "ffff33","description": "Need to assign to a release development cycle"}
+{"name": "component: CI/CD","color": "1d76db","description": "Continuous integration and deployment issues"}
+{"name": "component: Docker","color": "1d76db","description": "Docker container issues"}
+{"name": "component: METplus","color": "1d76db","description": "METplus issues"}
+{"name": "component: Singularity","color": "1d76db","description": "Singularity container issues"}
+{"name": "component: WRF","color": "1d76db","description": "WRF model issues"}
+{"name": "component: code cleanup","color": "1d76db","description": "Code cleanup and maintenance issues"}
+{"name": "component: code optimization","color": "1d76db","description": "Code optimization issues"}
+{"name": "component: documentation","color": "1d76db","description": "Documentation issues"}
+{"name": "component: external dependency","color": "1d76db","description": "External dependency issues"}
+{"name": "component: plotting","color": "1d76db","description": "Continuous integration and deployment issues"}
+{"name": "component: release engineering","color": "1d76db","description": "Release engineering issues"}
+{"name": "component: testing","color": "1d76db","description": "Software testing issues"}
+{"name": "component: training","color": "1d76db","description": "Training issues"}
+{"name": "component: user support","color": "1d76db","description": "User support issues"}
+{"name": "priority: blocker","color": "b60205","description": "Blocker"}
+{"name": "priority: high","color": "ed2939","description": "High Priority"}
+{"name": "priority: low","color": "cce88d","description": "Low Priority"}
+{"name": "priority: medium","color": "f8de7e","description": "Medium Priority"}
+{"name": "requestor: Community","color": "3101c1","description": "General Community"}
+{"name": "requestor: Cornell","color": "3101c1","description": "Cornell University"}
+{"name": "requestor: NCAR/RAL","color": "3101c1","description": "NCAR Research Applications Laboratory"}
+{"name": "type: bug","color": "e5bf7e","description": "Fix something that is not working"}
+{"name": "type: enhancement","color": "e5bf7e","description": "Improve something that it is currently doing"}
+{"name": "type: new feature","color": "e5bf7e","description": "Make it do something new"}
+{"name": "type: new use case","color": "e5bf7e","description": "Add a new use case"}
+{"name": "type: task","color": "e5bf7e","description": "An actionable item of work"}
