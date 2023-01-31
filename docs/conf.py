@@ -37,7 +37,7 @@ extensions = ['sphinx.ext.autodoc','sphinx.ext.intersphinx',]
 # settings for ReadTheDocs PDF creation
 latex_engine = 'pdflatex'
 latex_theme = 'manual'
-latex_logo = os.path.join('_static','RAL-contemp-logo-blue-square.png')
+latex_logo = os.path.join('_static','I-WRF_logo_200.png')
 latex_show_pagerefs = True
 latex_master_doc = 'Users_Guide/index'
 
@@ -113,7 +113,7 @@ html_static_path = ['_static']
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = os.path.join('_static','RAL-contemp-logo-blue-square.png')
+html_logo = os.path.join('_static','I-WRF_logo_200.png')
 
 # -- Intersphinx control -----------------------------------------------------
 intersphinx_mapping = {'numpy':("https://docs.scipy.org/doc/numpy/", None)}
