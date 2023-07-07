@@ -39,7 +39,7 @@ The National Center for Atmospheric Research (NCAR) is sponsored by the National
    gettingstarted
    configuration
    running
-   examples
+   usecases
    customization
    glossary
    references

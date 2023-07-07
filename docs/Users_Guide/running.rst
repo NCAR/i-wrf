@@ -14,10 +14,8 @@ METplus
 Visualization
 -------------
 
-On a Cloud Instance
-===================
-
-TODO: Need to reference specific Cloud Service Provider since instructions will be different for each CSP
+On AWS
+======
 
 WRF
 ---

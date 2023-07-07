@@ -1,6 +1,6 @@
-**********************
-Science Use Case Demos
-**********************
+*********
+Use Cases
+*********
 
 Generic CONUS “interesting weather”
 ===================================
