@@ -34,7 +34,15 @@ The National Center for Atmospheric Research (NCAR) is sponsored by the National
    :titlesonly:
    :numbered: 4
 
+   overview
    release-notes
+   gettingstarted
+   configuration
+   running
+   usecases
+   customization
+   glossary
+   references
 
 .. only:: html
 
