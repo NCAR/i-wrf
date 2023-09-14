@@ -126,9 +126,9 @@ cd /home/${WRFUSER}
 git clone https://github.com/wrf-model/WRF
 cd WRF
 git checkout v4.3.3
-# TODO: configure complains that NetCDF was built without --enable-netcdf4, however, that flag is set in the NetCDF build
-# This was only a problem with WRF v4.5 export NETCDF_classic=1
+# TODO: configure complains that NetCDF was built without --enable-netcdf4, however, that flag is set in the NetCDF build.  This was only a problem with WRF v4.5.  Solution: export NETCDF_classic=1
 ./clean
+mv arch/configure.iwrf.defaults arch/configure.defaults
 ./configure << EOF
 15
 1

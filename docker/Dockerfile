@@ -10,8 +10,9 @@ RUN apt -y install cmake pkg-config build-essential wget libcurl4-openssl-dev m4
 RUN wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB | gpg --dearmor > /usr/share/keyrings/oneapi-archive-keyring.gpg
 RUN echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" > /etc/apt/sources.list.d/oneAPI.list
 RUN apt -y update
-RUN apt -y install intel-hpckit
+RUN apt -y install intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic-2023.1.0 intel-oneapi-compiler-fortran-2023.1.0 intel-oneapi-dpcpp-cpp-2023.1.0 intel-oneapi-mpi-2021.9.0 intel-oneapi-mpi-devel-2021.9.0
 RUN apt -y --fix-broken install
+RUN apt -y update
 
 # Install other required packages
 RUN apt -y install libexpat1 libexpat1-dev expat git csh file
@@ -27,6 +28,8 @@ RUN echo 'export MPI="/opt/intel/oneapi/mpi/latest"' >> /etc/bashrc
 RUN echo 'export OPENMPI="${MPI}"' >> /etc/bashrc
 RUN echo 'export INTEL="/opt/intel/oneapi/compiler/latest/linux"' >> /etc/bashrc
 RUN echo 'export PATH="${INTEL}/bin/intel64:${MPI}/bin:${PATH}"' >> /etc/bashrc
+RUN echo 'export SCC="icx"' >> /etc/bashrc
+RUN echo 'export SFC="ifort"' >> /etc/bashrc
 RUN echo 'export I_MPI_CC="icx"' >> /etc/bashrc
 RUN echo 'export I_MPI_CXX="icpx"' >> /etc/bashrc
 RUN echo 'export I_MPI_FC="ifort"' >> /etc/bashrc
@@ -46,7 +49,7 @@ RUN echo 'export CFLAGS="-I${MPI}/include"' >> /etc/bashrc
 RUN echo 'export LDFLAGS="-L${MPI}/lib -L${MPI}/lib/release"' >> /etc/bashrc
 RUN echo 'export LD_LIBRARY_PATH="${MPI}/lib/release:${MPI}/lib"' >> /etc/bashrc
 RUN echo 'source /opt/intel/oneapi/setvars.sh --force > /dev/null' >> /etc/bashrc
-RUN echo 'export PATH="/opt/intel/oneapi/mpi/2021.9.0/bin:${PATH}"' >> /etc/bashrc
+RUN echo 'export PATH="/opt/intel/oneapi/mpi/latest/bin:${PATH}"' >> /etc/bashrc
 RUN echo 'export WRFUSER="wrfuser"' >> /etc/bashrc
 # TODO: This is not taking effect for the stack, we had to manually run: 'ulimit -s unlimited'
 RUN echo '*    hard    stack    unlimited' >> /etc/security/limits.conf
@@ -71,7 +74,7 @@ RUN wget https://www.wrfcloud.com/libs/szip-2.1.1.tar.gz
 RUN wget https://www.wrfcloud.com/libs/zlib-1.2.11.tar.gz
 RUN wget https://downloads.unidata.ucar.edu/udunits/2.2.28/udunits-2.2.28.tar.gz
 
-COPY build_wrf.sh /tmp/build_wrf.sh
-RUN bash /tmp/build_wrf.sh
+COPY build_wrf_lulc.sh /tmp/build_wrf_lulc.sh
+RUN bash /tmp/build_wrf_lulc.sh
 
 WORKDIR /home/wrfuser
