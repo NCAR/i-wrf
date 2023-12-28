@@ -1,5 +1,5 @@
 # Cornell uses ubuntu 22.04
-FROM ubuntu:22.04
+FROM ubuntu:22.04 as wrfbuild
 
 # Update the OS
 RUN apt -y update
@@ -75,5 +75,31 @@ RUN wget https://downloads.unidata.ucar.edu/udunits/2.2.28/udunits-2.2.28.tar.gz
 
 COPY build_wrf.sh /tmp/build_wrf.sh
 RUN bash /tmp/build_wrf.sh
+
+
+FROM ubuntu:22.04
+
+# Update the OS
+RUN apt -y update
+RUN apt -y upgrade
+
+COPY --from=wrfbuild /home/wrfuser /home/wrfuser
+COPY --from=wrfbuild /opt/hdf5 /opt/hdf5
+COPY --from=wrfbuild /opt/jasper /opt/jasper
+COPY --from=wrfbuild /opt/libpng /opt/libpng
+COPY --from=wrfbuild /opt/netcdf /opt/netcdf
+COPY --from=wrfbuild /opt/szip /opt/szip
+COPY --from=wrfbuild /opt/udunits /opt/udunits
+COPY --from=wrfbuild /opt/zlib /opt/zlib
+COPY --from=wrfbuild /etc/bashrc /etc/bashrc
+
+# Install required runtime packages
+# Note: To get a list of Intel OneAPI runtime packages, run the following:
+#     apt-cache pkgnames intel | grep intel-oneapi-runtime
+RUN apt -y install cmake pkg-config build-essential wget libcurl4-openssl-dev m4
+RUN wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB | gpg --dearmor > /usr/share/keyrings/oneapi-archive-keyring.gpg
+RUN echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" > /etc/apt/sources.list.d/oneAPI.list
+RUN apt -y update
+RUN apt -y install intel-oneapi-runtime-mpi-2021 intel-oneapi-common-vars intel-oneapi-compiler-shared-runtime-2023.1.0 intel-oneapi-compiler-fortran-runtime-2023.1.0
 
 WORKDIR /home/wrfuser
