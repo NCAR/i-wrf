@@ -10,7 +10,7 @@ RUN apt -y install cmake pkg-config build-essential wget libcurl4-openssl-dev m4
 RUN wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB | gpg --dearmor > /usr/share/keyrings/oneapi-archive-keyring.gpg
 RUN echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" > /etc/apt/sources.list.d/oneAPI.list
 RUN apt -y update
-RUN apt -y install intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic-2023.1.0 intel-oneapi-compiler-fortran-2023.1.0 intel-oneapi-dpcpp-cpp-2023.1.0 intel-oneapi-mpi-2021.9.0 intel-oneapi-mpi-devel-2021.9.0
+RUN apt -y install intel-oneapi-compiler-fortran-2023.1.0 intel-oneapi-dpcpp-cpp-2023.1.0 intel-oneapi-mpi-2021.9.0 intel-oneapi-mpi-devel-2021.9.0
 RUN apt -y --fix-broken install
 RUN apt -y update
 
@@ -29,11 +29,11 @@ RUN echo 'export OPENMPI="${MPI}"' >> /etc/bashrc
 RUN echo 'export INTEL="/opt/intel/oneapi/compiler/latest/linux"' >> /etc/bashrc
 RUN echo 'export PATH="${INTEL}/bin/intel64:${MPI}/bin:${PATH}"' >> /etc/bashrc
 RUN echo 'export SCC="icx"' >> /etc/bashrc
-RUN echo 'export SFC="ifort"' >> /etc/bashrc
+RUN echo 'export SFC="ifx"' >> /etc/bashrc
 RUN echo 'export I_MPI_CC="icx"' >> /etc/bashrc
 RUN echo 'export I_MPI_CXX="icpx"' >> /etc/bashrc
-RUN echo 'export I_MPI_FC="ifort"' >> /etc/bashrc
-RUN echo 'export I_MPI_F90="ifort"' >> /etc/bashrc
+RUN echo 'export I_MPI_FC="ifx"' >> /etc/bashrc
+RUN echo 'export I_MPI_F90="ifx"' >> /etc/bashrc
 RUN echo 'export FC="mpifc"' >> /etc/bashrc
 RUN echo 'export F90="mpifc"' >> /etc/bashrc
 RUN echo 'export F77="mpifc"' >> /etc/bashrc

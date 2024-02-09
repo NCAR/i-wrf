@@ -113,7 +113,7 @@ mkdir -p /home/${WRFUSER}
 cd /home/${WRFUSER}
 git clone https://github.com/wrf-model/WRF
 cd WRF
-git checkout v4.5.1
+git checkout v4.5.2
 # TODO: configure complains that NetCDF was built without --enable-netcdf4, however, that flag is set in the NetCDF build.  This was only a problem with WRF v4.5.  Solution: export NETCDF_classic=1
 export NETCDF_classic=1
 ./clean
