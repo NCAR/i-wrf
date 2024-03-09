@@ -133,7 +133,7 @@ cd /home/${WRFUSER}
 git clone https://github.com/wrf-model/WPS
 cd WPS
 git checkout v4.5
-export JASPERLIB="-L${SZIP}/lib -L${LIBPNG}/lib -L${ZLIB}/lib -L${JASPER}/lib -L${G2C}/lib -ljasper -lpng -lz -lgrib2c"
+export JASPERLIB="-L${SZIP}/lib -L${LIBPNG}/lib -L${ZLIB}/lib -L${JASPER}/lib -L${G2C}/lib -ljasper -lpng -lz"
 export JASPERINC="-I${SZIP}/include -I${LIBPNG}/include -I${ZLIB}/include -I${JASPER}/include"
 export FCFLAGS="${FCFLAGS} ${JASPERINC}"
 ./clean
