@@ -96,7 +96,7 @@ COPY --from=wrfbuild /etc/bashrc /etc/bashrc
 # Install required runtime packages
 # Note: To get a list of Intel OneAPI runtime packages, run the following:
 #     apt-cache pkgnames intel | grep intel-oneapi-runtime
-RUN apt -y install cmake pkg-config build-essential wget libcurl4-openssl-dev m4
+RUN apt -y install cmake pkg-config build-essential wget libcurl4-openssl-dev m4 csh
 RUN wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB | gpg --dearmor > /usr/share/keyrings/oneapi-archive-keyring.gpg
 RUN echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" > /etc/apt/sources.list.d/oneAPI.list
 RUN apt -y update
