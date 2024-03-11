@@ -121,7 +121,11 @@ export NETCDF_classic=1
 15
 1
 EOF
-cat configure.wrf | sed "s/-lz/-lz -L\/opt\/zlib\/lib/g" > configure.wrf.zlib
+cat configure.wrf  \
+  | sed "s/-lz/-lz -L\/opt\/zlib\/lib/g" \
+  | sed "s/SCC.*=.*icc/SCC             =       icx/g" \
+  | sed "s/CCOMP.*=.*icc/CCOMP           =       icx/g" \
+  > configure.wrf.zlib
 mv -f configure.wrf.zlib configure.wrf
 ./compile em_real 2>&1 | tee build.log
 cd /home/${WRFUSER}
@@ -140,6 +144,10 @@ export FCFLAGS="${FCFLAGS} ${JASPERINC}"
 ./configure << EOF
 19
 EOF
+cat configure.wps \
+  | sed "s/SCC.*=.*icc/SCC                 = icx/g" \
+  > configure.wps.icx
+mv configure.wps.icx configure.wps
 ./compile 2>&1 | tee build.log
 cd /home/${WRFUSER}
 chown -R ${WRFUSER}.${WRFUSER} WPS
