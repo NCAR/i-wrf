@@ -163,8 +163,6 @@ function _snr
   replace="${3}"
   temp_file="$(mktemp)"
 
-  echo $search
-
   cat "${file}" | sed "s/${search}/${replace}/g" > "${temp_file}"
   mv -f "${temp_file}" "${file}"
   rm -f "${temp_file}"
