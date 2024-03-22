@@ -74,6 +74,7 @@ RUN wget https://www.wrfcloud.com/libs/zlib-1.2.11.tar.gz
 RUN wget https://downloads.unidata.ucar.edu/udunits/2.2.28/udunits-2.2.28.tar.gz
 
 COPY build_wrf.sh /tmp/build_wrf.sh
+COPY WPS.patch /tmp/WPS.patch
 RUN bash /tmp/build_wrf.sh
 
 
