@@ -13,7 +13,7 @@ function check_errors
 
   if [[ "${exit_code}" != "0" ]]; then
     echo "${message}"
-    exit "${exit_code}"
+    exit ${exit_code}
   fi
 }
 
