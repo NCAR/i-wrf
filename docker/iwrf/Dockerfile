@@ -24,6 +24,7 @@ RUN apt -y install vim
 RUN useradd -u 5000 wrfuser
 
 # Configure bash
+RUN echo 'source /etc/bash.bashrc' >> /etc/bashrc
 RUN echo 'export MPI="/opt/intel/oneapi/mpi/latest"' >> /etc/bashrc
 RUN echo 'export OPENMPI="${MPI}"' >> /etc/bashrc
 RUN echo 'export INTEL="/opt/intel/oneapi/compiler/latest/linux"' >> /etc/bashrc
@@ -73,8 +74,8 @@ RUN wget https://www.wrfcloud.com/libs/szip-2.1.1.tar.gz
 RUN wget https://www.wrfcloud.com/libs/zlib-1.2.11.tar.gz
 RUN wget https://downloads.unidata.ucar.edu/udunits/2.2.28/udunits-2.2.28.tar.gz
 
-COPY build_wrf.sh /tmp/build_wrf.sh
 COPY WPS.patch /tmp/WPS.patch
+COPY build_wrf.sh /tmp/build_wrf.sh
 RUN bash /tmp/build_wrf.sh
 
 
