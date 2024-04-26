@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # script adapted from instructions at https://www2.mmm.ucar.edu/wrf/OnLineTutorial/CASES/SingleDomain/ungrib.php
-# docker run -it -v /home/hahn/git:/home/wrfuser/git -v /home/hahn/terrestrial_data:/home/wrfuser/terrestrial_data iwrf:latest /bin/bash
+# docker run -it -v /home/hahn/git:/home/wrfuser/git -v /mnt/storage/terrestrial_data:/home/wrfuser/terrestrial_data iwrf:latest /bin/bash
 
 source /etc/bashrc
 
