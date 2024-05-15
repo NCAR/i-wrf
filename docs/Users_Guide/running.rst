@@ -32,13 +32,21 @@ Set environment variable to bind directories to container
 using the --bind argument)
 
 * Input data directories for WRF, raob, and metar input data
-   * WRF: /glade/derecho/scratch/jaredlee/nsf_i-wrf/matthew to /data/input/wrf
-   * RAOB: /glade/campaign/ral/wsap/i-wrf/data/hurr-matthew/madis/point/raob/netcdf to /data/input/obs/raob
-   * METAR: /glade/campaign/ral/wsap/i-wrf/data/hurr-matthew/madis/point/metar/netcdf to /data/input/obs/metar
+   * WRF:
+      * Local: /glade/derecho/scratch/jaredlee/nsf_i-wrf/matthew
+      * Container: /data/input/wrf
+   * RAOB:
+      * Local: /glade/campaign/ral/wsap/i-wrf/data/hurr-matthew/madis/point/raob/netcdf
+      * Container: /data/input/obs/raob
+   * METAR:
+      * Local: /glade/campaign/ral/wsap/i-wrf/data/hurr-matthew/madis/point/metar/netcdf
+      * Container: /data/input/obs/metar
 * Config directory containing METplus use case configuration file
-   * /glade/u/home/mccabe/i-wrf/use_cases/Hurricane_Matthew/METplus to /config
+   * Local: /glade/u/home/mccabe/i-wrf/use_cases/Hurricane_Matthew/METplus
+   * Container: /config
 * Output directory to write output
-   * ${SCRATCH}/metplus_out to /data/output
+   * Local: ${SCRATCH}/metplus_out
+   * Container: /data/output
 
 ::
 
