@@ -1,3 +1,4 @@
-sphinx-gallery
+sphinx==5.3.0
+sphinx-gallery==0.14.0
 sphinxcontrib-bibtex
 sphinx-panels
