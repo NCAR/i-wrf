@@ -17,11 +17,12 @@ Load the apptainer module::
 
    module load apptainer
 
-Change directory to scratch and pull the container from DockerHub.
+Change directory to scratch and pull the containers from DockerHub.
 This will create a `.sif` file in the current directory::
 
    cd ${SCRATCH}
-   apptainer pull docker://dtcenter/metplus:6.0.0-beta4
+   apptainer pull docker://dtcenter/metplus-dev:feature_1514_madis2nc-pull_request
+   apptainer pull data-matthew-input-obs.sif oras://registry-1.docker.io/ncar/iwrf:data-matthew-input-obs
 
 Create a directory to store the output::
 
@@ -36,10 +37,10 @@ using the --bind argument)
       * Local: /glade/derecho/scratch/jaredlee/nsf_i-wrf/matthew
       * Container: /data/input/wrf
    * RAOB:
-      * Local: /glade/campaign/ral/wsap/i-wrf/data/hurr-matthew/madis/point/raob/netcdf
+      * Local: From data-matthew-input-obs.sif
       * Container: /data/input/obs/raob
    * METAR:
-      * Local: /glade/campaign/ral/wsap/i-wrf/data/hurr-matthew/madis/point/metar/netcdf
+      * Local: From data-matthew-input-obs.sif
       * Container: /data/input/obs/metar
 * Config directory containing METplus use case configuration file
    * Local: /glade/u/home/mccabe/i-wrf/use_cases/Hurricane_Matthew/METplus
@@ -52,15 +53,13 @@ using the --bind argument)
 
    LOCAL_METPLUS_CONFIG_DIR=/glade/u/home/mccabe/i-wrf/use_cases/Hurricane_Matthew/METplus
    LOCAL_FCST_INPUT_DIR=/glade/derecho/scratch/jaredlee/nsf_i-wrf/matthew
-   LOCAL_UPPER_AIR_OBS_INPUT_DIR=/glade/campaign/ral/wsap/i-wrf/data/hurr-matthew/madis/point/raob/netcdf
-   LOCAL_SURFACE_OBS_INPUT_DIR=/glade/campaign/ral/wsap/i-wrf/data/hurr-matthew/madis/point/metar/netcdf
    LOCAL_OUTPUT_DIR=${SCRATCH}/metplus_out
 
-   export APPTAINER_BIND="${LOCAL_METPLUS_CONFIG_DIR}:/config,${LOCAL_FCST_INPUT_DIR}:/data/input/wrf,${LOCAL_UPPER_AIR_OBS_INPUT_DIR}:/data/input/obs/raob,${LOCAL_SURFACE_OBS_INPUT_DIR}:/data/input/obs/metar,${LOCAL_OUTPUT_DIR}:/data/output"
+   export APPTAINER_BIND="data-matthew-input-obs.sif:/data/input/obs:image-src=/,${LOCAL_METPLUS_CONFIG_DIR}:/config,${LOCAL_FCST_INPUT_DIR}:/data/input/wrf,${LOCAL_OUTPUT_DIR}:/data/output"
 
 Execute the run_metplus.py command inside the container to run the use case::
 
-   apptainer exec metplus_6.0.0-beta4.sif /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
+   apptainer exec metplus-dev_feature_1514_madis2nc-pull_request.sif /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
 
 Check that the output data was created locally::
 
