@@ -7,8 +7,8 @@ Overview
 ========
 
 The following instructions can be used to run
-the `I-WRF weather simulation program https://i-wrf.org`
-with data from `Hurricane Matthew https://en.wikipedia.org/wiki/Hurricane_Matthew`
+the `I-WRF weather simulation program <https://i-wrf.org>`
+with data from `Hurricane Matthew <https://en.wikipedia.org/wiki/Hurricane_Matthew>`
 on the [Jetstream2 cloud computing platform](https://jetstream-cloud.org/).
 This exercise provides an introduction to using cloud computing platforms,
 running computationally complex simulations and using containerized applications.
@@ -21,15 +21,17 @@ and is available to researchers and educators.
 This example delivers the I-WRF program as a Docker "image",
 simplifying the set-up for running the simulation.
 
-### Prepare to Use Jetstream2
+=========================
+Prepare to Use Jetstream2
+=========================
 
 To [get started with Jetstream2](https://jetstream-cloud.org/get-started),
 you will need to:
 
-* Create an account with the [National Science Foundation (NSF)](https://www.nsf.gov/)'s
+ * Create an account with the [National Science Foundation (NSF)](https://www.nsf.gov/)'s
 [ACCESS program](https://access-ci.org/).
- Request a computational "allocation" from ACCESS.
-* Log in to Jetstream2's web portal.
+ * Request a computational "allocation" from ACCESS.
+ * Log in to Jetstream2's web portal.
 
 The sections below will guide you through this process
 
@@ -41,7 +43,9 @@ If you do not already have one, [register for an ACCESS account](https://operati
 Note that you can either choose to use an existing University/Organizational account or
 create an entirely new ACCESS account when registering. 
 
-#### Get an Allocation
+---
+Get an Allocation
+---
 
 With your ACCESS account set up, you may [request an allocation](https://allocations.access-ci.org/get-your-first-project)
 that will allow you to use an ACCESS-affiliated cyberinfrastructure resource.
