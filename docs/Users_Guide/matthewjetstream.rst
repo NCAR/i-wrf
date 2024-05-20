@@ -7,9 +7,9 @@ Overview
 ========
 
 The following instructions can be used to run
-the `I-WRF weather simulation program <https://i-wrf.org>`
+the `I-WRF weather simulation program https://i-wrf.org title="I-WRF weather simulation program`
 with data from `Hurricane Matthew <https://en.wikipedia.org/wiki/Hurricane_Matthew>`
-on the [Jetstream2 cloud computing platform](https://jetstream-cloud.org/).
+on the <a href="https://jetstream-cloud.org">Jetstream2 cloud computing platform </a>(https://jetstream-cloud.org/).
 This exercise provides an introduction to using cloud computing platforms,
 running computationally complex simulations and using containerized applications.
 
@@ -28,8 +28,7 @@ Prepare to Use Jetstream2
 To [get started with Jetstream2](https://jetstream-cloud.org/get-started),
 you will need to:
 
- * Create an account with the [National Science Foundation (NSF)](https://www.nsf.gov/)'s
-[ACCESS program](https://access-ci.org/).
+ * Create an account with the [National Science Foundation (NSF)](https://www.nsf.gov/)'s [ACCESS program](https://access-ci.org/).
  * Request a computational "allocation" from ACCESS.
  * Log in to Jetstream2's web portal.
 
@@ -156,16 +155,26 @@ The following commands can be copied and pasted into your shell.
 This first, complicated sequence sets up the Docker repository on your instance:
 
     sudo apt-get install ca-certificates curl
+
     sudo install -m 0755 -d /etc/apt/keyrings
+
     sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
+
       -o /etc/apt/keyrings/docker.asc
+
     sudo chmod a+r /etc/apt/keyrings/docker.asc
+
     echo \
+
       "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] \
+
       https://download.docker.com/linux/ubuntu \
+
       $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+
       sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    sudo apt-get update
+
+      sudo apt-get update
 
 Now you can simply install the Docker Engine:
 
