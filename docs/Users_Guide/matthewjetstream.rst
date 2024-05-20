@@ -1,10 +1,14 @@
-## Running I-WRF On Jetstream2 with Hurricane Matthew Data
+*******************************************************
+Running I-WRF On Jetstream2 with Hurricane Matthew Data
+*******************************************************
 
-### Overview
+========
+Overview
+========
 
 The following instructions can be used to run
-the [I-WRF weather simulation program](https://i-wrf.org/)
-with data from [Hurricane Matthew](https://en.wikipedia.org/wiki/Hurricane_Matthew)
+the `I-WRF weather simulation program https://i-wrf.org`
+with data from `Hurricane Matthew https://en.wikipedia.org/wiki/Hurricane_Matthew`
 on the [Jetstream2 cloud computing platform](https://jetstream-cloud.org/).
 This exercise provides an introduction to using cloud computing platforms,
 running computationally complex simulations and using containerized applications.
@@ -22,14 +26,16 @@ simplifying the set-up for running the simulation.
 To [get started with Jetstream2](https://jetstream-cloud.org/get-started),
 you will need to:
 
-+ Create an account with the [National Science Foundation (NSF)](https://www.nsf.gov/)'s
+* Create an account with the [National Science Foundation (NSF)](https://www.nsf.gov/)'s
 [ACCESS program](https://access-ci.org/).
-+ Request a computational "allocation" from ACCESS.
-+ Log in to Jetstream2's web portal.
+ Request a computational "allocation" from ACCESS.
+* Log in to Jetstream2's web portal.
 
 The sections below will guide you through this process
 
-#### Create an ACCESS Account
+------------------------
+Create an ACCESS Account
+------------------------
 
 If you do not already have one, [register for an ACCESS account](https://operations.access-ci.org/identity/new-user).
 Note that you can either choose to use an existing University/Organizational account or
