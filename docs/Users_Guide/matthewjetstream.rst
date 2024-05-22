@@ -150,6 +150,13 @@ and those changes will remain even after the instance is shelved and unshelved.
 The following sections instruct you to issue numerous Linux commands in your web shell.
 If you are not familiar with Linux, you may want to want to refer to
 `An Introduction to Linux <https://cvw.cac.cornell.edu/Linux>`_ when working through these steps.
+The commands in each section can be copied using the button in the upper right corner
+and then pasted into your web shell by right-clicking.
+
+If your web shell ever becomes unresponsive or disconnected from the instance,
+you can recover from that situation by rebooting the instance.
+In the Exosphere dashboard page for your instance, in the Actions menu, select "Reboot".
+The process takes several minutes, after which the instance status will return to "Ready".
 
 Install Docker and Get the I-WRF Image
 -----------------------------------------
@@ -162,8 +169,7 @@ You can then "pull" (download) the I-WRF image that will be run as a container.
 
 The `instructions for installing Docker Engine on Ubuntu<https://docs.docker.com/engine/install/ubuntu/>`_
 are very thorough and make a good reference, but we only need to perform a subset of those steps.
-The following commands can be copied and pasted into your shell.
-This first, complicated sequence sets up the Docker repository on your instance::
+This first sequence sets up the Docker software repository on your instance::
 
     sudo install -m 0755 -d /etc/apt/keyrings
     sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
@@ -171,7 +177,7 @@ This first, complicated sequence sets up the Docker repository on your instance:
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     sudo apt-get -y update
 
-Then you will install the Docker Engine::
+Then you will install the Docker Engine from that repository::
 
     sudo apt-get -y install docker-ce docker-ce-cli
 
@@ -200,7 +206,7 @@ The script expects to run in a folder where it can download data files and creat
 The instructions in this exercise create that folder in the user's home directory and name it "matthew".
 The simulation script is called "run.sh".
 The following commands create the empty folder and download the script into it,
-and they can be copied and pasted into your web shell::
+then change its permissions so it can be run::
 
     mkdir matthew
     curl https://gist.githubusercontent.com/Trumbore/27cef8073048cde7a8142af9bfb0b264/raw/1115ce9de4a30ad665055ed323c40a4e7aa411b2/run.sh > matthew/run.sh
@@ -212,7 +218,7 @@ Run I-WRF
 With everything in place, you are now ready to run the Docker container that will perform the simulation.
 The downloaded script runs inside the container, prints lots of status information,
 and creates output files in the run folder you created.
-To run the simulation, copy and paste this command into your web shell::
+Execute this command to run the simulation in your web shell::
 
     time docker run --shm-size 14G -it -v ~/:/home/wrfuser/terrestrial_data -v ~/matthew:/tmp/hurricane_matthew ncar/iwrf:latest /tmp/hurricane_matthew/run.sh
 
