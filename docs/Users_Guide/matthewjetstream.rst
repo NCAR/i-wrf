@@ -147,6 +147,10 @@ You will only need to perform these steps once,
 as they essentially change the contents of the instance's disk
 and those changes will remain even after the instance is shelved and unshelved.
 
+The following sections instruct you to issue numerous Linux commands in your web shell.
+If you are not familiar with Linux, you may want to want to refer to
+`An Introduction to Linux <https://cvw.cac.cornell.edu/Linux>`_ when working through these steps.
+
 Install Docker and Get the I-WRF Image
 -----------------------------------------
 
@@ -161,21 +165,15 @@ are very thorough and make a good reference, but we only need to perform a subse
 The following commands can be copied and pasted into your shell.
 This first, complicated sequence sets up the Docker repository on your instance::
 
-    sudo apt-get install ca-certificates curl
     sudo install -m 0755 -d /etc/apt/keyrings
-    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
-      -o /etc/apt/keyrings/docker.asc
+    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
     sudo chmod a+r /etc/apt/keyrings/docker.asc
-    echo \
-      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] \
-      https://download.docker.com/linux/ubuntu \
-      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-      sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    sudo apt-get update
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    sudo apt-get -y update
 
 Then you will install the Docker Engine::
 
-    sudo apt-get install docker-ce docker-ce-cli
+    sudo apt-get -y install docker-ce docker-ce-cli
 
 And finally, pull the latest version of the I-WRF image onto your instance::
 
@@ -187,7 +185,8 @@ Get the Geographic Data
 To run I-WRF on the Hurricane Matthew data set, you need a copy of the
 geographic data representing the terrain in the area of the simulation.
 These commands download an archive file containing that data,
-uncompress the archive into a folder named "WPS_GEOG", and delete the archive file::
+uncompress the archive into a folder named "WPS_GEOG", and delete the archive file.
+They take several minutes to complete::
 
     wget https://www2.mmm.ucar.edu/wrf/src/wps_files/geog_high_res_mandatory.tar.gz
     tar -xzf geog_high_res_mandatory.tar.gz
@@ -204,7 +203,8 @@ The following commands create the empty folder and download the script into it,
 and they can be copied and pasted into your web shell::
 
     mkdir matthew
-    https://gist.githubusercontent.com/Trumbore/27cef8073048cde7a8142af9bfb0b264/raw/1115ce9de4a30ad665055ed323c40a4e7aa411b2/run.sh > matthew/run.sh
+    curl https://gist.githubusercontent.com/Trumbore/27cef8073048cde7a8142af9bfb0b264/raw/1115ce9de4a30ad665055ed323c40a4e7aa411b2/run.sh > matthew/run.sh
+    chmod 775 matthew/run.sh
 
 Run I-WRF
 ===========
@@ -214,8 +214,7 @@ The downloaded script runs inside the container, prints lots of status informati
 and creates output files in the run folder you created.
 To run the simulation, copy and paste this command into your web shell::
 
-    time docker run --shm-size 14G -it -v ~/:/home/wrfuser/terrestrial_data \
-      -v ~/matthew:/tmp/hurricane_matthew ncar/iwrf:latest /tmp/hurricane_matthew/run.sh
+    time docker run --shm-size 14G -it -v ~/:/home/wrfuser/terrestrial_data -v ~/matthew:/tmp/hurricane_matthew ncar/iwrf:latest /tmp/hurricane_matthew/run.sh
 
 The command has numerous arguments and options, which do the following:
 
