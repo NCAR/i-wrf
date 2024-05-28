@@ -17,7 +17,7 @@ than you may have on your personal computer,
 but a cloud computing platform can provided the needed computational power.
 Jetstream2 is a national cyberinfrastructure resource that is easy to use
 and is available to researchers and educators.
-This example runs the I-WRF program as a Docker "container",
+This exercise runs the I-WRF program as a Docker "container",
 which simplifyies the set-up work needed to run the simulation.
 
 It is recommended that you follow the instructions in each section in the order presented
@@ -50,7 +50,7 @@ Get an Allocation
 With your ACCESS account set up, you may `request an allocation<https://allocations.access-ci.org/get-your-first-project>`_
 that will allow you to use an ACCESS-affiliated cyberinfrastructure resource.
 Be sure to read all of the information on that page so that you make a suitable request.
-An "Explore" project will be sufficient to work with this example,
+An "Explore" project will be sufficient to work with this exercise,
 and you will want to work with the resource "Indiana Jetstream2 CPU" (*not* GPU).
 The typical turnaround time for allocation requests is one business day.
 
@@ -66,7 +66,7 @@ and on `this page<https://docs.jetstream-cloud.org/ui/exo/login>`_
 of the `Jetstream2 documentation<https://docs.jetstream-cloud.org>`_.
 
 While adding an allocation to your account, it is recommended that you choose
-the "Indiana University" region of Jetstream2 for completing this example.
+the "Indiana University" region of Jetstream2 for completing this exercise.
 
 Create a Cloud Instance and Log In
 ====================================
@@ -80,13 +80,13 @@ before proceeding.
 Create an SSH Key
 -------------------
 
+You must upload a key pair to Jetstream before creating your instance so that you can log in to it,
+as password-based logins are disabled on Jetstream2.
 If you are not familiar with "SSH key pairs", you should
 `read about them<https://cvw.cac.cornell.edu/jetstream/keys/about-keys>`_ before continuing.
-A key pair is needed when creating your instance so that you can log in to it,
-as password-based logins are disabled on Jetstream2.
 
-* First, `create an SSH Key on your computer<https://cvw.cac.cornell.edu/jetstream/keys/ssh-create>`_ using the "ssh-keygen" command.
-* Then `upload the key to Jetstream2<https://cvw.cac.cornell.edu/jetstream/keys/ssh-upload>`_ through the Exosphere web interface. 
+* First, `create an SSH Key on your computer<https://cvw.cac.cornell.edu/jetstream/keys/ssh-create>`_ using the "ssh-keygen" command.  That command allows you to specify the name and location of the private key file it creates, with the default being "id_rsa".  The matching public key file is saved to the same location and name with ".pub" appended to the filename.  Later instructions will assume that your private key file is named "id_rsa", but you may choose a different name now and use that name in those later instructions.
+* Then, `upload the public key to Jetstream2<https://cvw.cac.cornell.edu/jetstream/keys/ssh-upload>`_ through the Exosphere web interface. 
 
 Create an Instance
 ---------------------
@@ -95,7 +95,7 @@ The Cornell Virtual Workshop topic `Creating an Instance<https://cvw.cac.cornell
 provides detailed information about creating a Jetstream2 instance.
 While following those steps, be sure to make the following choices for this instance:
 
-* Choose the "Featured-Ubuntu22" image as the instance source.
+* When choosing an image as the instance source, if viewing "By Type", select the "Ubuntu 22.04 (latest)" image.  If viewing "By Image", choose the "Featured-Ubuntu22" image.
 * Choose the "Flavor" m3.quad (4 CPUs) to provide a faster simulation run-time.
 * Select a custom disk size of 100 GB - larege enough to hold this exercise's data and results.
 * Select the SSH public key that you uploaded previously.
@@ -107,14 +107,21 @@ Note that the instance will not only be created, but will be running so that you
 Log in to the Instance
 -----------------------------
 
-The Exosphere web dashboard provides two easy ways to log in to Jetstream2 instances: Web Shell and Web Desktop.
-For this example, you can use the `Web Shell<https://cvw.cac.cornell.edu/jetstream/instance-login/webshell>`_ option
-to open a terminal tab in your web browser.
-You may also want to read about the `features of Guacamole<https://cvw.cac.cornell.edu/jetstream/instance-login/guacamole>`_,
-which is the platform that supports both Web Shell and Web Desktop.
+The Exosphere web dashboard provides the easy-to-use Web Shell for accessing your Jetstream2 instances,
+but after encountering some issues with this exercise when using Web Shell,
+we are recommending that you use the SSH command to access your instance from a shell on your computer.
+The instructions for `connecting to Jetstream2 using SSH<https://cvw.cac.cornell.edu/jetstream/instance-login/sshshell>`_
+can executed in the Command Prompt on Windows (from the Start menu, type "cmd" and select Command Prompt)
+or from the Terminal application on a Mac.
+
+In either case you will need to know the location and name of the private SSH key created on your computer (see above),
+the IP address of your instance (found in the Exosphere web dashboard)
+and the default username on your instance, which is "exouser".
 
 Once you are logged in to the web shell you can proceed to the
 "Install Software and Download Data" section below.
+You will know that your login has been successful when the prompt has the form ``exouser@instance-name:~$``,
+which indicates your username, the instance name, and your current working directory, followed by "$"
 
 Managing a Jetstream2 Instance
 ------------------------------------
@@ -125,7 +132,7 @@ Instances incur costs whenever they are running (on Jetstream2, this is when the
 "Shelving" an instance stops it from using the cloud's CPUs and memory,
 and therefore stops it from incurring any charges against your allocation.
 
-When you are through working on this example,
+When you are through working on this exercise,
 be sure to use the instance's "Actions" menu in the web dashboard to
 "Shelve" the instance so that it is no longer spending your credits.
 If you later return to the dashboard and want to use the instance again,
@@ -169,19 +176,19 @@ You can then "pull" (download) the I-WRF image that will be run as a container.
 
 The `instructions for installing Docker Engine on Ubuntu<https://docs.docker.com/engine/install/ubuntu/>`_
 are very thorough and make a good reference, but we only need to perform a subset of those steps.
-This first sequence sets up the Docker software repository on your instance::
+These commands run a script that sets up the Docker software repository on your instance,
+then installs Docker and starts its daemon::
 
-    sudo install -m 0755 -d /etc/apt/keyrings
-    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-    sudo chmod a+r /etc/apt/keyrings/docker.asc
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    sudo apt-get -y update
+    wget https://bit.ly/iwrf-docker > install-docker.sh
+    source install-docker.sh
 
-Then you will install the Docker Engine from that repository::
+You can test whether the Docker command line tool was installed correctly by asking for its version,
+and ask for the status of the Docker daemon to make sure it is running::
 
-    sudo apt-get -y install docker-ce docker-ce-cli
+    docker --version
+    sudo systemctl --no-pager status docker
 
-And finally, pull the latest version of the I-WRF image onto your instance::
+Once all of that is in order, pull the latest version of the I-WRF image onto your instance::
 
     docker pull ncar/iwrf
 
@@ -196,7 +203,7 @@ They take several minutes to complete::
 
     wget https://www2.mmm.ucar.edu/wrf/src/wps_files/geog_high_res_mandatory.tar.gz
     tar -xzf geog_high_res_mandatory.tar.gz
-    rm geog_high_res_mandatory.tar.tz
+    rm geog_high_res_mandatory.tar.gz
 
 Create the Run Folder
 -------------------------
@@ -209,7 +216,7 @@ The following commands create the empty folder and download the script into it,
 then change its permissions so it can be run::
 
     mkdir matthew
-    curl https://gist.githubusercontent.com/Trumbore/27cef8073048cde7a8142af9bfb0b264/raw/1115ce9de4a30ad665055ed323c40a4e7aa411b2/run.sh > matthew/run.sh
+    curl https://bit.ly/run-iwrf > matthew/run.sh
     chmod 775 matthew/run.sh
 
 Run I-WRF
@@ -230,5 +237,5 @@ The command has numerous arguments and options, which do the following:
 * ``ncar/iwrf:latest`` is the Docker image to use when creating the container.
 * ``/tmp/hurricane_matthew/run.sh`` is the location within the container of the script that it runs.
 
-It takes about 12 minutes for the simulation to finish on an m3.quad Jetstream instance.
+It takes about three minutes for the simulation to finish on an m3.quad Jetstream instance.
 
