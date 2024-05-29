@@ -1,8 +1,8 @@
 Running I-WRF On Jetstream2 with Hurricane Matthew Data
-****************************************************************
+*******************************************************
 
 Overview
-=================
+========
 
 The following instructions can be used to run
 the `I-WRF weather simulation program <https://i-wrf.org>`_
@@ -26,28 +26,28 @@ Most sections refer to external documentation to provide details about the neces
 and to offer additional background information.
 
 Prepare to Use Jetstream2
-===============================
+=========================
 
-To `get started with Jetstream2<https://jetstream-cloud.org/get-started>`_,
+To `get started with Jetstream2 <https://jetstream-cloud.org/get-started>`_,
 you will need to:
 
-* Create an account with the `National Science Foundation (NSF)<https://www.nsf.gov/>`_'s `ACCESS program<https://access-ci.org/>`_.
+* Create an account with the `National Science Foundation (NSF) <https://www.nsf.gov/>`_'s `ACCESS program <https://access-ci.org/>`_.
 * Request a computational "allocation" from ACCESS.
 * Log in to Jetstream2's web portal.
 
 The sections below will guide you through this process.
 
 Create an ACCESS Account
---------------------------------
+------------------------
 
-If you do not already have one, `register for an ACCESS account<https://operations.access-ci.org/identity/new-user>`_.
+If you do not already have one, `register for an ACCESS account <https://operations.access-ci.org/identity/new-user>`_.
 Note that you can either choose to associate your existing University/Organizational account or
 create an entirely new ACCESS account when registering. 
 
 Get an Allocation
--------------------
+-----------------
 
-With your ACCESS account set up, you may `request an allocation<https://allocations.access-ci.org/get-your-first-project>`_
+With your ACCESS account set up, you may `request an allocation <https://allocations.access-ci.org/get-your-first-project>`_
 that will allow you to use an ACCESS-affiliated cyberinfrastructure resource.
 Be sure to read all of the information on that page so that you make a suitable request.
 An "Explore" project will be sufficient to work with this exercise,
@@ -55,44 +55,44 @@ and you will want to work with the resource "Indiana Jetstream2 CPU" (*not* GPU)
 The typical turnaround time for allocation requests is one business day.
 
 Log in to the Exosphere Web Site
-------------------------------------
+--------------------------------
 
 Once you have an ACCESS account and allocation,
-you can log in to their `Exosphere web dashboard<https://jetstream2.exosphere.app>`_.
+you can log in to their `Exosphere web dashboard <https://jetstream2.exosphere.app>`_.
 The process of identifying your allocation and ACCESS ID to use Jetstream2
-is described on `this page<https://cvw.cac.cornell.edu/jetstream/intro/jetstream-login>`_ of the
-`Introduction to Jetstream2<https://cvw.cac.cornell.edu/jetstream>`_ Cornell Virtual Workshop,
-and on `this page<https://docs.jetstream-cloud.org/ui/exo/login>`_
-of the `Jetstream2 documentation<https://docs.jetstream-cloud.org>`_.
+is described on `this page <https://cvw.cac.cornell.edu/jetstream/intro/jetstream-login>`_ of the
+`Introduction to Jetstream2 <https://cvw.cac.cornell.edu/jetstream>`_ Cornell Virtual Workshop,
+and on `this page <https://docs.jetstream-cloud.org/ui/exo/login>`_
+of the `Jetstream2 documentation <https://docs.jetstream-cloud.org>`_.
 
 While adding an allocation to your account, it is recommended that you choose
 the "Indiana University" region of Jetstream2 for completing this exercise.
 
 Create a Cloud Instance and Log In
-====================================
+==================================
 
 After you have logged in to Jetstream2 and added your allocation to your account,
 you are ready to create the cloud instance where you will run the I-WRF simulation.
 If you are not familiar with the cloud computing terms "image" and "instance",
-it is recommended that you `read about them<https://cvw.cac.cornell.edu/jetstream/intro/imagesandinstances>`_
+it is recommended that you `read about them <https://cvw.cac.cornell.edu/jetstream/intro/imagesandinstances>`_
 before proceeding.
 
 Create an SSH Key
--------------------
+-----------------
 
 You must upload a public SSH key to Jetstream2 before creating your instance.
 Jetstream2 injects that public key into the instance's default user account,
 and you will need to provide the matching private SSH key to log in to the instance.
 If you are not familiar with "SSH key pairs", you should
-`read about them<https://cvw.cac.cornell.edu/jetstream/keys/about-keys>`_ before continuing.
+`read about them <https://cvw.cac.cornell.edu/jetstream/keys/about-keys>`_ before continuing.
 
-* First, `create an SSH Key on your computer<https://cvw.cac.cornell.edu/jetstream/keys/ssh-create>`_ using the "ssh-keygen" command.  That command allows you to specify the name and location of the private key file it creates, with the default being "id_rsa".  The matching public key file is saved to the same location and name with ".pub" appended to the filename.  Later instructions will assume that your private key file is named "id_rsa", but you may choose a different name now and use that name in those later instructions.
-* Then, `upload the public key to Jetstream2<https://cvw.cac.cornell.edu/jetstream/keys/ssh-upload>`_ through the Exosphere web interface. 
+* First, `create an SSH Key on your computer <https://cvw.cac.cornell.edu/jetstream/keys/ssh-create>`_ using the "ssh-keygen" command.  That command allows you to specify the name and location of the private key file it creates, with the default being "id_rsa".  The matching public key file is saved to the same location and name with ".pub" appended to the filename.  Later instructions will assume that your private key file is named "id_rsa", but you may choose a different name now and use that name in those later instructions.
+* Then, `upload the public key to Jetstream2 <https://cvw.cac.cornell.edu/jetstream/keys/ssh-upload>`_ through the Exosphere web interface.
 
 Create an Instance
----------------------
+------------------
 
-The Cornell Virtual Workshop topic `Creating an Instance<https://cvw.cac.cornell.edu/jetstream/create-instance>`_
+The Cornell Virtual Workshop topic `Creating an Instance <https://cvw.cac.cornell.edu/jetstream/create-instance>`_
 provides detailed information about creating a Jetstream2 instance.
 While following those steps, be sure to make the following choices for this instance:
 
@@ -106,12 +106,12 @@ After clicking the "Create" button, wait for the instance to enter the "Ready" s
 Note that the instance will not only be created, but will be running so that you can log in right away.
 
 Log in to the Instance
------------------------------
+----------------------
 
 The Exosphere web dashboard provides the easy-to-use Web Shell for accessing your Jetstream2 instances,
 but after encountering some issues with this exercise when using Web Shell,
 we are recommending that you use the SSH command to access your instance from a shell on your computer.
-The instructions for `connecting to Jetstream2 using SSH<https://cvw.cac.cornell.edu/jetstream/instance-login/sshshell>`_
+The instructions for `connecting to Jetstream2 using SSH <https://cvw.cac.cornell.edu/jetstream/instance-login/sshshell>`_
 can executed in the Command Prompt on Windows (from the Start menu, type "cmd" and select Command Prompt)
 or from the Terminal application on a Mac.
 
@@ -125,10 +125,10 @@ You will know that your login has been successful when the prompt has the form `
 which indicates your username, the instance name, and your current working directory, followed by "$"
 
 Managing a Jetstream2 Instance
-------------------------------------
+------------------------------
 
 In order to use cloud computing resources efficiently, you must know how to
-`manage your instances<https://cvw.cac.cornell.edu/jetstream/manage-instance/states-actions>`_.
+`manage your instances <https://cvw.cac.cornell.edu/jetstream/manage-instance/states-actions>`_.
 Instances incur costs whenever they are running (on Jetstream2, this is when they are "Ready").
 "Shelving" an instance stops it from using the cloud's CPUs and memory,
 and therefore stops it from incurring any charges against your allocation.
@@ -147,7 +147,7 @@ But of course, doubling the number of CPUs doubles the cost per hour to run the 
 so Shelving as soon as you are done becomes even more important!
 
 Install Software and Download Data
-=====================================
+==================================
 
 With your instance created and running and you logged in to it through a Web Shell,
 you can now install the necessary software and download the data to run the simulation.
@@ -167,15 +167,15 @@ In the Exosphere dashboard page for your instance, in the Actions menu, select "
 The process takes several minutes, after which the instance status will return to "Ready".
 
 Install Docker and Get the I-WRF Image
------------------------------------------
+--------------------------------------
 
 As mentioned above, the I-WRF simulation application is provided as a Docker image that will run as a
-`"container"<https://docs.docker.com/guides/docker-concepts/the-basics/what-is-a-container/>`_
+`"container" <https://docs.docker.com/guides/docker-concepts/the-basics/what-is-a-container/>`_
 on your cloud instance.
 To run a Docker container, you must first install the Docker Engine on your instance.
 You can then "pull" (download) the I-WRF image that will be run as a container.
 
-The `instructions for installing Docker Engine on Ubuntu<https://docs.docker.com/engine/install/ubuntu/>`_
+The `instructions for installing Docker Engine on Ubuntu <https://docs.docker.com/engine/install/ubuntu/>`_
 are very thorough and make a good reference, but we only need to perform a subset of those steps.
 These commands run a script that sets up the Docker software repository on your instance,
 then installs Docker::
@@ -201,7 +201,7 @@ Once all of that is in order, you must pull the latest version of the I-WRF imag
     docker pull ncar/iwrf
 
 Get the Geographic Data
-----------------------------
+-----------------------
 
 To run I-WRF on the Hurricane Matthew data set, you need a copy of the
 geographic data representing the terrain in the area of the simulation.
@@ -214,7 +214,7 @@ They take several minutes to complete::
     rm geog_high_res_mandatory.tar.gz
 
 Create the Run Folder
--------------------------
+---------------------
 
 The simulation is performed using a script that must first be downloaded.
 The script expects to run in a folder where it can download data files and create result files.
@@ -228,7 +228,7 @@ then change its permissions so it can be run::
     chmod 775 matthew/run.sh
 
 Run I-WRF
-===========
+=========
 
 With everything in place, you are now ready to run the Docker container that will perform the simulation.
 The downloaded script runs inside the container, prints lots of status information,
@@ -263,3 +263,4 @@ The output should look something like this::
     Timing for main: time 2016-10-06_12:00:00 on domain   1:    0.23407 elapsed seconds
     Timing for Writing wrfout_d01_2016-10-06_12:00:00 for domain        1:    0.32534 elapsed seconds
     d01 2016-10-06_12:00:00 wrf: SUCCESS COMPLETE WRF
+
