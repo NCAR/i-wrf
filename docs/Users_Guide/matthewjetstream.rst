@@ -80,8 +80,9 @@ before proceeding.
 Create an SSH Key
 -------------------
 
-You must upload a key pair to Jetstream before creating your instance so that you can log in to it,
-as password-based logins are disabled on Jetstream2.
+You must upload a public SSH key to Jetstream2 before creating your instance.
+Jetstream2 injects that public key into the instance's default user account,
+and you will need to provide the matching private SSH key to log in to the instance.
 If you are not familiar with "SSH key pairs", you should
 `read about them<https://cvw.cac.cornell.edu/jetstream/keys/about-keys>`_ before continuing.
 
@@ -177,18 +178,25 @@ You can then "pull" (download) the I-WRF image that will be run as a container.
 The `instructions for installing Docker Engine on Ubuntu<https://docs.docker.com/engine/install/ubuntu/>`_
 are very thorough and make a good reference, but we only need to perform a subset of those steps.
 These commands run a script that sets up the Docker software repository on your instance,
-then installs Docker and starts its daemon::
+then installs Docker::
 
-    wget https://bit.ly/iwrf-docker > install-docker.sh
+    curl --location https://bit.ly/3R3lqMU > install-docker.sh
     source install-docker.sh
 
-You can test whether the Docker command line tool was installed correctly by asking for its version,
-and ask for the status of the Docker daemon to make sure it is running::
+If a text dialog is displayed asking which services should be restarted, type ``Enter``.
+When the installation is complete, you can verify that the Docker command line tool works by asking for its version::
 
     docker --version
+
+Next, you must start the Docker daemon, which runs in the background and processes commands::
+
+    sudo service docker start
+
+If that command appeared to succeed, you can confirm its status with this command::
+
     sudo systemctl --no-pager status docker
 
-Once all of that is in order, pull the latest version of the I-WRF image onto your instance::
+Once all of that is in order, you must pull the latest version of the I-WRF image onto your instance::
 
     docker pull ncar/iwrf
 
@@ -216,7 +224,7 @@ The following commands create the empty folder and download the script into it,
 then change its permissions so it can be run::
 
     mkdir matthew
-    curl https://bit.ly/run-iwrf > matthew/run.sh
+    curl --location https://bit.ly/3KoBtRK > matthew/run.sh
     chmod 775 matthew/run.sh
 
 Run I-WRF
@@ -237,5 +245,21 @@ The command has numerous arguments and options, which do the following:
 * ``ncar/iwrf:latest`` is the Docker image to use when creating the container.
 * ``/tmp/hurricane_matthew/run.sh`` is the location within the container of the script that it runs.
 
-It takes about three minutes for the simulation to finish on an m3.quad Jetstream instance.
+The simulation initially prints lots of information while initializing things, then settles in to the computation.
+The provided configuration simulates 12 hours of weather and takes under three minutes to finish on an m3.quad Jetstream2 instance.
+Once completed, you can view the end of any of the output files to confirm that it succeeded::
 
+    tail matthew/rsl.out.0000
+
+The output should look something like this::
+
+    Timing for main: time 2016-10-06_11:42:30 on domain   1:    0.23300 elapsed seconds
+    Timing for main: time 2016-10-06_11:45:00 on domain   1:    0.23366 elapsed seconds
+    Timing for main: time 2016-10-06_11:47:30 on domain   1:    2.77688 elapsed seconds
+    Timing for main: time 2016-10-06_11:50:00 on domain   1:    0.23415 elapsed seconds
+    Timing for main: time 2016-10-06_11:52:30 on domain   1:    0.23260 elapsed seconds
+    Timing for main: time 2016-10-06_11:55:00 on domain   1:    0.23354 elapsed seconds
+    Timing for main: time 2016-10-06_11:57:30 on domain   1:    0.23345 elapsed seconds
+    Timing for main: time 2016-10-06_12:00:00 on domain   1:    0.23407 elapsed seconds
+    Timing for Writing wrfout_d01_2016-10-06_12:00:00 for domain        1:    0.32534 elapsed seconds
+    d01 2016-10-06_12:00:00 wrf: SUCCESS COMPLETE WRF
