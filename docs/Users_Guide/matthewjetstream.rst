@@ -62,9 +62,9 @@ Log in to the Exosphere Web Site
 Once you have an ACCESS account and allocation,
 you can log in to their `Exosphere web dashboard <https://jetstream2.exosphere.app>`_.
 The process of identifying your allocation and ACCESS ID to use Jetstream2
-is described on `this page <https://cvw.cac.cornell.edu/jetstream/intro/jetstream-login>`_ of the
+is described on `this page <https://cvw.cac.cornell.edu/jetstream/intro/jetstream-login>`__ of the
 `Introduction to Jetstream2 <https://cvw.cac.cornell.edu/jetstream>`_ Cornell Virtual Workshop,
-and on `this page <https://docs.jetstream-cloud.org/ui/exo/login>`_
+and on `this page <https://docs.jetstream-cloud.org/ui/exo/login>`__
 of the `Jetstream2 documentation <https://docs.jetstream-cloud.org>`_.
 
 While adding an allocation to your account, it is recommended that you choose
@@ -76,7 +76,7 @@ Create a Cloud Instance and Log In
 After you have logged in to Jetstream2 and added your allocation to your account,
 you are ready to create the cloud instance where you will run the I-WRF simulation.
 If you are not familiar with the cloud computing terms "image" and "instance",
-it is recommended that you `read about them <https://cvw.cac.cornell.edu/jetstream/intro/imagesandinstances>`_
+it is recommended that you `read about them <https://cvw.cac.cornell.edu/jetstream/intro/imagesandinstances>`__
 before proceeding.
 
 Create an SSH Key
@@ -86,7 +86,7 @@ You must upload a public SSH key to Jetstream2 before creating your instance.
 Jetstream2 injects that public key into the instance's default user account,
 and you will need to provide the matching private SSH key to log in to the instance.
 If you are not familiar with "SSH key pairs", you should
-`read about them <https://cvw.cac.cornell.edu/jetstream/keys/about-keys>`_ before continuing.
+`read about them <https://cvw.cac.cornell.edu/jetstream/keys/about-keys>`__ before continuing.
 
 * First, `create an SSH Key on your computer <https://cvw.cac.cornell.edu/jetstream/keys/ssh-create>`_ using the "ssh-keygen" command.  That command allows you to specify the name and location of the private key file it creates, with the default being "id_rsa".  The matching public key file is saved to the same location and name with ".pub" appended to the filename.  Later instructions will assume that your private key file is named "id_rsa", but you may choose a different name now and use that name in those later instructions.
 * Then, `upload the public key to Jetstream2 <https://cvw.cac.cornell.edu/jetstream/keys/ssh-upload>`_ through the Exosphere web interface.
