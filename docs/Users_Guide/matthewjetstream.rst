@@ -22,7 +22,7 @@ but a cloud computing platform can provided the needed computational power.
 Jetstream2 is a national cyberinfrastructure resource that is easy to use
 and is available to researchers and educators.
 This exercise runs the I-WRF program as a Docker "container",
-which simplifyies the set-up work needed to run the simulation.
+which simplifies the set-up work needed to run the simulation.
 
 It is recommended that you follow the instructions in each section in the order presented
 to avoid encountering issues during the process.
@@ -102,7 +102,7 @@ While following those steps, be sure to make the following choices for this inst
 
 * When choosing an image as the instance source, if viewing "By Type", select the "Ubuntu 22.04 (latest)" image.  If viewing "By Image", choose the "Featured-Ubuntu22" image.
 * Choose the "Flavor" m3.quad (4 CPUs) to provide a faster simulation run-time.
-* Select a custom disk size of 100 GB - larege enough to hold this exercise's data and results.
+* Select a custom disk size of 100 GB - large enough to hold this exercise's data and results.
 * Select the SSH public key that you uploaded previously.
 * You do not need to set any of the Advanced Options.
 
@@ -245,7 +245,7 @@ The command has numerous arguments and options, which do the following:
 
 * ``time docker run`` prints the runtime of the "docker run" command.
 * ``--shm-size 14G -it`` tells the command how much shared memory to use, and to run interactively in the shell.
-* The ``-v`` options map folders in your cloud instance to paths within the contianer.
+* The ``-v`` options map folders in your cloud instance to paths within the container.
 * ``ncar/iwrf:latest`` is the Docker image to use when creating the container.
 * ``/tmp/hurricane_matthew/run.sh`` is the location within the container of the script that it runs.
 
