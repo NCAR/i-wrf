@@ -195,13 +195,18 @@ When the installation is complete, you can verify that the Docker command line t
 
     docker --version
 
-Next, you must start the Docker daemon, which runs in the background and processes commands::
-
-    sudo service docker start
-
-If that command appeared to succeed, you can confirm its status with this command::
+The Docker daemon should start automatically, but it sometimes runs into issues.
+First, check to see if the daemon started successfully::
 
     sudo systemctl --no-pager status docker
+
+If you see a message saying the daemon failed to start because a "Start request repeated too quickly",
+wait a few minutes and issue this command to try again to start it::
+
+    sudo systemctl start docker
+
+If the command seems to succeed, confirm that the daemon is running using the status command above,
+and repeat these efforts as necessary until it is started.
 
 Once all of that is in order, you must pull the correct versions of the WRF and METPlus images onto your instance.
 We define environment variables here and below to ensure that consistent IDs are used for containers and folders::
@@ -239,7 +244,7 @@ then change its permissions so it can be run::
     WORKING_DIR=/home/exouser
     WRF_DIR=${WORKING_DIR}/wrf/20161006_00
     mkdir -p ${WRF_DIR}
-    curl --location https://bit.ly/3KoBtRK > ${WRF_DIR}/run.sh
+    curl --location https://bit.ly/4ccWsTY > ${WRF_DIR}/run.sh
     chmod 775 ${WRF_DIR}/run.sh
 
 Get the Observed Weather Data
@@ -264,7 +269,7 @@ METPlus requires a folder into which it can download files and write its output,
     mkdir -p ${METPLUS_DIR}
 
 It also needs some configuration files to direct its behavior, which we are contained in
-the I-WRF GitHub repository and can be downloaded with these commands:
+the I-WRF GitHub repository and can be downloaded with these commands::
 
     git clone https://github.com/NCAR/i-wrf ${WORKING_DIR}/i-wrf
     METPLUS_CONFIG_DIR=${WORKING_DIR}/i-wrf/use_cases/Hurricane_Matthew/METplus
@@ -311,10 +316,11 @@ Run METPlus
 
 After the WRF simulation has finished, you can run the METPlus analysis to compare the simulated results
 to the actual weather observations during the hurricane.
+The analysis takes about five minutes to complete.
 We use command line options to tell the METPlus container several things, including where the observed data is located,
 where the METPlus configuration can be found, where the WRF output data is located, and where it should create its output files::
 
-    docker run --rm -it --volumes-from ${OBS_DATA_VOL} -v $METPLUS_CONFIG_DIR:/config -v ${WRF_DIR}:/data/input/wrf -v ${METPLUS_DIR}:/data/output ${METPLUS_IMAGE} /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
+    docker run --rm -it --volumes-from ${OBS_DATA_VOL} -v $METPLUS_CONFIG_DIR:/config -v ${WORKING_DIR}/wrf:/data/input/wrf -v ${METPLUS_DIR}:/data/output ${METPLUS_IMAGE} /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
 
 As the analysis is performed, progress information is displayed.  It is not uncommon to see "WARNING" messages in this output,
 but you should only be alarmed if you see messages with the text "ERROR".
