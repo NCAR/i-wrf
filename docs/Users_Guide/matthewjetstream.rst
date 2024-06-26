@@ -12,7 +12,7 @@ The following instructions can be used to run elements of
 the `I-WRF weather simulation framework <https://i-wrf.org>`_
 from the `National Center for Atmospheric Research (NCAR) <https://ncar.ucar.edu/>`_
 and the `Cornell Center for Advanced Computing <https://cac.cornell.edu/>`_.
-The steps below run the `Weather Research & Forecasting (WRF) model <https://www.mmm.ucar.edu/models/wrf>`_
+The steps below run the `Weather Research & Forecasting (WRF) <https://www.mmm.ucar.edu/models/wrf>`_ model
 and the  `METPlus <https://https://dtcenter.org/community-code/metplus>`_ verification framework
 with data from `Hurricane Matthew <https://en.wikipedia.org/wiki/Hurricane_Matthew>`_
 on the `Jetstream2 cloud computing platform <https://jetstream-cloud.org/>`_.
@@ -129,7 +129,7 @@ and the default username on your instance, which is "exouser".
 Once you are logged in to the instance you can proceed to the
 "Install Software and Download Data" section below.
 You will know that your login has been successful when the prompt has the form ``exouser@instance-name:~$``,
-which indicates your username, the instance name, and your current working directory, followed by "$"
+which indicates your username, the instance name, and your current working directory, followed by "$".
 
 Managing a Jetstream2 Instance
 ------------------------------
@@ -203,8 +203,8 @@ If that command appeared to succeed, you can confirm its status with this comman
 
     sudo systemctl --no-pager status docker
 
-Once all of that is in order, you must pull the latest versions of the WRF and METPlus images onto your instance.
-We define environment variables here and elsewhere to ensure consistent IDs for containers and folders::
+Once all of that is in order, you must pull the correct versions of the WRF and METPlus images onto your instance.
+We define environment variables here and below to ensure that consistent IDs are used for containers and folders::
 
     WRF_IMAGE=ncar/iwrf:latest
     METPLUS_IMAGE=dtcenter/metplus-dev:develop
@@ -217,7 +217,7 @@ Get the Geographic Data
 To run WRF on the Hurricane Matthew data set, you need a copy of the
 geographic data representing the terrain in the area of the simulation.
 These commands download an archive file containing that data,
-uncompress the archive into a folder named "WPS_GEOG", and delete the archive file.
+uncompress the archive into a folder named "WPS_GEOG" in your home directory, and delete the archive file.
 They take several minutes to complete::
 
     wget https://www2.mmm.ucar.edu/wrf/src/wps_files/geog_high_res_mandatory.tar.gz
@@ -231,12 +231,13 @@ The simulation is performed using a script that must first be downloaded.
 The script expects to run in a folder where it can download data files and create result files.
 The instructions in this exercise create a folder (named "wrf") under the user's home directory,
 and a sub-folder within "wrf" to hold the output of this simulation.
-The subfolder is named "20161006_00", the beginning date and time of the simulatition.
+The subfolder is named "20161006_00", which is the beginning date and time of the simulatition.
 The simulation script is called "run.sh".
 The following commands create the empty folders and download the script into them,
 then change its permissions so it can be run::
 
-    WRF_DIR=/home/exouser/wrf/20161006_00
+    WORKING_DIR=/home/exouser
+    WRF_DIR=${WORKING_DIR}/wrf/20161006_00
     mkdir -p ${WRF_DIR}
     curl --location https://bit.ly/3KoBtRK > ${WRF_DIR}/run.sh
     chmod 775 ${WRF_DIR}/run.sh
@@ -244,8 +245,29 @@ then change its permissions so it can be run::
 Get the Observed Weather Data
 -----------------------------
 
+The METPlus analysis will be comparing the results of the WRF simulation against
+the actual weather data that was recorded during Hurricane Matthew.
+We will download that data by pulling a Docker volume that holds it,
+and then referencing that volume when we run the METPlus Docker container.
+The commands to pull and create the volume are::
+
+    OBS_DATA_VOL=data-matthew-input-obs
+    docker pull ncar/iwrf:data-matthew-input-obs.docker
+    docker create --name ${OBS_DATA_VOL} ncar/iwrf:data-matthew-input-obs.docker
+
 Set up the METPlus Directories
 ------------------------------
+
+METPlus requires a folder into which it can download files and write its output, so we will create one::
+
+    METPLUS_DIR=${WORKING_DIR}/metplus
+    mkdir -p ${METPLUS_DIR}
+
+It also needs some configuration files to direct its behavior, which we are contained in
+the I-WRF GitHub repository and can be downloaded with these commands:
+
+    git clone https://github.com/NCAR/i-wrf ${WORKING_DIR}/i-wrf
+    METPLUS_CONFIG_DIR=${WORKING_DIR}/i-wrf/use_cases/Hurricane_Matthew/METplus
 
 Run WRF
 =======
@@ -255,7 +277,7 @@ The downloaded script runs inside the container, prints lots of status informati
 and creates output files in the run folder you created.
 Execute this command to run the simulation in your shell::
 
-    time docker run --shm-size 14G -it -v ~/:/home/wrfuser/terrestrial_data -v ${WRF_DIR}:/tmp/hurricane_matthew ${WRF_IMAGE} /tmp/hurricane_matthew/run.sh
+    time docker run --shm-size 14G -it -v ${WORKING_DIR}:/home/wrfuser/terrestrial_data -v ${WRF_DIR}:/tmp/hurricane_matthew ${WRF_IMAGE} /tmp/hurricane_matthew/run.sh
 
 The command has numerous arguments and options, which do the following:
 
@@ -269,7 +291,7 @@ The simulation initially prints lots of information while initializing things, t
 The provided configuration simulates 48 hours of weather and takes about 12 minutes to finish on an m3.quad Jetstream2 instance.
 Once completed, you can view the end of any of the output files to confirm that it succeeded::
 
-    tail matthew/rsl.out.0000
+    tail ${WRF_DIR}/rsl.out.0000
 
 The output should look something like this::
 
@@ -286,3 +308,18 @@ The output should look something like this::
 
 Run METPlus
 ===========
+
+After the WRF simulation has finished, you can run the METPlus analysis to compare the simulated results
+to the actual weather observations during the hurricane.
+We use command line options to tell the METPlus container several things, including where the observed data is located,
+where the METPlus configuration can be found, where the WRF output data is located, and where it should create its output files::
+
+    docker run --rm -it --volumes-from ${OBS_DATA_VOL} -v $METPLUS_CONFIG_DIR:/config -v ${WRF_DIR}:/data/input/wrf -v ${METPLUS_DIR}:/data/output ${METPLUS_IMAGE} /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
+
+As the analysis is performed, progress information is displayed.  It is not uncommon to see "WARNING" messages in this output,
+but you should only be alarmed if you see messages with the text "ERROR".
+METPlus first makes two passes over each of the 48 hourly observation time-slices,
+converting data files to a suitable format for the analysis.
+It then performs statistical analysis on the data from the earth's surface and on the pressure level data.
+
+TBD: If no errors reported, how to see if successful and/or view results.
