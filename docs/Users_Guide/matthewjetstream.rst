@@ -221,8 +221,8 @@ wait a few minutes and issue this command to try again to start it::
 
     sudo systemctl start docker
 
-If the command seems to succeed, confirm that the daemon is running using the status command above,
-and repeat these efforts as necessary until it is started.
+If the command seems to succeed, confirm that the daemon is running using the status command above.
+Repeat these efforts as necessary until it is started.
 
 Get the WRF and METPlus Docker Images and the Observed Weather Data
 -------------------------------------------------------------------
@@ -281,7 +281,7 @@ Some of those configuration files must also be copied into run folders.
 These commands perform the necessary operations::
 
     git clone https://github.com/NCAR/i-wrf ${WORKING_DIR}/i-wrf
-    cp ${WRF_CONFIG_DIR}/var_io.txt ${WRF_DIR}
+    cp ${WRF_CONFIG_DIR}/vars_io.txt ${WRF_DIR}
     curl --location https://bit.ly/4eKpb47 > ${WRF_DIR}/namelist.input.template
 
 Run WRF
@@ -330,7 +330,7 @@ The analysis takes about five minutes to complete.
 We use command line options to tell the METPlus container several things, including where the observed data is located,
 where the METPlus configuration can be found, where the WRF output data is located, and where it should create its output files::
 
-    docker run --rm -it --volumes-from ${OBS_DATA_VOL} -v $METPLUS_CONFIG_DIR:/config -v ${WORKING_DIR}/wrf:/data/input/wrf -v ${METPLUS_DIR}:/data/output ${METPLUS_IMAGE} /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
+    docker run --rm -it --volumes-from ${OBS_DATA_VOL} -v ${METPLUS_CONFIG_DIR}:/config -v ${WORKING_DIR}/wrf:/data/input/wrf -v ${METPLUS_DIR}:/data/output ${METPLUS_IMAGE} /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
 
 As the analysis is performed, progress information is displayed.  It is not uncommon to see "WARNING" messages in this output,
 and you should only be alarmed if you see messages with the text "ERROR".
