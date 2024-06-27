@@ -268,7 +268,7 @@ The following commands create the empty folders and download the script
 and change its permissions so it can be run::
 
     mkdir -p ${WRF_DIR}
-    curl --location https://bit.ly/3RLmo0F > ${WRF_DIR}/run.sh
+    curl --location https://bit.ly/3xzm9z6 > ${WRF_DIR}/run.sh
     chmod 775 ${WRF_DIR}/run.sh
     mkdir -p ${METPLUS_DIR}
 
