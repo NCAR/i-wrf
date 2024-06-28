@@ -13,7 +13,7 @@ the `I-WRF weather simulation framework <https://i-wrf.org>`_
 from the `National Center for Atmospheric Research (NCAR) <https://ncar.ucar.edu/>`_
 and the `Cornell Center for Advanced Computing <https://cac.cornell.edu/>`_.
 The steps below run the `Weather Research & Forecasting (WRF) <https://www.mmm.ucar.edu/models/wrf>`_ model
-and the  `METPlus <https://https://dtcenter.org/community-code/metplus>`_ verification framework
+and the  `METplus <https://https://dtcenter.org/community-code/metplus>`_ verification framework
 with data from `Hurricane Matthew <https://en.wikipedia.org/wiki/Hurricane_Matthew>`_
 on the `Jetstream2 cloud computing platform <https://jetstream-cloud.org/>`_.
 This exercise provides an introduction to using cloud computing platforms,
@@ -192,11 +192,11 @@ to redefine the variables before executing the commands that follow.
 Install Docker
 --------------
 
-As mentioned above, the WRF simulation and METPlus analysis applications are provided as Docker images that will run as a
+As mentioned above, the WRF simulation and METplus analysis applications are provided as Docker images that will run as a
 `"container" <https://docs.docker.com/guides/docker-concepts/the-basics/what-is-a-container/>`_
 on your cloud instance.
 To run a Docker container, you must first install the Docker Engine on your instance.
-You can then "pull" (download) the WRF and METPlus images that will be run as containers.
+You can then "pull" (download) the WRF and METplus images that will be run as containers.
 
 The `instructions for installing Docker Engine on Ubuntu <https://docs.docker.com/engine/install/ubuntu/>`_
 are very thorough and make a good reference, but we only need to perform a subset of those steps.
@@ -224,18 +224,18 @@ wait a few minutes and issue this command to try again to start it::
 If the command seems to succeed, confirm that the daemon is running using the status command above.
 Repeat these efforts as necessary until it is started.
 
-Get the WRF and METPlus Docker Images and the Observed Weather Data
+Get the WRF and METplus Docker Images and the Observed Weather Data
 -------------------------------------------------------------------
 
-Once Docker is running, you must pull the correct versions of the WRF and METPlus images onto your instance::
+Once Docker is running, you must pull the correct versions of the WRF and METplus images onto your instance::
 
     docker pull ${WRF_IMAGE}
     docker pull ${METPLUS_IMAGE}
 
-The METPlus analysis will be comparing the results of the WRF simulation against
+The METplus analysis will be comparing the results of the WRF simulation against
 the actual weather data that was recorded during Hurricane Matthew.
 We download that data by pulling a Docker volume that holds it,
-and then referencing that volume when we run the METPlus Docker container.
+and then referencing that volume when we run the METplus Docker container.
 The commands to pull and create the volume are::
 
     docker pull ncar/iwrf:data-matthew-input-obs.docker
@@ -254,7 +254,7 @@ They take several minutes to complete::
     tar -xzf geog_high_res_mandatory.tar.gz
     rm geog_high_res_mandatory.tar.gz
 
-Create the WRF and METPlus Run Folders
+Create the WRF and METplus Run Folders
 --------------------------------------
 
 The simulation is performed using a script that must first be downloaded.
@@ -263,7 +263,7 @@ The instructions in this exercise create a folder (named "wrf") under the user's
 and a sub-folder within "wrf" to hold the output of this simulation.
 The subfolder is named "20161006_00", which is the beginning date and time of the simulatition.
 The simulation script is called "run.sh".
-Similarly, a run folder named "metplus" must be created for the METPlus process to use.
+Similarly, a run folder named "metplus" must be created for the METplus process to use.
 The following commands create the empty folders and download the script 
 and change its permissions so it can be run::
 
@@ -275,7 +275,7 @@ and change its permissions so it can be run::
 Download Configuration Files
 ----------------------------
 
-Both WRF and METPlus require some configuration files to direct their behavior,
+Both WRF and METplus require some configuration files to direct their behavior,
 and those are downloaded from the I-WRF GitHub repository.
 Some of those configuration files must also be copied into run folders.
 These commands perform the necessary operations::
@@ -320,25 +320,25 @@ The output should look something like this::
     Timing for Writing wrfout_d01_2016-10-06_12:00:00 for domain        1:    0.32534 elapsed seconds
     d01 2016-10-06_12:00:00 wrf: SUCCESS COMPLETE WRF
 
-Run METPlus
+Run METplus
 ===========
 
-After the WRF simulation has finished, you can run the METPlus analysis to compare the simulated results
+After the WRF simulation has finished, you can run the METplus analysis to compare the simulated results
 to the actual weather observations during the hurricane.
 The analysis takes about five minutes to complete.
-We use command line options to tell the METPlus container several things, including where the observed data is located,
-where the METPlus configuration can be found, where the WRF output data is located, and where it should create its output files::
+We use command line options to tell the METplus container several things, including where the observed data is located,
+where the METplus configuration can be found, where the WRF output data is located, and where it should create its output files::
 
     docker run --rm -it --volumes-from ${OBS_DATA_VOL} -v ${METPLUS_CONFIG_DIR}:/config -v ${WORKING_DIR}/wrf:/data/input/wrf -v ${METPLUS_DIR}:/data/output ${METPLUS_IMAGE} /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
 
 As the analysis is performed, progress information is displayed.  It is not uncommon to see "WARNING" messages in this output,
 and you should only be alarmed if you see messages with the text "ERROR".
-METPlus first makes two passes over each of the 48 hourly observation time-slices,
+METplus first makes two passes over each of the 48 hourly observation time-slices,
 converting data files to a suitable format for the analysis.
 It then performs statistical analysis on the data from the earth's surface and from the "upper air".
-METPlus will print its completion status when the processing finishes.
+METplus will print its completion status when the processing finishes.
 
-The results of the METPlus analysis are stored in the subfolders of ~/metplus.
+The results of the METplus analysis are stored in the subfolders of ~/metplus.
 Most of these files are not human readable, but those in the point_stat subfolder
 contain tabular output that can be viewed in a text editor
 (the rows are very long, so you may want to turn word wrapping off for better viewing).
