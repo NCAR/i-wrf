@@ -285,7 +285,6 @@ These commands perform the necessary operations::
     curl --location https://bit.ly/4eKpb47 > ${WRF_DIR}/namelist.input.template
 
 Run WRF
-=======
 
 With everything in place, you are now ready to run the Docker container that will perform the simulation.
 The downloaded script runs inside the container, prints lots of status information,
