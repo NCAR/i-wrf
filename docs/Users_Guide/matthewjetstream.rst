@@ -291,7 +291,10 @@ The downloaded script runs inside the container, prints lots of status informati
 and creates output files in the run folder you created.
 Execute this command to run the simulation in your shell::
 
-    docker run --shm-size 14G -it -v ${WORKING_DIR}:/home/wrfuser/terrestrial_data -v ${WRF_DIR}:/tmp/hurricane_matthew ${WRF_IMAGE} /tmp/hurricane_matthew/run.sh
+    docker run --shm-size 14G -it \
+      -v ${WORKING_DIR}:/home/wrfuser/terrestrial_data \
+      -v ${WRF_DIR}:/tmp/hurricane_matthew \
+      ${WRF_IMAGE} /tmp/hurricane_matthew/run.sh
 
 The command has numerous arguments and options, which do the following:
 
@@ -329,7 +332,12 @@ The analysis takes about five minutes to complete.
 We use command line options to tell the METplus container several things, including where the observed data is located,
 where the METplus configuration can be found, where the WRF output data is located, and where it should create its output files::
 
-    docker run --rm -it --volumes-from ${OBS_DATA_VOL} -v ${METPLUS_CONFIG_DIR}:/config -v ${WORKING_DIR}/wrf:/data/input/wrf -v ${METPLUS_DIR}:/data/output ${METPLUS_IMAGE} /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
+    docker run --rm -it \
+      --volumes-from ${OBS_DATA_VOL} \
+      -v ${METPLUS_CONFIG_DIR}:/config \
+      -v ${WORKING_DIR}/wrf:/data/input/wrf \
+      -v ${METPLUS_DIR}:/data/output ${METPLUS_IMAGE} \
+      /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
 
 As the analysis is performed, progress information is displayed.  It is not uncommon to see "WARNING" messages in this output,
 and you should only be alarmed if you see messages with the text "ERROR".
