@@ -25,7 +25,7 @@ but a cloud computing platform can provided the needed computational power.
 Jetstream2 is a national cyberinfrastructure resource that is easy to use
 and is available to researchers and educators.
 This exercise runs the I-WRF programs as Docker "containers",
-which simplifies the set-up work needed to run the simulation and analysis.
+which simplifies the set-up work needed to run the simulation and verification.
 
 It is recommended that you follow the instructions in each section in the order presented
 to avoid encountering issues during the process.
@@ -79,7 +79,7 @@ Create a Cloud Instance and Log In
 ==================================
 
 After you have logged in to Jetstream2 and added your allocation to your account,
-you are ready to create the cloud instance where you will run the simulation and analysis.
+you are ready to create the cloud instance where you will run the simulation and verification.
 If you are not familiar with the cloud computing terms "image" and "instance",
 it is recommended that you `read about them <https://cvw.cac.cornell.edu/jetstream/intro/imagesandinstances>`__
 before proceeding.
@@ -157,7 +157,7 @@ Install Software and Download Data
 ==================================
 
 With your instance created and running and you logged in to it through SSH,
-you can now install the necessary software and download the data to run the simulation and analysis.
+you can now install the necessary software and download the data to run the simulation and verification.
 You will only need to perform these steps once,
 as they essentially change the contents of the instance's disk
 and those changes will remain even after the instance is shelved and unshelved.
@@ -192,7 +192,7 @@ to redefine the variables before executing the commands that follow.
 Install Docker
 --------------
 
-As mentioned above, the WRF simulation and METplus analysis applications are provided as Docker images that will run as a
+As mentioned above, the WRF and METplus software are provided as Docker images that will run as a
 `"container" <https://docs.docker.com/guides/docker-concepts/the-basics/what-is-a-container/>`_
 on your cloud instance.
 To run a Docker container, you must first install the Docker Engine on your instance.
@@ -326,9 +326,9 @@ The output should look something like this::
 Run METplus
 ===========
 
-After the WRF simulation has finished, you can run the METplus analysis to compare the simulated results
+After the WRF simulation has finished, you can run the METplus verification to compare the simulated results
 to the actual weather observations during the hurricane.
-The analysis takes about five minutes to complete.
+The verification takes about five minutes to complete.
 We use command line options to tell the METplus container several things, including where the observed data is located,
 where the METplus configuration can be found, where the WRF output data is located, and where it should create its output files::
 
@@ -339,16 +339,16 @@ where the METplus configuration can be found, where the WRF output data is locat
       -v ${METPLUS_DIR}:/data/output ${METPLUS_IMAGE} \
       /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
 
-As the analysis is performed, progress information is displayed.  It is not uncommon to see "WARNING" messages in this output,
-and you should only be alarmed if you see messages with the text "ERROR".
-METplus first makes two passes over each of the 48 hourly observation time-slices,
-converting data files to a suitable format for the analysis.
-It then performs statistical analysis on the data from the earth's surface and from the "upper air".
+Progress information is displayed while the verification is performed.
+**WARNING** log messages are expected because observations files are not available for every valid time and METplus is
+configured to allow some missing inputs. An **ERROR** log message indicates that something went wrong.
+METplus first converts the observation data files to a format that the MET tools can read using the MADIS2NC wrapper.
+Point-Stat is run to generate statistics comparing METAR observations to surface-level model fields and
+RAOB observations to "upper air" fields.
 METplus will print its completion status when the processing finishes.
 
-The results of the METplus analysis are stored in the subfolders of ~/metplus.
-Most of these files are not human readable, but those in the point_stat subfolder
-contain tabular output that can be viewed in a text editor
-(the rows are very long, so you may want to turn word wrapping off for better viewing).
-In the near future, this exercise will be extended to include
-a friendlier way to view the results from the simulation and analysis.
+The results of the METplus verification can be found in ${WORKING_DIR}/metplus/point_stat.
+These files contain tabular output that can be viewed in a text editor. Turn off word wrapping for better viewing.
+Refer to the MET User's Guide for more information about the
+`Point-Stat output <https://met.readthedocs.io/en/latest/Users_Guide/point-stat.html#point-stat-output>`.
+In the near future, this exercise will be extended to include instructions to visualize the results.
