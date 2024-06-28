@@ -232,14 +232,14 @@ Once Docker is running, you must pull the correct versions of the WRF and METplu
     docker pull ${WRF_IMAGE}
     docker pull ${METPLUS_IMAGE}
 
-The METplus analysis will be comparing the results of the WRF simulation against
-the actual weather data that was recorded during Hurricane Matthew.
+METplus is run to perform verification of the results of the WRF simulation using
+observations gathered during Hurricane Matthew.
 We download that data by pulling a Docker volume that holds it,
 and then referencing that volume when we run the METplus Docker container.
 The commands to pull and create the volume are::
 
-    docker pull ncar/iwrf:data-matthew-input-obs.docker
-    docker create --name ${OBS_DATA_VOL} ncar/iwrf:data-matthew-input-obs.docker
+    docker pull ncar/iwrf:${OBS_DATA_VOL}.docker
+    docker create --name ${OBS_DATA_VOL} ncar/iwrf:${OBS_DATA_VOL}.docker
 
 Get the Geographic Data
 -----------------------
