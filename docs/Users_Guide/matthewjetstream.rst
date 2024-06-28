@@ -338,3 +338,10 @@ METPlus first makes two passes over each of the 48 hourly observation time-slice
 converting data files to a suitable format for the analysis.
 It then performs statistical analysis on the data from the earth's surface and from the "upper air".
 METPlus will print its completion status when the processing finishes.
+
+The results of the METPlus analysis are stored in the subfolders of ~/metplus.
+Most of these files are not human readable, but those in the point_stat subfolder
+contain tabular output that can be viewed in a text editor
+(the rows are very long, so you may want to turn word wrapping off for better viewing).
+In the near future, this exercise will be extended to include
+a friendlier way to view the results from the simulation and analysis.
