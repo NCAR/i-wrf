@@ -285,6 +285,7 @@ These commands perform the necessary operations::
     curl --location https://bit.ly/4eKpb47 > ${WRF_DIR}/namelist.input.template
 
 Run WRF
+=======
 
 With everything in place, you are now ready to run the Docker container that will perform the simulation.
 The downloaded script runs inside the container, prints lots of status information,
@@ -347,8 +348,8 @@ Point-Stat is run to generate statistics comparing METAR observations to surface
 RAOB observations to "upper air" fields.
 METplus will print its completion status when the processing finishes.
 
-The results of the METplus verification can be found in ${WORKING_DIR}/metplus/point_stat.
+The results of the METplus verification can be found in ``${WORKING_DIR}/metplus/point_stat``.
 These files contain tabular output that can be viewed in a text editor. Turn off word wrapping for better viewing.
 Refer to the MET User's Guide for more information about the
-`Point-Stat output <https://met.readthedocs.io/en/latest/Users_Guide/point-stat.html#point-stat-output>`.
+`Point-Stat output <https://met.readthedocs.io/en/latest/Users_Guide/point-stat.html#point-stat-output>`_.
 In the near future, this exercise will be extended to include instructions to visualize the results.
