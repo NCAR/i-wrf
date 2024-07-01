@@ -77,6 +77,8 @@ Repeat these efforts as necessary until it is started.
 User Workstation
 ^^^^^^^^^^^^^^^^
 
-To install `Docker <https://docs.docker.com/get-docker>`_ or
-`Apptainer <https://apptainer.org/docs/admin/main/installation.html>`_
-on a personal workstation, please refer to the tool's installation instructions.
+To install Docker or Apptainer on a personal workstation,
+please refer to the installation instructions for the tools.
+
+Docker: `Get Docker <https://docs.docker.com/get-docker>`_
+Apptainer: `Installing Apptainer <https://apptainer.org/docs/admin/main/installation.html>`_
