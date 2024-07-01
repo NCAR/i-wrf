@@ -8,21 +8,24 @@ Running I-WRF On Jetstream2 with Hurricane Matthew Data
 Overview
 ========
 
-The following instructions can be used to run
-the `I-WRF weather simulation program <https://i-wrf.org>`_
+The following instructions can be used to run elements of
+the `I-WRF weather simulation framework <https://i-wrf.org>`_
 from the `National Center for Atmospheric Research (NCAR) <https://ncar.ucar.edu/>`_
+and the `Cornell Center for Advanced Computing <https://cac.cornell.edu/>`_.
+The steps below run the `Weather Research & Forecasting (WRF) <https://www.mmm.ucar.edu/models/wrf>`_ model
+and the  `METplus <https://https://dtcenter.org/community-code/metplus>`_ verification framework
 with data from `Hurricane Matthew <https://en.wikipedia.org/wiki/Hurricane_Matthew>`_
 on the `Jetstream2 cloud computing platform <https://jetstream-cloud.org/>`_.
 This exercise provides an introduction to using cloud computing platforms,
-running computationally complex simulations and using containerized applications.
+running computationally complex simulations and analyses, and using containerized applications.
 
-Simulations like I-WRF often require greater computing resources
+Simulations like WRF often require greater computing resources
 than you may have on your personal computer,
 but a cloud computing platform can provided the needed computational power.
 Jetstream2 is a national cyberinfrastructure resource that is easy to use
 and is available to researchers and educators.
-This exercise runs the I-WRF program as a Docker "container",
-which simplifies the set-up work needed to run the simulation.
+This exercise runs the I-WRF programs as Docker "containers",
+which simplifies the set-up work needed to run the simulation and verification.
 
 It is recommended that you follow the instructions in each section in the order presented
 to avoid encountering issues during the process.
@@ -76,7 +79,7 @@ Create a Cloud Instance and Log In
 ==================================
 
 After you have logged in to Jetstream2 and added your allocation to your account,
-you are ready to create the cloud instance where you will run the I-WRF simulation.
+you are ready to create the cloud instance where you will run the simulation and verification.
 If you are not familiar with the cloud computing terms "image" and "instance",
 it is recommended that you `read about them <https://cvw.cac.cornell.edu/jetstream/intro/imagesandinstances>`__
 before proceeding.
@@ -123,10 +126,10 @@ In either case you will need to know the location and name of the private SSH ke
 the IP address of your instance (found in the Exosphere web dashboard)
 and the default username on your instance, which is "exouser".
 
-Once you are logged in to the web shell you can proceed to the
+Once you are logged in to the instance you can proceed to the
 "Install Software and Download Data" section below.
 You will know that your login has been successful when the prompt has the form ``exouser@instance-name:~$``,
-which indicates your username, the instance name, and your current working directory, followed by "$"
+which indicates your username, the instance name, and your current working directory, followed by "$".
 
 Managing a Jetstream2 Instance
 ------------------------------
@@ -153,31 +156,47 @@ so Shelving as soon as you are done becomes even more important!
 Install Software and Download Data
 ==================================
 
-With your instance created and running and you logged in to it through a Web Shell,
-you can now install the necessary software and download the data to run the simulation.
+With your instance created and running and you logged in to it through SSH,
+you can now install the necessary software and download the data to run the simulation and verification.
 You will only need to perform these steps once,
 as they essentially change the contents of the instance's disk
 and those changes will remain even after the instance is shelved and unshelved.
 
-The following sections instruct you to issue numerous Linux commands in your web shell.
+The following sections instruct you to issue numerous Linux commands in your shell.
 If you are not familiar with Linux, you may want to want to refer to
 `An Introduction to Linux <https://cvw.cac.cornell.edu/Linux>`_ when working through these steps.
 The commands in each section can be copied using the button in the upper right corner
-and then pasted into your web shell by right-clicking.
+and then pasted into your shell by right-clicking.
 
-If your web shell ever becomes unresponsive or disconnected from the instance,
+If your shell ever becomes unresponsive or disconnected from the instance,
 you can recover from that situation by rebooting the instance.
 In the Exosphere dashboard page for your instance, in the Actions menu, select "Reboot".
 The process takes several minutes, after which the instance status will return to "Ready".
 
-Install Docker and Get the I-WRF Image
---------------------------------------
+We will be using some environment variables throughout this exercise to
+make sure that we use the same resource names and file paths wherever they are used.
+Copy and paste the definitions below into your shell to define the variables before proceeding::
 
-As mentioned above, the I-WRF simulation application is provided as a Docker image that will run as a
+    WRF_IMAGE=ncar/iwrf:latest
+    METPLUS_IMAGE=dtcenter/metplus-dev:develop
+    WORKING_DIR=/home/exouser
+    WRF_DIR=${WORKING_DIR}/wrf/20161006_00
+    METPLUS_DIR=${WORKING_DIR}/metplus
+    WRF_CONFIG_DIR=${WORKING_DIR}/i-wrf/use_cases/Hurricane_Matthew/WRF
+    METPLUS_CONFIG_DIR=${WORKING_DIR}/i-wrf/use_cases/Hurricane_Matthew/METplus
+    OBS_DATA_VOL=data-matthew-input-obs
+
+Any time you open a new shell on your instance, you will need to perform this action
+to redefine the variables before executing the commands that follow.
+
+Install Docker
+--------------
+
+As mentioned above, the WRF and METplus software are provided as Docker images that will run as a
 `"container" <https://docs.docker.com/guides/docker-concepts/the-basics/what-is-a-container/>`_
 on your cloud instance.
 To run a Docker container, you must first install the Docker Engine on your instance.
-You can then "pull" (download) the I-WRF image that will be run as a container.
+You can then "pull" (download) the WRF and METplus images that will be run as containers.
 
 The `instructions for installing Docker Engine on Ubuntu <https://docs.docker.com/engine/install/ubuntu/>`_
 are very thorough and make a good reference, but we only need to perform a subset of those steps.
@@ -192,68 +211,105 @@ When the installation is complete, you can verify that the Docker command line t
 
     docker --version
 
-Next, you must start the Docker daemon, which runs in the background and processes commands::
-
-    sudo service docker start
-
-If that command appeared to succeed, you can confirm its status with this command::
+The Docker daemon should start automatically, but it sometimes runs into issues.
+First, check to see if the daemon started successfully::
 
     sudo systemctl --no-pager status docker
 
-Once all of that is in order, you must pull the latest version of the I-WRF image onto your instance::
+If you see a message saying the daemon failed to start because a "Start request repeated too quickly",
+wait a few minutes and issue this command to try again to start it::
 
-    docker pull ncar/iwrf
+    sudo systemctl start docker
+
+If the command seems to succeed, confirm that the daemon is running using the status command above.
+Repeat these efforts as necessary until it is started.
+
+Get the WRF and METplus Docker Images and the Observed Weather Data
+-------------------------------------------------------------------
+
+Once Docker is running, you must pull the correct versions of the WRF and METplus images onto your instance::
+
+    docker pull ${WRF_IMAGE}
+    docker pull ${METPLUS_IMAGE}
+
+METplus is run to perform verification of the results of the WRF simulation using
+observations gathered during Hurricane Matthew.
+We download that data by pulling a Docker volume that holds it,
+and then referencing that volume when we run the METplus Docker container.
+The commands to pull and create the volume are::
+
+    docker pull ncar/iwrf:${OBS_DATA_VOL}.docker
+    docker create --name ${OBS_DATA_VOL} ncar/iwrf:${OBS_DATA_VOL}.docker
 
 Get the Geographic Data
 -----------------------
 
-To run I-WRF on the Hurricane Matthew data set, you need a copy of the
+To run WRF on the Hurricane Matthew data set, you need a copy of the
 geographic data representing the terrain in the area of the simulation.
 These commands download an archive file containing that data,
-uncompress the archive into a folder named "WPS_GEOG", and delete the archive file.
+uncompress the archive into a folder named "WPS_GEOG" in your home directory, and delete the archive file.
 They take several minutes to complete::
 
     wget https://www2.mmm.ucar.edu/wrf/src/wps_files/geog_high_res_mandatory.tar.gz
     tar -xzf geog_high_res_mandatory.tar.gz
     rm geog_high_res_mandatory.tar.gz
 
-Create the Run Folder
----------------------
+Create the WRF and METplus Run Folders
+--------------------------------------
 
 The simulation is performed using a script that must first be downloaded.
 The script expects to run in a folder where it can download data files and create result files.
-The instructions in this exercise create that folder in the user's home directory and name it "matthew".
+The instructions in this exercise create a folder (named "wrf") under the user's home directory,
+and a sub-folder within "wrf" to hold the output of this simulation.
+The subfolder is named "20161006_00", which is the beginning date and time of the simulatition.
 The simulation script is called "run.sh".
-The following commands create the empty folder and download the script into it,
-then change its permissions so it can be run::
+Similarly, a run folder named "metplus" must be created for the METplus process to use.
+The following commands create the empty folders and download the script 
+and change its permissions so it can be run::
 
-    mkdir matthew
-    curl --location https://bit.ly/3KoBtRK > matthew/run.sh
-    chmod 775 matthew/run.sh
+    mkdir -p ${WRF_DIR}
+    curl --location https://bit.ly/3xzm9z6 > ${WRF_DIR}/run.sh
+    chmod 775 ${WRF_DIR}/run.sh
+    mkdir -p ${METPLUS_DIR}
 
-Run I-WRF
-=========
+Download Configuration Files
+----------------------------
+
+Both WRF and METplus require some configuration files to direct their behavior,
+and those are downloaded from the I-WRF GitHub repository.
+Some of those configuration files must also be copied into run folders.
+These commands perform the necessary operations::
+
+    git clone https://github.com/NCAR/i-wrf ${WORKING_DIR}/i-wrf
+    cp ${WRF_CONFIG_DIR}/vars_io.txt ${WRF_DIR}
+    curl --location https://bit.ly/4eKpb47 > ${WRF_DIR}/namelist.input.template
+
+Run WRF
+=======
 
 With everything in place, you are now ready to run the Docker container that will perform the simulation.
 The downloaded script runs inside the container, prints lots of status information,
 and creates output files in the run folder you created.
-Execute this command to run the simulation in your web shell::
+Execute this command to run the simulation in your shell::
 
-    time docker run --shm-size 14G -it -v ~/:/home/wrfuser/terrestrial_data -v ~/matthew:/tmp/hurricane_matthew ncar/iwrf:latest /tmp/hurricane_matthew/run.sh
+    docker run --shm-size 14G -it \
+      -v ${WORKING_DIR}:/home/wrfuser/terrestrial_data \
+      -v ${WRF_DIR}:/tmp/hurricane_matthew \
+      ${WRF_IMAGE} /tmp/hurricane_matthew/run.sh
 
 The command has numerous arguments and options, which do the following:
 
-* ``time docker run`` prints the runtime of the "docker run" command.
+* ``docker run`` creates the container if needed and then runs it.
 * ``--shm-size 14G -it`` tells the command how much shared memory to use, and to run interactively in the shell.
 * The ``-v`` options map folders in your cloud instance to paths within the container.
 * ``ncar/iwrf:latest`` is the Docker image to use when creating the container.
 * ``/tmp/hurricane_matthew/run.sh`` is the location within the container of the script that it runs.
 
 The simulation initially prints lots of information while initializing things, then settles in to the computation.
-The provided configuration simulates 12 hours of weather and takes under three minutes to finish on an m3.quad Jetstream2 instance.
+The provided configuration simulates 48 hours of weather and takes about 12 minutes to finish on an m3.quad Jetstream2 instance.
 Once completed, you can view the end of any of the output files to confirm that it succeeded::
 
-    tail matthew/rsl.out.0000
+    tail ${WRF_DIR}/rsl.out.0000
 
 The output should look something like this::
 
@@ -268,3 +324,32 @@ The output should look something like this::
     Timing for Writing wrfout_d01_2016-10-06_12:00:00 for domain        1:    0.32534 elapsed seconds
     d01 2016-10-06_12:00:00 wrf: SUCCESS COMPLETE WRF
 
+Run METplus
+===========
+
+After the WRF simulation has finished, you can run the METplus verification to compare the simulated results
+to the actual weather observations during the hurricane.
+The verification takes about five minutes to complete.
+We use command line options to tell the METplus container several things, including where the observed data is located,
+where the METplus configuration can be found, where the WRF output data is located, and where it should create its output files::
+
+    docker run --rm -it \
+      --volumes-from ${OBS_DATA_VOL} \
+      -v ${METPLUS_CONFIG_DIR}:/config \
+      -v ${WORKING_DIR}/wrf:/data/input/wrf \
+      -v ${METPLUS_DIR}:/data/output ${METPLUS_IMAGE} \
+      /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
+
+Progress information is displayed while the verification is performed.
+**WARNING** log messages are expected because observations files are not available for every valid time and METplus is
+configured to allow some missing inputs. An **ERROR** log message indicates that something went wrong.
+METplus first converts the observation data files to a format that the MET tools can read using the MADIS2NC wrapper.
+Point-Stat is run to generate statistics comparing METAR observations to surface-level model fields and
+RAOB observations to "upper air" fields.
+METplus will print its completion status when the processing finishes.
+
+The results of the METplus verification can be found in ``${WORKING_DIR}/metplus/point_stat``.
+These files contain tabular output that can be viewed in a text editor. Turn off word wrapping for better viewing.
+Refer to the MET User's Guide for more information about the
+`Point-Stat output <https://met.readthedocs.io/en/latest/Users_Guide/point-stat.html#point-stat-output>`_.
+In the near future, this exercise will be extended to include instructions to visualize the results.
