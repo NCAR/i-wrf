@@ -153,11 +153,11 @@ Increasing the number of CPUs (say, to flavor "m3.8") can make your computations
 But of course, doubling the number of CPUs doubles the cost per hour to run the instance,
 so Shelving as soon as you are done becomes even more important!
 
-Install Software and Download Data
-==================================
+Preparing the Environment
+=========================
 
 With your instance created and running and you logged in to it through SSH,
-you can now install the necessary software and download the data to run the simulation and verification.
+you can now create the run folders, install Docker software and download the data to run the simulation and verification.
 You will only need to perform these steps once,
 as they essentially change the contents of the instance's disk
 and those changes will remain even after the instance is shelved and unshelved.
@@ -172,6 +172,9 @@ If your shell ever becomes unresponsive or disconnected from the instance,
 you can recover from that situation by rebooting the instance.
 In the Exosphere dashboard page for your instance, in the Actions menu, select "Reboot".
 The process takes several minutes, after which the instance status will return to "Ready".
+
+Define Environment Variables
+----------------------------
 
 We will be using some environment variables throughout this exercise to
 make sure that we use the same resource names and file paths wherever they are used.
@@ -188,6 +191,34 @@ Copy and paste the definitions below into your shell to define the variables bef
 
 Any time you open a new shell on your instance, you will need to perform this action
 to redefine the variables before executing the commands that follow.
+
+Create the WRF and METplus Run Folders
+--------------------------------------
+
+The simulation is performed using a script that expects to run in a folder where it can create result files.
+The first command below creates a folder (named "wrf") under the user's home directory,
+and a sub-folder within "wrf" to hold the output of this simulation.
+The subfolder is named "20161006_00", which is the beginning date and time of the simulatition.
+Similarly, a run folder named "metplus" must be created for the METplus process to use::
+
+    mkdir -p ${WRF_DIR}
+    mkdir -p ${METPLUS_DIR}
+
+Download Configuration Files
+----------------------------
+
+Both WRF and METplus require some configuration files to direct their behavior,
+and those are downloaded from the I-WRF GitHub repository.
+Some of those configuration files must then be copied into run folders.
+These commands perform the necessary operations::
+
+    git clone https://github.com/NCAR/i-wrf ${WORKING_DIR}/i-wrf
+    cp ${WRF_CONFIG_DIR}/namelist.* ${WRF_DIR}
+    cp ${WRF_CONFIG_DIR}/vars_io.txt ${WRF_DIR}
+    cp ${WRF_CONFIG_DIR}/run.sh ${WRF_DIR}
+
+Install Docker and Pull Docker Objects
+======================================
 
 Install Docker
 --------------
@@ -241,8 +272,13 @@ The commands to pull and create the volume are::
     docker pull ncar/iwrf:${OBS_DATA_VOL}.docker
     docker create --name ${OBS_DATA_VOL} ncar/iwrf:${OBS_DATA_VOL}.docker
 
-Get the Geographic Data
------------------------
+Download Data
+=============
+
+Text here
+
+Get the Data Needed by WRF
+--------------------------
 
 To run WRF on the Hurricane Matthew data set, you need a copy of the
 geographic data representing the terrain in the area of the simulation.
@@ -254,35 +290,17 @@ They take several minutes to complete::
     tar -xzf geog_high_res_mandatory.tar.gz
     rm geog_high_res_mandatory.tar.gz
 
-Create the WRF and METplus Run Folders
---------------------------------------
+Get case study data::
 
-The simulation is performed using a script that must first be downloaded.
-The script expects to run in a folder where it can download data files and create result files.
-The instructions in this exercise create a folder (named "wrf") under the user's home directory,
-and a sub-folder within "wrf" to hold the output of this simulation.
-The subfolder is named "20161006_00", which is the beginning date and time of the simulatition.
-The simulation script is called "run.sh".
-Similarly, a run folder named "metplus" must be created for the METplus process to use.
-The following commands create the empty folders and download the script 
-and change its permissions so it can be run::
+      wget https://www2.mmm.ucar.edu/wrf/TUTORIAL_DATA/matthew_1deg.tar.gz
+      tar -xvzf matthew_1deg.tar.gz
+      rm -f matthew_1deg.tar.gz
 
-    mkdir -p ${WRF_DIR}
-    curl --location https://bit.ly/3xzm9z6 > ${WRF_DIR}/run.sh
-    chmod 775 ${WRF_DIR}/run.sh
-    mkdir -p ${METPLUS_DIR}
+Get SST data::
 
-Download Configuration Files
-----------------------------
-
-Both WRF and METplus require some configuration files to direct their behavior,
-and those are downloaded from the I-WRF GitHub repository.
-Some of those configuration files must also be copied into run folders.
-These commands perform the necessary operations::
-
-    git clone https://github.com/NCAR/i-wrf ${WORKING_DIR}/i-wrf
-    cp ${WRF_CONFIG_DIR}/vars_io.txt ${WRF_DIR}
-    curl --location https://bit.ly/4eKpb47 > ${WRF_DIR}/namelist.input.template
+      wget https://www2.mmm.ucar.edu/wrf/TUTORIAL_DATA/matthew_sst.tar.gz
+      tar -xzvf matthew_sst.tar.gz
+      rm -f matthew_sst.tar.gz
 
 Run WRF
 =======
