@@ -177,7 +177,7 @@ Define Environment Variables
 ----------------------------
 
 We will be using some environment variables throughout this exercise to
-make sure that we use the same resource names and file paths wherever they are used.
+make sure that we refer to the same resource names and file paths wherever they are used.
 Copy and paste the definitions below into your shell to define the variables before proceeding::
 
     WRF_IMAGE=ncar/iwrf:latest
@@ -198,7 +198,7 @@ Create the WRF and METplus Run Folders
 The simulation is performed using a script that expects to run in a folder where it can create result files.
 The first command below creates a folder (named "wrf") under the user's home directory,
 and a sub-folder within "wrf" to hold the output of this simulation.
-The subfolder is named "20161006_00", which is the beginning date and time of the simulatition.
+The subfolder is named "20161006_00", which is the beginning date and time of the simulation.
 Similarly, a run folder named "metplus" must be created for the METplus process to use::
 
     mkdir -p ${WRF_DIR}
@@ -209,7 +209,7 @@ Download Configuration Files
 
 Both WRF and METplus require some configuration files to direct their behavior,
 and those are downloaded from the I-WRF GitHub repository.
-Some of those configuration files must then be copied into run folders.
+Some of those configuration files are then copied into the run folders.
 These commands perform the necessary operations::
 
     git clone https://github.com/NCAR/i-wrf ${WORKING_DIR}/i-wrf
@@ -236,6 +236,7 @@ then installs Docker::
 
     curl --location https://bit.ly/3R3lqMU > install-docker.sh
     source install-docker.sh
+    rm install-docker.sh
 
 If a text dialog is displayed asking which services should be restarted, type ``Enter``.
 When the installation is complete, you can verify that the Docker command line tool works by asking for its version::
@@ -272,35 +273,37 @@ The commands to pull and create the volume are::
     docker pull ncar/iwrf:${OBS_DATA_VOL}.docker
     docker create --name ${OBS_DATA_VOL} ncar/iwrf:${OBS_DATA_VOL}.docker
 
-Download Data
-=============
+Download Data for WRF
+=====================
 
-Text here
+To run WRF on the Hurricane Matthew data set, you need to have
+several data sets to support the computation.
+The commands in these sections download archive files containing that data,
+then uncompress the archives into folders.
+The geographic data is large and takes several minutes to acquire,
+while the other two data sets are smaller and are downloaded directly into the WRF run folder,
+rather than the user's home directory.
 
-Get the Data Needed by WRF
---------------------------
+Get the geographic data representing the terrain in the area of the simulation::
 
-To run WRF on the Hurricane Matthew data set, you need a copy of the
-geographic data representing the terrain in the area of the simulation.
-These commands download an archive file containing that data,
-uncompress the archive into a folder named "WPS_GEOG" in your home directory, and delete the archive file.
-They take several minutes to complete::
-
+    cd ${WORKING_DIR}
     wget https://www2.mmm.ucar.edu/wrf/src/wps_files/geog_high_res_mandatory.tar.gz
     tar -xzf geog_high_res_mandatory.tar.gz
     rm geog_high_res_mandatory.tar.gz
 
-Get case study data::
+Get the case study data (GRIB2 files)::
 
-      wget https://www2.mmm.ucar.edu/wrf/TUTORIAL_DATA/matthew_1deg.tar.gz
-      tar -xvzf matthew_1deg.tar.gz
-      rm -f matthew_1deg.tar.gz
+    cd ${WRF_DIR}
+    wget https://www2.mmm.ucar.edu/wrf/TUTORIAL_DATA/matthew_1deg.tar.gz
+    tar -xvzf matthew_1deg.tar.gz
+    rm -f matthew_1deg.tar.gz
 
-Get SST data::
+Get the SST (Sea Surface Temperature) data::
 
-      wget https://www2.mmm.ucar.edu/wrf/TUTORIAL_DATA/matthew_sst.tar.gz
-      tar -xzvf matthew_sst.tar.gz
-      rm -f matthew_sst.tar.gz
+    cd ${WRF_DIR}
+    wget https://www2.mmm.ucar.edu/wrf/TUTORIAL_DATA/matthew_sst.tar.gz
+    tar -xzvf matthew_sst.tar.gz
+    rm -f matthew_sst.tar.gz
 
 Run WRF
 =======
@@ -325,7 +328,7 @@ The command has numerous arguments and options, which do the following:
 
 The simulation initially prints lots of information while initializing things, then settles in to the computation.
 The provided configuration simulates 48 hours of weather and takes about 12 minutes to finish on an m3.quad Jetstream2 instance.
-Once completed, you can view the end of any of the output files to confirm that it succeeded::
+Once completed, you can view the end of an output file to confirm that it succeeded::
 
     tail ${WRF_DIR}/rsl.out.0000
 
