@@ -1,0 +1,376 @@
+:orphan:
+
+.. _matthewjetstream:
+
+Running I-WRF On Jetstream2 with Hurricane Matthew Data
+*******************************************************
+
+Overview
+========
+
+The following instructions can be used to run elements of
+the `I-WRF weather simulation framework <https://i-wrf.org>`_
+from the `National Center for Atmospheric Research (NCAR) <https://ncar.ucar.edu/>`_
+and the `Cornell Center for Advanced Computing <https://cac.cornell.edu/>`_.
+The steps below run the `Weather Research & Forecasting (WRF) <https://www.mmm.ucar.edu/models/wrf>`_ model
+and the  `METplus <https://https://dtcenter.org/community-code/metplus>`_ verification framework
+with data from `Hurricane Matthew <https://en.wikipedia.org/wiki/Hurricane_Matthew>`_
+on the `Jetstream2 cloud computing platform <https://jetstream-cloud.org/>`_.
+This exercise provides an introduction to using cloud computing platforms,
+running computationally complex simulations and analyses, and using containerized applications.
+
+Simulations like WRF often require greater computing resources
+than you may have on your personal computer,
+but a cloud computing platform can provided the needed computational power.
+Jetstream2 is a national cyberinfrastructure resource that is easy to use
+and is available to researchers and educators.
+This exercise runs the I-WRF programs as Docker "containers",
+which simplifies the set-up work needed to run the simulation and verification.
+
+It is recommended that you follow the instructions in each section in the order presented
+to avoid encountering issues during the process.
+Most sections refer to external documentation to provide details about the necessary steps
+and to offer additional background information.
+
+Prepare to Use Jetstream2
+=========================
+
+To `get started with Jetstream2 <https://jetstream-cloud.org/get-started>`_,
+you will need to:
+
+* Create an account with the `National Science Foundation (NSF) <https://www.nsf.gov/>`_'s `ACCESS program <https://access-ci.org/>`_.
+* Request a computational "allocation" from ACCESS.
+* Log in to Jetstream2's web portal.
+
+The sections below will guide you through this process.
+
+Create an ACCESS Account
+------------------------
+
+If you do not already have one, `register for an ACCESS account <https://operations.access-ci.org/identity/new-user>`_.
+Note that you can either choose to associate your existing University/Organizational account or
+create an entirely new ACCESS account when registering. 
+
+Get an Allocation
+-----------------
+
+With your ACCESS account set up, you may `request an allocation <https://allocations.access-ci.org/get-your-first-project>`_
+that will allow you to use an ACCESS-affiliated cyberinfrastructure resource.
+Be sure to read all of the information on that page so that you make a suitable request.
+An "Explore" project will be sufficient to work with this exercise,
+and you will want to work with the resource "Indiana Jetstream2 CPU" (*not* GPU).
+The typical turnaround time for allocation requests is one business day.
+
+Log in to the Exosphere Web Site
+--------------------------------
+
+Once you have an ACCESS account and allocation,
+you can log in to their `Exosphere web dashboard <https://jetstream2.exosphere.app>`_.
+The process of identifying your allocation and ACCESS ID to use Jetstream2
+is described on `this page <https://cvw.cac.cornell.edu/jetstream/intro/jetstream-login>`__ of the
+`Introduction to Jetstream2 <https://cvw.cac.cornell.edu/jetstream>`_ Cornell Virtual Workshop,
+and on `this page <https://docs.jetstream-cloud.org/ui/exo/login>`__
+of the `Jetstream2 documentation <https://docs.jetstream-cloud.org>`_.
+
+While adding an allocation to your account, it is recommended that you choose
+the "Indiana University" region of Jetstream2 for completing this exercise.
+
+Create a Cloud Instance and Log In
+==================================
+
+After you have logged in to Jetstream2 and added your allocation to your account,
+you are ready to create the cloud instance where you will run the simulation and verification.
+If you are not familiar with the cloud computing terms "image" and "instance",
+it is recommended that you `read about them <https://cvw.cac.cornell.edu/jetstream/intro/imagesandinstances>`__
+before proceeding.
+
+Create an SSH Key
+-----------------
+
+You must upload a public SSH key to Jetstream2 before creating your instance.
+Jetstream2 injects that public key into the instance's default user account,
+and you will need to provide the matching private SSH key to log in to the instance.
+If you are not familiar with "SSH key pairs", you should
+`read about them <https://cvw.cac.cornell.edu/jetstream/keys/about-keys>`__ before continuing.
+
+* First, `create an SSH Key on your computer <https://cvw.cac.cornell.edu/jetstream/keys/ssh-create>`_ using the "ssh-keygen" command.  That command allows you to specify the name and location of the private key file it creates, with the default being "id_rsa".  The matching public key file is saved to the same location and name with ".pub" appended to the filename.  Later instructions will assume that your private key file is named "id_rsa", but you may choose a different name now and use that name in those later instructions.
+* Then, `upload the public key to Jetstream2 <https://cvw.cac.cornell.edu/jetstream/keys/ssh-upload>`_ through the Exosphere web interface.
+
+Create an Instance
+------------------
+
+The Cornell Virtual Workshop topic `Creating an Instance <https://cvw.cac.cornell.edu/jetstream/create-instance>`_
+provides detailed information about creating a Jetstream2 instance.
+While following those steps, be sure to make the following choices for this instance:
+
+* When choosing an image as the instance source, if viewing "By Type", select the "Ubuntu 22.04 (latest)" image.  If viewing "By Image", choose the "Featured-Ubuntu22" image.
+* Choose the "Flavor" m3.quad (4 CPUs) to provide a faster simulation run-time.
+* Select a custom disk size of 100 GB - large enough to hold this exercise's data and results.
+* Select the SSH public key that you uploaded previously.
+* You do not need to set any of the Advanced Options.
+
+After clicking the "Create" button, wait for the instance to enter the "Ready" state (it takes several minutes).
+Note that the instance will not only be created, but will be running so that you can log in right away.
+
+Log in to the Instance
+----------------------
+
+The Exosphere web dashboard provides the easy-to-use Web Shell for accessing your Jetstream2 instances,
+but after encountering some issues with this exercise when using Web Shell,
+we are recommending that you use the SSH command to access your instance from a shell on your computer.
+The instructions for `connecting to Jetstream2 using SSH <https://cvw.cac.cornell.edu/jetstream/instance-login/sshshell>`_
+can executed in the Command Prompt on Windows (from the Start menu, type "cmd" and select Command Prompt)
+or from the Terminal application on a Mac.
+
+In either case you will need to know the location and name of the private SSH key created on your computer (see above),
+the IP address of your instance (found in the Exosphere web dashboard)
+and the default username on your instance, which is "exouser".
+
+Once you are logged in to the instance you can proceed to the
+"Install Software and Download Data" section below.
+You will know that your login has been successful when the prompt has the form ``exouser@instance-name:~$``,
+which indicates your username, the instance name, and your current working directory, followed by "$".
+
+Managing a Jetstream2 Instance
+------------------------------
+
+In order to use cloud computing resources efficiently, you must know how to
+`manage your instances <https://cvw.cac.cornell.edu/jetstream/manage-instance/states-actions>`_.
+Instances incur costs whenever they are running (on Jetstream2, this is when they are "Ready").
+"Shelving" an instance stops it from using the cloud's CPUs and memory,
+and therefore stops it from incurring any charges against your allocation.
+
+When you are through working on this exercise,
+be sure to use the instance's "Actions" menu in the web dashboard to
+"Shelve" the instance so that it is no longer spending your credits.
+If you later return to the dashboard and want to use the instance again,
+Use the Action menu's "Unshelve" option to start the instance up again.
+Note that any programs that were running when you shelve the instance will be lost,
+but the contents of the disk are preserved when shelving.
+
+You may also want to try the "Resize" action to change the number of CPUs of the instance.
+Increasing the number of CPUs (say, to flavor "m3.8") can make your computations finish more quickly.
+But of course, doubling the number of CPUs doubles the cost per hour to run the instance,
+so Shelving as soon as you are done becomes even more important!
+
+Preparing the Environment
+=========================
+
+With your instance created and running and you logged in to it through SSH,
+you can now create the run folders, install Docker software and download the data to run the simulation and verification.
+You will only need to perform these steps once,
+as they essentially change the contents of the instance's disk
+and those changes will remain even after the instance is shelved and unshelved.
+
+The following sections instruct you to issue numerous Linux commands in your shell.
+If you are not familiar with Linux, you may want to want to refer to
+`An Introduction to Linux <https://cvw.cac.cornell.edu/Linux>`_ when working through these steps.
+The commands in each section can be copied using the button in the upper right corner
+and then pasted into your shell by right-clicking.
+
+If your shell ever becomes unresponsive or disconnected from the instance,
+you can recover from that situation by rebooting the instance.
+In the Exosphere dashboard page for your instance, in the Actions menu, select "Reboot".
+The process takes several minutes, after which the instance status will return to "Ready".
+
+Define Environment Variables
+----------------------------
+
+We will be using some environment variables throughout this exercise to
+make sure that we refer to the same resource names and file paths wherever they are used.
+Copy and paste the definitions below into your shell to define the variables before proceeding::
+
+    WRF_IMAGE=ncar/iwrf:latest
+    METPLUS_IMAGE=dtcenter/metplus-dev:develop
+    WORKING_DIR=/home/exouser
+    WRF_DIR=${WORKING_DIR}/wrf/20161006_00
+    METPLUS_DIR=${WORKING_DIR}/metplus
+    WRF_CONFIG_DIR=${WORKING_DIR}/i-wrf/use_cases/Hurricane_Matthew/WRF
+    METPLUS_CONFIG_DIR=${WORKING_DIR}/i-wrf/use_cases/Hurricane_Matthew/METplus
+    OBS_DATA_VOL=data-matthew-input-obs
+
+Any time you open a new shell on your instance, you will need to perform this action
+to redefine the variables before executing the commands that follow.
+
+Create the WRF and METplus Run Folders
+--------------------------------------
+
+The simulation is performed using a script that expects to run in a folder where it can create result files.
+The first command below creates a folder (named "wrf") under the user's home directory,
+and a sub-folder within "wrf" to hold the output of this simulation.
+The subfolder is named "20161006_00", which is the beginning date and time of the simulation.
+Similarly, a run folder named "metplus" must be created for the METplus process to use::
+
+    mkdir -p ${WRF_DIR}
+    mkdir -p ${METPLUS_DIR}
+
+Download Configuration Files
+----------------------------
+
+Both WRF and METplus require some configuration files to direct their behavior,
+and those are downloaded from the I-WRF GitHub repository.
+Some of those configuration files are then copied into the run folders.
+These commands perform the necessary operations::
+
+    git clone https://github.com/NCAR/i-wrf ${WORKING_DIR}/i-wrf
+    cp ${WRF_CONFIG_DIR}/namelist.* ${WRF_DIR}
+    cp ${WRF_CONFIG_DIR}/vars_io.txt ${WRF_DIR}
+    cp ${WRF_CONFIG_DIR}/run.sh ${WRF_DIR}
+
+Install Docker and Pull Docker Objects
+======================================
+
+Install Docker
+--------------
+
+As mentioned above, the WRF and METplus software are provided as Docker images that will run as a
+`"container" <https://docs.docker.com/guides/docker-concepts/the-basics/what-is-a-container/>`_
+on your cloud instance.
+To run a Docker container, you must first install the Docker Engine on your instance.
+You can then "pull" (download) the WRF and METplus images that will be run as containers.
+
+The `instructions for installing Docker Engine on Ubuntu <https://docs.docker.com/engine/install/ubuntu/>`_
+are very thorough and make a good reference, but we only need to perform a subset of those steps.
+These commands run a script that sets up the Docker software repository on your instance,
+then installs Docker::
+
+    curl --location https://bit.ly/3R3lqMU > install-docker.sh
+    source install-docker.sh
+    rm install-docker.sh
+
+If a text dialog is displayed asking which services should be restarted, type ``Enter``.
+When the installation is complete, you can verify that the Docker command line tool works by asking for its version::
+
+    docker --version
+
+The Docker daemon should start automatically, but it sometimes runs into issues.
+First, check to see if the daemon started successfully::
+
+    sudo systemctl --no-pager status docker
+
+If you see a message saying the daemon failed to start because a "Start request repeated too quickly",
+wait a few minutes and issue this command to try again to start it::
+
+    sudo systemctl start docker
+
+If the command seems to succeed, confirm that the daemon is running using the status command above.
+Repeat these efforts as necessary until it is started.
+
+Get the WRF and METplus Docker Images and the Observed Weather Data
+-------------------------------------------------------------------
+
+Once Docker is running, you must pull the correct versions of the WRF and METplus images onto your instance::
+
+    docker pull ${WRF_IMAGE}
+    docker pull ${METPLUS_IMAGE}
+
+METplus is run to perform verification of the results of the WRF simulation using
+observations gathered during Hurricane Matthew.
+We download that data by pulling a Docker volume that holds it,
+and then referencing that volume when we run the METplus Docker container.
+The commands to pull and create the volume are::
+
+    docker pull ncar/iwrf:${OBS_DATA_VOL}.docker
+    docker create --name ${OBS_DATA_VOL} ncar/iwrf:${OBS_DATA_VOL}.docker
+
+Download Data for WRF
+=====================
+
+To run WRF on the Hurricane Matthew data set, you need to have
+several data sets to support the computation.
+The commands in these sections download archive files containing that data,
+then uncompress the archives into folders.
+The geographic data is large and takes several minutes to acquire,
+while the other two data sets are smaller and are downloaded directly into the WRF run folder,
+rather than the user's home directory.
+
+Get the geographic data representing the terrain in the area of the simulation::
+
+    cd ${WORKING_DIR}
+    wget https://www2.mmm.ucar.edu/wrf/src/wps_files/geog_high_res_mandatory.tar.gz
+    tar -xzf geog_high_res_mandatory.tar.gz
+    rm geog_high_res_mandatory.tar.gz
+
+Get the case study data (GRIB2 files)::
+
+    cd ${WRF_DIR}
+    wget https://www2.mmm.ucar.edu/wrf/TUTORIAL_DATA/matthew_1deg.tar.gz
+    tar -xvzf matthew_1deg.tar.gz
+    rm -f matthew_1deg.tar.gz
+
+Get the SST (Sea Surface Temperature) data::
+
+    cd ${WRF_DIR}
+    wget https://www2.mmm.ucar.edu/wrf/TUTORIAL_DATA/matthew_sst.tar.gz
+    tar -xzvf matthew_sst.tar.gz
+    rm -f matthew_sst.tar.gz
+
+Run WRF
+=======
+
+With everything in place, you are now ready to run the Docker container that will perform the simulation.
+The downloaded script runs inside the container, prints lots of status information,
+and creates output files in the run folder you created.
+Execute this command to run the simulation in your shell::
+
+    docker run --shm-size 14G -it \
+      -v ${WORKING_DIR}:/home/wrfuser/terrestrial_data \
+      -v ${WRF_DIR}:/tmp/hurricane_matthew \
+      ${WRF_IMAGE} /tmp/hurricane_matthew/run.sh
+
+The command has numerous arguments and options, which do the following:
+
+* ``docker run`` creates the container if needed and then runs it.
+* ``--shm-size 14G -it`` tells the command how much shared memory to use, and to run interactively in the shell.
+* The ``-v`` options map folders in your cloud instance to paths within the container.
+* ``ncar/iwrf:latest`` is the Docker image to use when creating the container.
+* ``/tmp/hurricane_matthew/run.sh`` is the location within the container of the script that it runs.
+
+The simulation initially prints lots of information while initializing things, then settles in to the computation.
+The provided configuration simulates 48 hours of weather and takes about 12 minutes to finish on an m3.quad Jetstream2 instance.
+Once completed, you can view the end of an output file to confirm that it succeeded::
+
+    tail ${WRF_DIR}/rsl.out.0000
+
+The output should look something like this::
+
+    Timing for main: time 2016-10-06_11:42:30 on domain   1:    0.23300 elapsed seconds
+    Timing for main: time 2016-10-06_11:45:00 on domain   1:    0.23366 elapsed seconds
+    Timing for main: time 2016-10-06_11:47:30 on domain   1:    2.77688 elapsed seconds
+    Timing for main: time 2016-10-06_11:50:00 on domain   1:    0.23415 elapsed seconds
+    Timing for main: time 2016-10-06_11:52:30 on domain   1:    0.23260 elapsed seconds
+    Timing for main: time 2016-10-06_11:55:00 on domain   1:    0.23354 elapsed seconds
+    Timing for main: time 2016-10-06_11:57:30 on domain   1:    0.23345 elapsed seconds
+    Timing for main: time 2016-10-06_12:00:00 on domain   1:    0.23407 elapsed seconds
+    Timing for Writing wrfout_d01_2016-10-06_12:00:00 for domain        1:    0.32534 elapsed seconds
+    d01 2016-10-06_12:00:00 wrf: SUCCESS COMPLETE WRF
+
+Run METplus
+===========
+
+After the WRF simulation has finished, you can run the METplus verification to compare the simulated results
+to the actual weather observations during the hurricane.
+The verification takes about five minutes to complete.
+We use command line options to tell the METplus container several things, including where the observed data is located,
+where the METplus configuration can be found, where the WRF output data is located, and where it should create its output files::
+
+    docker run --rm -it \
+      --volumes-from ${OBS_DATA_VOL} \
+      -v ${METPLUS_CONFIG_DIR}:/config \
+      -v ${WORKING_DIR}/wrf:/data/input/wrf \
+      -v ${METPLUS_DIR}:/data/output ${METPLUS_IMAGE} \
+      /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
+
+Progress information is displayed while the verification is performed.
+**WARNING** log messages are expected because observations files are not available for every valid time and METplus is
+configured to allow some missing inputs. An **ERROR** log message indicates that something went wrong.
+METplus first converts the observation data files to a format that the MET tools can read using the MADIS2NC wrapper.
+Point-Stat is run to generate statistics comparing METAR observations to surface-level model fields and
+RAOB observations to "upper air" fields.
+METplus will print its completion status when the processing finishes.
+
+The results of the METplus verification can be found in ``${WORKING_DIR}/metplus/point_stat``.
+These files contain tabular output that can be viewed in a text editor. Turn off word wrapping for better viewing.
+Refer to the MET User's Guide for more information about the
+`Point-Stat output <https://met.readthedocs.io/en/latest/Users_Guide/point-stat.html#point-stat-output>`_.
+In the near future, this exercise will be extended to include instructions to visualize the results.
