@@ -2,8 +2,8 @@
 
 .. _matthewjetstream:
 
-Running I-WRF On Jetstream2 with Hurricane Matthew Data
-*******************************************************
+Running I-WRF On Windows (Intel CPU) with Hurricane Matthew Data
+**********************************************************************
 
 Overview
 ========
@@ -15,179 +15,56 @@ and the `Cornell Center for Advanced Computing <https://cac.cornell.edu/>`_.
 The steps below run the `Weather Research & Forecasting (WRF) <https://www.mmm.ucar.edu/models/wrf>`_ model
 and the  `METplus <https://https://dtcenter.org/community-code/metplus>`_ verification framework
 with data from `Hurricane Matthew <https://en.wikipedia.org/wiki/Hurricane_Matthew>`_
-on the `Jetstream2 cloud computing platform <https://jetstream-cloud.org/>`_.
+on a Windows computer with an Intel CPU.
 This exercise provides an introduction to using cloud computing platforms,
 running computationally complex simulations and analyses, and using containerized applications.
 
-Simulations like WRF often require greater computing resources
-than you may have on your personal computer,
-but a cloud computing platform can provided the needed computational power.
-Jetstream2 is a national cyberinfrastructure resource that is easy to use
-and is available to researchers and educators.
+Simulations like WRF often require significant computing resources,
+so it is recommended that the computer you use have at least four cores, 32 GB of RAM, and 50 Gb of available disk space.
 This exercise runs the I-WRF programs as Docker "containers",
 which simplifies the set-up work needed to run the simulation and verification.
+However, the code used to build those Docker containers was compiled expressly for use on
+`Intel CPUs <https://www.intel.com/content/www/us/en/products/details/processors.html>`_,
+so the Windows computer you use must contain an Intel processor.
+Your Windows account will also need to have administrative privileges in order to perform all necessary steps.
 
 It is recommended that you follow the instructions in each section in the order presented
 to avoid encountering issues during the process.
 Most sections refer to external documentation to provide details about the necessary steps
 and to offer additional background information.
 
-Prepare to Use Jetstream2
-=========================
-
-To `get started with Jetstream2 <https://jetstream-cloud.org/get-started>`_,
-you will need to:
-
-* Create an account with the `National Science Foundation (NSF) <https://www.nsf.gov/>`_'s `ACCESS program <https://access-ci.org/>`_.
-* Request a computational "allocation" from ACCESS.
-* Log in to Jetstream2's web portal.
-
-The sections below will guide you through this process.
-
-Create an ACCESS Account
-------------------------
-
-If you do not already have one, `register for an ACCESS account <https://operations.access-ci.org/identity/new-user>`_.
-Note that you can either choose to associate your existing University/Organizational account or
-create an entirely new ACCESS account when registering. 
-
-Get an Allocation
------------------
-
-With your ACCESS account set up, you may `request an allocation <https://allocations.access-ci.org/get-your-first-project>`_
-that will allow you to use an ACCESS-affiliated cyberinfrastructure resource.
-Be sure to read all of the information on that page so that you make a suitable request.
-An "Explore" project will be sufficient to work with this exercise,
-and you will want to work with the resource "Indiana Jetstream2 CPU" (*not* GPU).
-The typical turnaround time for allocation requests is one business day.
-
-Log in to the Exosphere Web Site
---------------------------------
-
-Once you have an ACCESS account and allocation,
-you can log in to their `Exosphere web dashboard <https://jetstream2.exosphere.app>`_.
-The process of identifying your allocation and ACCESS ID to use Jetstream2
-is described on `this page <https://cvw.cac.cornell.edu/jetstream/intro/jetstream-login>`__ of the
-`Introduction to Jetstream2 <https://cvw.cac.cornell.edu/jetstream>`_ Cornell Virtual Workshop,
-and on `this page <https://docs.jetstream-cloud.org/ui/exo/login>`__
-of the `Jetstream2 documentation <https://docs.jetstream-cloud.org>`_.
-
-While adding an allocation to your account, it is recommended that you choose
-the "Indiana University" region of Jetstream2 for completing this exercise.
-
-Create a Cloud Instance and Log In
-==================================
-
-After you have logged in to Jetstream2 and added your allocation to your account,
-you are ready to create the cloud instance where you will run the simulation and verification.
-If you are not familiar with the cloud computing terms "image" and "instance",
-it is recommended that you `read about them <https://cvw.cac.cornell.edu/jetstream/intro/imagesandinstances>`__
-before proceeding.
-
-Create an SSH Key
------------------
-
-You must upload a public SSH key to Jetstream2 before creating your instance.
-Jetstream2 injects that public key into the instance's default user account,
-and you will need to provide the matching private SSH key to log in to the instance.
-If you are not familiar with "SSH key pairs", you should
-`read about them <https://cvw.cac.cornell.edu/jetstream/keys/about-keys>`__ before continuing.
-
-* First, `create an SSH Key on your computer <https://cvw.cac.cornell.edu/jetstream/keys/ssh-create>`_ using the "ssh-keygen" command.  That command allows you to specify the name and location of the private key file it creates, with the default being "id_rsa".  The matching public key file is saved to the same location and name with ".pub" appended to the filename.  Later instructions will assume that your private key file is named "id_rsa", but you may choose a different name now and use that name in those later instructions.
-* Then, `upload the public key to Jetstream2 <https://cvw.cac.cornell.edu/jetstream/keys/ssh-upload>`_ through the Exosphere web interface.
-
-Create an Instance
-------------------
-
-The Cornell Virtual Workshop topic `Creating an Instance <https://cvw.cac.cornell.edu/jetstream/create-instance>`_
-provides detailed information about creating a Jetstream2 instance.
-While following those steps, be sure to make the following choices for this instance:
-
-* When choosing an image as the instance source, if viewing "By Type", select the "Ubuntu 22.04 (latest)" image.  If viewing "By Image", choose the "Featured-Ubuntu22" image.
-* Choose the "Flavor" m3.quad (4 CPUs) to provide a faster simulation run-time.
-* Select a custom disk size of 100 GB - large enough to hold this exercise's data and results.
-* Select the SSH public key that you uploaded previously.
-* You do not need to set any of the Advanced Options.
-
-After clicking the "Create" button, wait for the instance to enter the "Ready" state (it takes several minutes).
-Note that the instance will not only be created, but will be running so that you can log in right away.
-
-Log in to the Instance
-----------------------
-
-The Exosphere web dashboard provides the easy-to-use Web Shell for accessing your Jetstream2 instances,
-but after encountering some issues with this exercise when using Web Shell,
-we are recommending that you use the SSH command to access your instance from a shell on your computer.
-The instructions for `connecting to Jetstream2 using SSH <https://cvw.cac.cornell.edu/jetstream/instance-login/sshshell>`_
-can executed in the Command Prompt on Windows (from the Start menu, type "cmd" and select Command Prompt)
-or from the Terminal application on a Mac.
-
-In either case you will need to know the location and name of the private SSH key created on your computer (see above),
-the IP address of your instance (found in the Exosphere web dashboard)
-and the default username on your instance, which is "exouser".
-
-Once you are logged in to the instance you can proceed to the
-"Install Software and Download Data" section below.
-You will know that your login has been successful when the prompt has the form ``exouser@instance-name:~$``,
-which indicates your username, the instance name, and your current working directory, followed by "$".
-
-Managing a Jetstream2 Instance
-------------------------------
-
-In order to use cloud computing resources efficiently, you must know how to
-`manage your instances <https://cvw.cac.cornell.edu/jetstream/manage-instance/states-actions>`_.
-Instances incur costs whenever they are running (on Jetstream2, this is when they are "Ready").
-"Shelving" an instance stops it from using the cloud's CPUs and memory,
-and therefore stops it from incurring any charges against your allocation.
-
-When you are through working on this exercise,
-be sure to use the instance's "Actions" menu in the web dashboard to
-"Shelve" the instance so that it is no longer spending your credits.
-If you later return to the dashboard and want to use the instance again,
-Use the Action menu's "Unshelve" option to start the instance up again.
-Note that any programs that were running when you shelve the instance will be lost,
-but the contents of the disk are preserved when shelving.
-
-You may also want to try the "Resize" action to change the number of CPUs of the instance.
-Increasing the number of CPUs (say, to flavor "m3.8") can make your computations finish more quickly.
-But of course, doubling the number of CPUs doubles the cost per hour to run the instance,
-so Shelving as soon as you are done becomes even more important!
-
 Preparing the Environment
 =========================
 
-With your instance created and running and you logged in to it through SSH,
-you can now create the run folders, install Docker software and download the data to run the simulation and verification.
-You will only need to perform these steps once,
-as they essentially change the contents of the instance's disk
-and those changes will remain even after the instance is shelved and unshelved.
-
-The following sections instruct you to issue numerous Linux commands in your shell.
-If you are not familiar with Linux, you may want to want to refer to
-`An Introduction to Linux <https://cvw.cac.cornell.edu/Linux>`_ when working through these steps.
-The commands in each section can be copied using the button in the upper right corner
-and then pasted into your shell by right-clicking.
-
-If your shell ever becomes unresponsive or disconnected from the instance,
-you can recover from that situation by rebooting the instance.
-In the Exosphere dashboard page for your instance, in the Actions menu, select "Reboot".
-The process takes several minutes, after which the instance status will return to "Ready".
+You can now create the run folders, install the software and download the data
+that are needed to run the simulation and verification.
+You will only need to perform these steps once.
+The following sections instruct you to issue numerous DOS commands in a Windows "Command Prompt" shell.
+To open such a shell, click the Start icon and then type "cmd" to display matching commands.
+Right click on the "Command Prompt" option that is shown and select "Run as administrator".
+A black shell window should open.
 
 Define Environment Variables
 ----------------------------
 
 We will be using some environment variables throughout this exercise to
 make sure that we refer to the same resource names and file paths wherever they are used.
-Copy and paste the definitions below into your shell to define the variables before proceeding::
+The first variable you need to define will specify the location of the "working directory" for the data and run folders.
+The example command below specifies that the working directory is the home directory of user account "exercise".
+You will need to enter a command similar to this that either specifies your user account name instead of "exercise",
+or changes the path entirely to use a different location on your computer::
 
-    WRF_IMAGE=ncar/iwrf:latest
-    METPLUS_IMAGE=dtcenter/metplus-dev:develop
-    WORKING_DIR=/home/exouser
-    WRF_DIR=${WORKING_DIR}/wrf/20161006_00
-    METPLUS_DIR=${WORKING_DIR}/metplus
-    WRF_CONFIG_DIR=${WORKING_DIR}/i-wrf/use_cases/Hurricane_Matthew/WRF
-    METPLUS_CONFIG_DIR=${WORKING_DIR}/i-wrf/use_cases/Hurricane_Matthew/METplus
-    OBS_DATA_VOL=data-matthew-input-obs
+    set WORKING_DIR=C:\Users\exercise
+
+Now you can copy and paste the definitions below into your shell to define the other variables before proceeding::
+
+    set WRF_IMAGE=ncar/iwrf:latest
+    set METPLUS_IMAGE=dtcenter/metplus-dev:develop
+    set WRF_DIR=${WORKING_DIR}\wrf\20161006_00
+    set METPLUS_DIR=${WORKING_DIR}\metplus
+    set WRF_CONFIG_DIR=${WORKING_DIR}\i-wrf-main\use_cases\Hurricane_Matthew\WRF
+    set METPLUS_CONFIG_DIR=${WORKING_DIR}\i-wrf-main\use_cases\Hurricane_Matthew\METplus
+    set OBS_DATA_VOL=data-matthew-input-obs
 
 Any time you open a new shell on your instance, you will need to perform this action
 to redefine the variables before executing the commands that follow.
@@ -201,21 +78,26 @@ and a sub-folder within "wrf" to hold the output of this simulation.
 The subfolder is named "20161006_00", which is the beginning date and time of the simulation.
 Similarly, a run folder named "metplus" must be created for the METplus process to use::
 
-    mkdir -p ${WRF_DIR}
-    mkdir -p ${METPLUS_DIR}
+    mkdir ${WRF_DIR}
+    mkdir ${METPLUS_DIR}
 
 Download Configuration Files
 ----------------------------
 
 Both WRF and METplus require some configuration files to direct their behavior,
-and those are downloaded from the I-WRF GitHub repository.
-Some of those configuration files are then copied into the run folders.
+and those must be downloaded from GitHub:
+
+* In a browser, visit the `I-WRF GitHub repository <https://github.com/NCAR/i-wrf>`_.
+* Expand the green button ``<> Code`` button, and select Download ZIP.
+* After the ZIP file has been downloaded, open it and extract its contents to the working directory you have selected.
+* Do not change the name of the extracted folder, which should be "i-wrf-main".
+
+Now, some of the configuration files must be copied into the run folders.
 These commands perform the necessary operations::
 
-    git clone https://github.com/NCAR/i-wrf ${WORKING_DIR}/i-wrf
-    cp ${WRF_CONFIG_DIR}/namelist.* ${WRF_DIR}
-    cp ${WRF_CONFIG_DIR}/vars_io.txt ${WRF_DIR}
-    cp ${WRF_CONFIG_DIR}/run.sh ${WRF_DIR}
+    cp ${WRF_CONFIG_DIR}\namelist.* ${WRF_DIR}
+    cp ${WRF_CONFIG_DIR}\vars_io.txt ${WRF_DIR}
+    cp ${WRF_CONFIG_DIR}\run.sh ${WRF_DIR}
 
 Install Docker and Pull Docker Objects
 ======================================
