@@ -60,10 +60,10 @@ Now you can copy and paste the definitions below into your shell to define the o
 
     set WRF_IMAGE=ncar/iwrf:latest
     set METPLUS_IMAGE=dtcenter/metplus-dev:develop
-    set WRF_DIR=${WORKING_DIR}\wrf\20161006_00
-    set METPLUS_DIR=${WORKING_DIR}\metplus
-    set WRF_CONFIG_DIR=${WORKING_DIR}\i-wrf-main\use_cases\Hurricane_Matthew\WRF
-    set METPLUS_CONFIG_DIR=${WORKING_DIR}\i-wrf-main\use_cases\Hurricane_Matthew\METplus
+    set WRF_DIR=%WORKING_DIR%\wrf\20161006_00
+    set METPLUS_DIR=%WORKING_DIR%\metplus
+    set WRF_CONFIG_DIR=%WORKING_DIR%\i-wrf-main\use_cases\Hurricane_Matthew\WRF
+    set METPLUS_CONFIG_DIR=%WORKING_DIR%\i-wrf-main\use_cases\Hurricane_Matthew\METplus
     set OBS_DATA_VOL=data-matthew-input-obs
 
 Any time you open a new shell on your instance, you will need to perform this action
@@ -78,8 +78,8 @@ and a sub-folder within "wrf" to hold the output of this simulation.
 The subfolder is named "20161006_00", which is the beginning date and time of the simulation.
 Similarly, a run folder named "metplus" must be created for the METplus process to use::
 
-    mkdir ${WRF_DIR}
-    mkdir ${METPLUS_DIR}
+    mkdir %WRF_DIR%
+    mkdir %METPLUS_DIR%
 
 Download Configuration Files
 ----------------------------
@@ -95,9 +95,9 @@ and those must be downloaded from GitHub:
 Now, some of the configuration files must be copied into the run folders.
 These commands perform the necessary operations::
 
-    cp ${WRF_CONFIG_DIR}\namelist.* ${WRF_DIR}
-    cp ${WRF_CONFIG_DIR}\vars_io.txt ${WRF_DIR}
-    cp ${WRF_CONFIG_DIR}\run.sh ${WRF_DIR}
+    cp %WRF_CONFIG_DIR}%\namelist.* %WRF_DIR%
+    cp %WRF_CONFIG_DIR%\vars_io.txt %WRF_DIR%
+    cp %WRF_CONFIG_DIR%\run.sh %WRF_DIR%
 
 Install Docker and Pull Docker Objects
 ======================================
@@ -143,8 +143,8 @@ Get the WRF and METplus Docker Images and the Observed Weather Data
 
 Once Docker is running, you must pull the correct versions of the WRF and METplus images onto your instance::
 
-    docker pull ${WRF_IMAGE}
-    docker pull ${METPLUS_IMAGE}
+    docker pull %WRF_IMAGE%
+    docker pull %METPLUS_IMAGE%
 
 METplus is run to perform verification of the results of the WRF simulation using
 observations gathered during Hurricane Matthew.
@@ -152,8 +152,8 @@ We download that data by pulling a Docker volume that holds it,
 and then referencing that volume when we run the METplus Docker container.
 The commands to pull and create the volume are::
 
-    docker pull ncar/iwrf:${OBS_DATA_VOL}.docker
-    docker create --name ${OBS_DATA_VOL} ncar/iwrf:${OBS_DATA_VOL}.docker
+    docker pull ncar/iwrf:%OBS_DATA_VOL%.docker
+    docker create --name %OBS_DATA_VOL% ncar/iwrf:%OBS_DATA_VOL%.docker
 
 Download Data for WRF
 =====================
@@ -168,21 +168,21 @@ rather than the user's home directory.
 
 Get the geographic data representing the terrain in the area of the simulation::
 
-    cd ${WORKING_DIR}
+    cd %WORKING_DIR%
     wget https://www2.mmm.ucar.edu/wrf/src/wps_files/geog_high_res_mandatory.tar.gz
     tar -xzf geog_high_res_mandatory.tar.gz
     rm geog_high_res_mandatory.tar.gz
 
 Get the case study data (GRIB2 files)::
 
-    cd ${WRF_DIR}
+    cd %WORKING_DIR%
     wget https://www2.mmm.ucar.edu/wrf/TUTORIAL_DATA/matthew_1deg.tar.gz
     tar -xvzf matthew_1deg.tar.gz
     rm -f matthew_1deg.tar.gz
 
 Get the SST (Sea Surface Temperature) data::
 
-    cd ${WRF_DIR}
+    cd %WORKING_DIR%
     wget https://www2.mmm.ucar.edu/wrf/TUTORIAL_DATA/matthew_sst.tar.gz
     tar -xzvf matthew_sst.tar.gz
     rm -f matthew_sst.tar.gz
@@ -196,9 +196,9 @@ and creates output files in the run folder you created.
 Execute this command to run the simulation in your shell::
 
     docker run --shm-size 14G -it \
-      -v ${WORKING_DIR}:/home/wrfuser/terrestrial_data \
-      -v ${WRF_DIR}:/tmp/hurricane_matthew \
-      ${WRF_IMAGE} /tmp/hurricane_matthew/run.sh
+      -v %WORKING_DIR%:/home/wrfuser/terrestrial_data \
+      -v %WRF_DIR%:/tmp/hurricane_matthew \
+      %WRF_IMAGE% /tmp/hurricane_matthew/run.sh
 
 The command has numerous arguments and options, which do the following:
 
@@ -212,7 +212,7 @@ The simulation initially prints lots of information while initializing things, t
 The provided configuration simulates 48 hours of weather and takes about 12 minutes to finish on an m3.quad Jetstream2 instance.
 Once completed, you can view the end of an output file to confirm that it succeeded::
 
-    tail ${WRF_DIR}/rsl.out.0000
+    tail %WRF_DIR%\rsl.out.0000
 
 The output should look something like this::
 
@@ -237,10 +237,10 @@ We use command line options to tell the METplus container several things, includ
 where the METplus configuration can be found, where the WRF output data is located, and where it should create its output files::
 
     docker run --rm -it \
-      --volumes-from ${OBS_DATA_VOL} \
-      -v ${METPLUS_CONFIG_DIR}:/config \
-      -v ${WORKING_DIR}/wrf:/data/input/wrf \
-      -v ${METPLUS_DIR}:/data/output ${METPLUS_IMAGE} \
+      --volumes-from %OBS_DATA_VOL% \
+      -v %METPLUS_CONFIG_DIR%:/config \
+      -v %WORKING_DIR%\wrf:/data/input/wrf \
+      -v %METPLUS_DIR%:/data/output %METPLUS_IMAGE% \
       /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
 
 Progress information is displayed while the verification is performed.
@@ -251,7 +251,7 @@ Point-Stat is run to generate statistics comparing METAR observations to surface
 RAOB observations to "upper air" fields.
 METplus will print its completion status when the processing finishes.
 
-The results of the METplus verification can be found in ``${WORKING_DIR}/metplus/point_stat``.
+The results of the METplus verification can be found in ``%WORKING_DIR%\metplus\point_stat``.
 These files contain tabular output that can be viewed in a text editor. Turn off word wrapping for better viewing.
 Refer to the MET User's Guide for more information about the
 `Point-Stat output <https://met.readthedocs.io/en/latest/Users_Guide/point-stat.html#point-stat-output>`_.
