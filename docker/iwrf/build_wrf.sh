@@ -176,8 +176,10 @@ cat configure.wrf  \
   > configure.wrf.zlib
 mv -f configure.wrf.zlib configure.wrf
 ./compile em_real 2>&1 | tee build.log
+./compile em_real 2>&1 | tee build2.log
 cd /home/${WRFUSER}
-chown -R ${WRFUSER}.${WRFUSER} WRF
+#chown -R ${WRFUSER}.${WRFUSER} WRF
+chown -R root.root WRF
 #check_expected_files "/home/wrfuser/WRF/main/wrf.exe /home/wrfuser/WRF/main/real.exe"
 
 # Build WPS
@@ -185,9 +187,9 @@ source /etc/bashrc
 cd /home/${WRFUSER}
 git clone https://github.com/wrf-model/WPS
 cd WPS
-git checkout v4.5
+git checkout develop
 cd ../
-patch -ruN -p1 -d WPS < /tmp/WPS.patch
+#patch -ruN -p1 -d WPS < /tmp/WPS.patch
 cd WPS
 export JASPERLIB="-L${SZIP}/lib -L${LIBPNG}/lib -L${ZLIB}/lib -L${JASPER}/lib -L${G2C}/lib -ljasper -lpng -lz"
 export JASPERINC="-I${SZIP}/include -I${LIBPNG}/include -I${ZLIB}/include -I${JASPER}/include"
@@ -202,5 +204,6 @@ cat configure.wps \
 mv configure.wps.icx configure.wps
 ./compile 2>&1 | tee build.log
 cd /home/${WRFUSER}
-chown -R ${WRFUSER}.${WRFUSER} WPS
+#chown -R ${WRFUSER}.${WRFUSER} WPS
+chown -R root.root WPS
 #check_expected_files "/home/wrfuser/WPS/geogrid/src/geogrid.exe /home/wrfuser/WPS/ungrib/src/ungrib.exe /home/wrfuser/WPS/metgrid/src/metgrid.exe"
