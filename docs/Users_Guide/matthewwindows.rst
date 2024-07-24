@@ -25,7 +25,8 @@ This exercise runs the I-WRF programs as Docker "containers",
 which simplifies the set-up work needed to run the simulation and verification.
 However, the code used to build those Docker containers was compiled expressly for use on
 `Intel CPUs <https://www.intel.com/content/www/us/en/products/details/processors.html>`_,
-so the Windows computer you use must contain an Intel processor.
+so the Windows 10 or 11 computer you use must contain an Intel processor
+(note that these instructions are not intended for use on a system running Windows Server).
 Your Windows account will also need to have administrative privileges in order to perform all necessary steps.
 
 It is recommended that you follow the instructions in each section in the order presented
@@ -40,9 +41,11 @@ You can now create the run folders, install the software and download the data
 that are needed to run the simulation and verification.
 You will only need to perform these steps once.
 The following sections instruct you to issue numerous DOS commands in a Windows "Command Prompt" shell.
-To open such a shell, click the Start icon and then type "cmd" to display matching commands.
-Right click on the "Command Prompt" option that is shown and select "Run as administrator".
-A black shell window should open.
+To open such a shell:
+
+* Click the Start icon and then type "cmd" to display matching commands.
+* Right click on the "Command Prompt" option that is shown and select "Run as administrator".
+* A black shell window should open.
 
 Define Environment Variables
 ----------------------------
@@ -89,21 +92,17 @@ and those must be downloaded from GitHub:
 
 * In a browser, visit the `I-WRF GitHub repository <https://github.com/NCAR/i-wrf>`_.
 * Expand the green button ``<> Code`` button, and select Download ZIP.
-* After the ZIP file has been downloaded, open it and extract its contents to the working directory you have selected.
-* Do not change the name of the extracted folder, which should be "i-wrf-main".
+* After the ZIP file has been downloaded, open it and extract its contents to the working directory you have selected as a folder named "i-wrf-main" (the default).  Be careful not to include an extra "i-wrf-main" folder in the path!
 
-Now, some of the configuration files must be copied into the run folders.
+Now, some of the configuration files must be copied into the WRF run folder.
 These commands perform the necessary operations::
 
-    cp %WRF_CONFIG_DIR}%\namelist.* %WRF_DIR%
-    cp %WRF_CONFIG_DIR%\vars_io.txt %WRF_DIR%
-    cp %WRF_CONFIG_DIR%\run.sh %WRF_DIR%
+    copy /y %WRF_CONFIG_DIR%\namelist.* %WRF_DIR%
+    copy /y %WRF_CONFIG_DIR%\vars_io.txt %WRF_DIR%
+    copy /y %WRF_CONFIG_DIR%\run.sh %WRF_DIR%
 
 Install Docker and Pull Docker Objects
 ======================================
-
-Install Docker
---------------
 
 As mentioned above, the WRF and METplus software are provided as Docker images that will run as a
 `"container" <https://docs.docker.com/guides/docker-concepts/the-basics/what-is-a-container/>`_
@@ -111,32 +110,56 @@ on your cloud instance.
 To run a Docker container, you must first install the Docker Engine on your instance.
 You can then "pull" (download) the WRF and METplus images that will be run as containers.
 
-The `instructions for installing Docker Engine on Ubuntu <https://docs.docker.com/engine/install/ubuntu/>`_
-are very thorough and make a good reference, but we only need to perform a subset of those steps.
-These commands run a script that sets up the Docker software repository on your instance,
-then installs Docker::
+In order to install Docker on your Windows computer, one or more Windows services must be enabled
+(these services allow virtualization and running of containers).
+The `process for performing this setup and installation <https://learn.microsoft.com/en-us/virtualization/windowscontainers/quick-start/set-up-environment>`_
+is outlined below.
+During the setup process your computer may reboot one or more times,
+so be sure to save all work and close your other applications before beginning the setup.
 
-    curl --location https://bit.ly/3R3lqMU > install-docker.sh
-    source install-docker.sh
-    rm install-docker.sh
+Installing Docker on Windows 10/11
+----------------------------------
 
-If a text dialog is displayed asking which services should be restarted, type ``Enter``.
-When the installation is complete, you can verify that the Docker command line tool works by asking for its version::
+To install Docker and enable the required components on Windows 10/11:
+
+* In a web browser, visit `Install Docker Desktop on Windows <https://docs.docker.com/desktop/install/windows-install/>`_.
+* Click on <code>Docker Desktop for Windows - x86_64</code> to download the installer.
+* Run the installer file "Docker Desktop Installer.exe".
+* TBD...
+
+Install Docker on Windows Server 2022
+-------------------------------------
+
+To install Docker and enable/install the required system components on Windows Server 2022:
+
+* Click the Start icon and then type "power" to display matching commands.
+* Right click on the "Power Shell" option that is shown and select "Run as administrator".  A power shell window should open.
+* Paste the following command into the window::
+
+    Invoke-WebRequest -UseBasicParsing ^
+       "https://raw.githubusercontent.com/microsoft/Windows-Containers/Main/helpful_tools/Install-DockerCE/install-docker-ce.ps1" ^
+       -o install-docker-ce.ps1
+    .\install-docker-ce.ps1
+
+* The Docker installation process takes 10 or more minutes and may require several reboots.
+* When the installation is finished, `install the Windows Subsystem for Linux (WSL) <https://learn.microsoft.com/en-us/windows/wsl/install-on-server>`_ with this command::
+
+    wsl --install
+
+* This installation may also require a system reboot, after which a Linux shell may be opened.
+* If you are prompted to provide a username and passowrd for the new Linux virtual computer, do so, then close the shell.
+
+Verify the Docker Installation
+------------------------------
+
+When the installation is complete, you can verify that the Docker command line tool works by asking for its version.
+In a command shell, enter::
 
     docker --version
 
-The Docker daemon should start automatically, but it sometimes runs into issues.
-First, check to see if the daemon started successfully::
+The Docker daemon should have started automatically.  To confirm that it is running, enter the command::
 
-    sudo systemctl --no-pager status docker
-
-If you see a message saying the daemon failed to start because a "Start request repeated too quickly",
-wait a few minutes and issue this command to try again to start it::
-
-    sudo systemctl start docker
-
-If the command seems to succeed, confirm that the daemon is running using the status command above.
-Repeat these efforts as necessary until it is started.
+    docker info
 
 Get the WRF and METplus Docker Images and the Observed Weather Data
 -------------------------------------------------------------------
