@@ -110,6 +110,9 @@ on your cloud instance.
 To run a Docker container, you must first install the Docker Engine on your instance.
 You can then "pull" (download) the WRF and METplus images that will be run as containers.
 
+Install Docker Desktop
+----------------------
+
 In order to install Docker on your Windows computer, one or more Windows services must be enabled
 (these services allow virtualization and running of containers).
 The `process for performing this setup and installation <https://learn.microsoft.com/en-us/virtualization/windowscontainers/quick-start/set-up-environment>`_
@@ -123,24 +126,18 @@ you will install the Docker Desktop for Windows application, which includes :
 * In a web browser, visit `Install Docker Desktop on Windows <https://docs.docker.com/desktop/install/windows-install/>`_.
 * Click on <code>Docker Desktop for Windows - x86_64</code> to download the installer.
 * Run the installer file "Docker Desktop Installer.exe", which will require a system restart.
-* TBD...
+* Leave the "Use WSL 2 instead of Hyper-V" option checked in the dialog that appears.
+* After the installation is complete, use the Start menu to find and run Docker Desktop, then agree to the terms and complete other steps in the first use wizard.
 
-Verify the Docker Installation
-------------------------------
-
-When the installation is complete, you can verify that the Docker command line tool works by asking for its version.
-In a command shell, enter::
-
-    docker --version
-
-The Docker daemon should have started automatically.  To confirm that it is running, enter the command::
-
-    docker info
+The Docker Desktop app should now show a green "Engine running" status in the lower left corner.
+If your engine isn't running or you encounter any other issues,
+visit the `Troubleshoot Docker Desktop page <https://docs.docker.com/desktop/troubleshoot/overview/>`_.
 
 Get the WRF and METplus Docker Images and the Observed Weather Data
 -------------------------------------------------------------------
 
-Once Docker is running, you must pull the correct versions of the WRF and METplus images onto your instance::
+Once Docker is running, you must pull the correct versions of the WRF and METplus images onto your instance.
+Open a Command Prompt shell as done before and issue these commands::
 
     docker pull %WRF_IMAGE%
     docker pull %METPLUS_IMAGE%
@@ -148,8 +145,9 @@ Once Docker is running, you must pull the correct versions of the WRF and METplu
 METplus is run to perform verification of the results of the WRF simulation using
 observations gathered during Hurricane Matthew.
 We download that data by pulling a Docker volume that holds it,
+creating a container using it,
 and then referencing that volume when we run the METplus Docker container.
-The commands to pull and create the volume are::
+The commands to pull the volume and create a container for it are::
 
     docker pull ncar/iwrf:%OBS_DATA_VOL%.docker
     docker create --name %OBS_DATA_VOL% ncar/iwrf:%OBS_DATA_VOL%.docker
@@ -157,13 +155,25 @@ The commands to pull and create the volume are::
 Download Data for WRF
 =====================
 
-To run WRF on the Hurricane Matthew data set, you need to have
-several data sets to support the computation.
+To run WRF on the Hurricane Matthew data, you need to have
+three addtional data sets to support the computation.
 The commands in these sections download archive files containing that data,
 then uncompress the archives into folders.
 The geographic data is large and takes several minutes to acquire,
 while the other two data sets are smaller and are downloaded directly into the WRF run folder,
 rather than the user's home directory.
+
+The steps to process each data set are similar:
+
+* Visit the data set's URL in a web browser, which will download the .tar.gz file.
+* Unzip the file contents into the target folder
+* Remove the downloaded .tar.gz file.
+
+Windows does not include a program that can unzip .tar.gz files,
+so you may need to install one before downloading this data.
+The free open source program 7Zip is our recommendation for performing this task,
+and you can `download a 7Zip installer <https://www.7-zip.org/download.html>`_ and run it now.
+
 
 Get the geographic data representing the terrain in the area of the simulation::
 
