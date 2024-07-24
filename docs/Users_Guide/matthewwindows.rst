@@ -117,37 +117,13 @@ is outlined below.
 During the setup process your computer may reboot one or more times,
 so be sure to save all work and close your other applications before beginning the setup.
 
-Installing Docker on Windows 10/11
-----------------------------------
-
-To install Docker and enable the required components on Windows 10/11:
+To install Docker and enable the required components on Windows 10/11,
+you will install the Docker Desktop for Windows application, which includes :
 
 * In a web browser, visit `Install Docker Desktop on Windows <https://docs.docker.com/desktop/install/windows-install/>`_.
 * Click on <code>Docker Desktop for Windows - x86_64</code> to download the installer.
-* Run the installer file "Docker Desktop Installer.exe".
+* Run the installer file "Docker Desktop Installer.exe", which will require a system restart.
 * TBD...
-
-Install Docker on Windows Server 2022
--------------------------------------
-
-To install Docker and enable/install the required system components on Windows Server 2022:
-
-* Click the Start icon and then type "power" to display matching commands.
-* Right click on the "Power Shell" option that is shown and select "Run as administrator".  A power shell window should open.
-* Paste the following command into the window::
-
-    Invoke-WebRequest -UseBasicParsing ^
-       "https://raw.githubusercontent.com/microsoft/Windows-Containers/Main/helpful_tools/Install-DockerCE/install-docker-ce.ps1" ^
-       -o install-docker-ce.ps1
-    .\install-docker-ce.ps1
-
-* The Docker installation process takes 10 or more minutes and may require several reboots.
-* When the installation is finished, `install the Windows Subsystem for Linux (WSL) <https://learn.microsoft.com/en-us/windows/wsl/install-on-server>`_ with this command::
-
-    wsl --install
-
-* This installation may also require a system reboot, after which a Linux shell may be opened.
-* If you are prompted to provide a username and passowrd for the new Linux virtual computer, do so, then close the shell.
 
 Verify the Docker Installation
 ------------------------------
