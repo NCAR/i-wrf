@@ -3,7 +3,7 @@
 .. _matthewredcloud:
 
 Running I-WRF On Red Cloud with Hurricane Matthew Data
-*******************************************************
+******************************************************
 
 Overview
 ========
@@ -76,7 +76,7 @@ To request an exploratory account, submit a `request <https://www.cac.cornell.ed
 You are also given one hour of free consulting for any help you may need.
 
 Log in to Red Cloud OpenStack Interface
-------------------------------------
+---------------------------------------
 
 Once you are given a CAC account login information,
 you can log into the `Red Cloud OpenStack web interface <https://redcloud.cac.cornell.edu/>`_.
