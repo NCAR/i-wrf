@@ -201,9 +201,9 @@ The downloaded script runs inside the container, prints lots of status informati
 and creates output files in the run folder you created.
 Execute this command to run the simulation in your shell::
 
-    docker run --shm-size 14G -it \
-      -v %WORKING_DIR%:/home/wrfuser/terrestrial_data \
-      -v %WRF_DIR%:/tmp/hurricane_matthew \
+    docker run --shm-size 14G -it ^
+      -v %WORKING_DIR%:/home/wrfuser/terrestrial_data ^
+      -v %WRF_DIR%:/tmp/hurricane_matthew ^
       %WRF_IMAGE% /tmp/hurricane_matthew/run.sh
 
 The command has numerous arguments and options, which do the following:
@@ -218,7 +218,7 @@ The simulation initially prints lots of information while initializing things, t
 The provided configuration simulates 48 hours of weather and takes about 12 minutes to finish on an m3.quad Jetstream2 instance.
 Once completed, you can view the end of an output file to confirm that it succeeded::
 
-    tail %WRF_DIR%\rsl.out.0000
+    powershell -command "& {Get-Content %WRF_DIR%\rsl.out.0000 | Select-Object -last 10}"
 
 The output should look something like this::
 
@@ -242,11 +242,11 @@ The verification takes about five minutes to complete.
 We use command line options to tell the METplus container several things, including where the observed data is located,
 where the METplus configuration can be found, where the WRF output data is located, and where it should create its output files::
 
-    docker run --rm -it \
-      --volumes-from %OBS_DATA_VOL% \
-      -v %METPLUS_CONFIG_DIR%:/config \
-      -v %WORKING_DIR%\wrf:/data/input/wrf \
-      -v %METPLUS_DIR%:/data/output %METPLUS_IMAGE% \
+    docker run --rm -it ^
+      --volumes-from %OBS_DATA_VOL% ^
+      -v %METPLUS_CONFIG_DIR%:/config ^
+      -v %WORKING_DIR%\wrf:/data/input/wrf ^
+      -v %METPLUS_DIR%:/data/output %METPLUS_IMAGE% ^
       /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
 
 Progress information is displayed while the verification is performed.
