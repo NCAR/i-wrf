@@ -157,44 +157,41 @@ Download Data for WRF
 
 To run WRF on the Hurricane Matthew data, you need to have
 three addtional data sets to support the computation.
-The commands in these sections download archive files containing that data,
+The commands in this section download archive files containing that data,
 then uncompress the archives into folders.
 The geographic data is large and takes several minutes to acquire,
 while the other two data sets are smaller and are downloaded directly into the WRF run folder,
-rather than the user's home directory.
+rather than the exercise's working directory.
 
-The steps to process each data set are similar:
+The steps to process each data set are the same:
 
 * Visit the data set's URL in a web browser, which will download the .tar.gz file.
-* Unzip the file contents into the target folder
+* Unzip the .tar.gz file contents into the destination folder.
 * Remove the downloaded .tar.gz file.
 
-Windows does not include a program that can unzip .tar.gz files,
-so you may need to install one before downloading this data.
-The free open source program 7Zip is our recommendation for performing this task,
-and you can `download a 7Zip installer <https://www.7-zip.org/download.html>`_ and run it now.
+Begin by download all of the data sets in this table:
 
++-------------------+----------------------------------------------------------------------------+---------------+
+| Data Set          | URL                                                                        | Destination   |
++===================+============================================================================+===============+
+| Terrain           | https://www2.mmm.ucar.edu/wrf/src/wps_files/geog_high_res_mandatory.tar.gz | %WORKING_DIR% |
++-------------------+----------------------------------------------------------------------------+---------------+
+| Case study        | https://www2.mmm.ucar.edu/wrf/TUTORIAL_DATA/matthew_1deg.tar.gz            | %WRF_DIR%     |
++-------------------+----------------------------------------------------------------------------+---------------+
+| Sea Surface Temps | https://www2.mmm.ucar.edu/wrf/TUTORIAL_DATA/matthew_sst.tar.gz             | %WRF_DIR%     |
++-------------------+----------------------------------------------------------------------------+---------------+
 
-Get the geographic data representing the terrain in the area of the simulation::
+Now, in your command prompt window, change directory ("cd") to the folder where those files were downloaded.
+Then, copy/paste the commands below to unzip the data and delete the downloaded files::
 
-    cd %WORKING_DIR%
-    wget https://www2.mmm.ucar.edu/wrf/src/wps_files/geog_high_res_mandatory.tar.gz
-    tar -xzf geog_high_res_mandatory.tar.gz
-    rm geog_high_res_mandatory.tar.gz
+    tar -xzf geog_high_res_mandatory.tar.gz -C %WORKING_DIR%
+    del geog_high_res_mandatory.tar.gz
 
-Get the case study data (GRIB2 files)::
+    tar -xzf matthew_1deg.tar.gz -C %WRF_DIR%
+    del -f matthew_1deg.tar.gz
 
-    cd %WORKING_DIR%
-    wget https://www2.mmm.ucar.edu/wrf/TUTORIAL_DATA/matthew_1deg.tar.gz
-    tar -xvzf matthew_1deg.tar.gz
-    rm -f matthew_1deg.tar.gz
-
-Get the SST (Sea Surface Temperature) data::
-
-    cd %WORKING_DIR%
-    wget https://www2.mmm.ucar.edu/wrf/TUTORIAL_DATA/matthew_sst.tar.gz
-    tar -xzvf matthew_sst.tar.gz
-    rm -f matthew_sst.tar.gz
+    tar -xzf matthew_sst.tar.gz -C %WRF_DIR%
+    del -f matthew_sst.tar.gz
 
 Run WRF
 =======
