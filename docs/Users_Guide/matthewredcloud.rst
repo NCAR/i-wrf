@@ -41,7 +41,7 @@ you will need to:
 
 * Get a CAC account by doing one of the following:
 
-  * Start a new project by `project request <https://www.cac.cornell.edu/services/projects/project.aspx>`_ (Only available for Cornell Faculty and Staff).
+  * Start a new project by making a `project request <https://www.cac.cornell.edu/services/projects/project.aspx>`_ (Only available for Cornell Faculty and Staff).
   * Join an existing project by `request to be added to a project <https://www.cac.cornell.edu/services/external/RequestCACid.aspx>`_.
   * Request an exploratory account by `submitting a request <https://www.cac.cornell.edu/cu/explore.aspx>`_.
 
@@ -63,7 +63,7 @@ read `this page <https://www.cac.cornell.edu/services/projects/project.aspx>`_ t
 Join a Project
 --------------
 
-To join an existing project, submit a `request <https://www.cac.cornell.edu/services/external/RequestCACid.aspx>`_. 
+To join an existing project, submit a `join request <https://www.cac.cornell.edu/services/external/RequestCACid.aspx>`_. 
 You should only do this if your PI has requested you to submit the request. 
 Once the PI of the project approves the request, an email is sent to you with the login information.
 
