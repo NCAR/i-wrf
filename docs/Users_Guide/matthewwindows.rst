@@ -37,7 +37,7 @@ and to offer additional background information.
 Preparing the Environment
 =========================
 
-You can now create the run folders, install the software and download the data
+You will now create the run folders, install the software and download the data
 that are needed to run the simulation and verification.
 You will only need to perform these steps once.
 The following sections instruct you to issue numerous DOS commands in a Windows "Command Prompt" shell.
@@ -53,8 +53,8 @@ Define Environment Variables
 We will be using some environment variables throughout this exercise to
 make sure that we refer to the same resource names and file paths wherever they are used.
 The first variable you need to define will specify the location of the "working directory" for the data and run folders.
-The example command below specifies that the working directory is the home directory of user account "exercise".
-You will need to enter a command similar to this that either specifies your user account name instead of "exercise",
+The example command below specifies that the working directory is the home directory of a hypothetical username "exercise".
+You will need to enter a command similar to this that either specifies *your* user account name instead of "exercise",
 or changes the path entirely to use a different location on your computer::
 
     set WORKING_DIR=C:\Users\exercise
@@ -92,7 +92,7 @@ and those must be downloaded from GitHub:
 
 * In a browser, visit the `I-WRF GitHub repository <https://github.com/NCAR/i-wrf>`_.
 * Expand the green button ``<> Code`` button, and select Download ZIP.
-* After the ZIP file has been downloaded, open it and extract its contents to the working directory you have selected as a folder named "i-wrf-main" (the default).  Be careful not to include an extra "i-wrf-main" folder in the path!
+* After the ZIP file has been downloaded, open it and extract its contents to the working directory you have selected as a folder named "i-wrf-main" (the default).  Be careful not to include two levels of "i-wrf-main" folders in the path!
 
 Now, some of the configuration files must be copied into the WRF run folder.
 These commands perform the necessary operations::
@@ -121,13 +121,13 @@ During the setup process your computer may reboot one or more times,
 so be sure to save all work and close your other applications before beginning the setup.
 
 To install Docker and enable the required components on Windows 10/11,
-you will install the Docker Desktop for Windows application, which includes :
+you will install the Docker Desktop for Windows application by following these steps:
 
 * In a web browser, visit `Install Docker Desktop on Windows <https://docs.docker.com/desktop/install/windows-install/>`_.
-* Click on <code>Docker Desktop for Windows - x86_64</code> to download the installer.
+* Click on ``Docker Desktop for Windows - x86_64`` to download the installer.
 * Run the installer file "Docker Desktop Installer.exe", which will require a system restart.
 * Leave the "Use WSL 2 instead of Hyper-V" option checked in the dialog that appears.
-* After the installation is complete, use the Start menu to find and run Docker Desktop, then agree to the terms and complete other steps in the first use wizard.
+* After the installation is complete, use the Start menu to find and run Docker Desktop, then agree to the terms and complete the other steps in the "first use" wizard.
 
 The Docker Desktop app should now show a green "Engine running" status in the lower left corner.
 If your engine isn't running or you encounter any other issues,
@@ -137,15 +137,15 @@ Get the WRF and METplus Docker Images and the Observed Weather Data
 -------------------------------------------------------------------
 
 Once Docker is running, you must pull the correct versions of the WRF and METplus images onto your instance.
-Open a Command Prompt shell as done before and issue these commands::
+Open a Command Prompt shell as done before, execute the commands to define the environment variables, and then issue these commands::
 
     docker pull %WRF_IMAGE%
     docker pull %METPLUS_IMAGE%
 
 METplus is run to perform verification of the results of the WRF simulation using
 observations gathered during Hurricane Matthew.
-We download that data by pulling a Docker volume that holds it,
-creating a container using it,
+We download that data by pulling a Docker volume on which the data resides,
+then creating a container from that volume,
 and then referencing that volume when we run the METplus Docker container.
 The commands to pull the volume and create a container for it are::
 
@@ -156,12 +156,12 @@ Download Data for WRF
 =====================
 
 To run WRF on the Hurricane Matthew data, you need to have
-three addtional data sets to support the computation.
+three data sets to support the computation.
 The commands in this section download archive files containing that data,
 then uncompress the archives into folders.
 The geographic data is large and takes several minutes to acquire,
 while the other two data sets are smaller and are downloaded directly into the WRF run folder,
-rather than the exercise's working directory.
+rather than the main working directory.
 
 The steps to process each data set are the same:
 
@@ -215,7 +215,8 @@ The command has numerous arguments and options, which do the following:
 * ``/tmp/hurricane_matthew/run.sh`` is the location within the container of the script that it runs.
 
 The simulation initially prints lots of information while initializing things, then settles in to the computation.
-The provided configuration simulates 48 hours of weather and takes about 12 minutes to finish on an m3.quad Jetstream2 instance.
+The provided configuration simulates 48 hours of weather and should take less than 30 minutes to finish,
+depending on your CPU's number of cores and clock speed.
 Once completed, you can view the end of an output file to confirm that it succeeded::
 
     powershell -command "& {Get-Content %WRF_DIR%\rsl.out.0000 | Select-Object -last 10}"
