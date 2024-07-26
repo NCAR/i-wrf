@@ -160,7 +160,7 @@ function run_wrf
   ulimit -s unlimited
   cd "${CYCLE_DIR}"
   ln -s "${WRF_DIR}"/test/em_real/* .
-  ./wrf.exe
+  mpirun -np 8 ./wrf.exe
 }
 
 
