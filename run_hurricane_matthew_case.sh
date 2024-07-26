@@ -1,7 +1,15 @@
 #! /bin/bash
 
 # script adapted from instructions at https://www2.mmm.ucar.edu/wrf/OnLineTutorial/CASES/SingleDomain/ungrib.php
-# docker run -it -v /home/hahn/git:/home/wrfuser/git -v /mnt/storage/terrestrial_data:/home/wrfuser/terrestrial_data iwrf:latest /bin/bash
+
+# Run Steps:
+#     Cornell RedCloud:
+#         docker run -it -v /home/hahn/git:/home/wrfuser/git -v /mnt/storage/terrestrial_data:/home/wrfuser/terrestrial_data iwrf:latest /bin/bash
+#     NCAR Derecho:
+#         qsub -l select=1:ncpus=2:mpiprocs=2 -A UCOR0071 -l walltime=01:00:00 -I -q develop
+#         module load charliecloud apptainer gcc cuda ncarcompilers
+#         singularity pull docker://ncar/iwrf:latest
+#         singularity run --bind /glade/work/wrfhelp/WPS_GEOG:/home/wrfuser/terrestrial_data iwrf_latest.sif /bin/bash
 
 source /etc/bashrc
 
@@ -91,7 +99,7 @@ function run_geogrid
   _snr namelist.wps "truelat1.*," "truelat1 = 30.0,"
   _snr namelist.wps "truelat2.*," "truelat2 = 60.0,"
   _snr namelist.wps "stand_lon.*," "stand_lon = -75.0,"
-  _snr namelist.wps "geog_data_path.*" "geog_data_path = '\/home\/wrfuser\/terrestrial_data\/WPS_GEOG'"
+  _snr namelist.wps "geog_data_path.*" "geog_data_path = '\/home\/wrfuser\/terrestrial_data'"
 
   ln -s "${WPS_DIR}"/* .
   ./geogrid.exe
@@ -161,7 +169,7 @@ function _snr
   file="${1}"
   search="${2}"
   replace="${3}"
-  temp_file="$(mktemp)"
+  temp_file="/tmp/iwrf.temp"
 
   cat "${file}" | sed "s/${search}/${replace}/g" > "${temp_file}"
   mv -f "${temp_file}" "${file}"
