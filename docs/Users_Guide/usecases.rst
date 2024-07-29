@@ -10,6 +10,16 @@ Hurricane Matthew on Jetstream2
 
 Navigate to :ref:`matthewjetstream` for more information.
 
+Hurricane Matthew on Red Cloud
+==============================
+
+Navigate to :ref:`matthewredcloud` for more information.
+
+Hurricane Matthew on Windows with Intel Processor
+=================================================
+
+Navigate to :ref:`matthewwindows` for more information.
+
 Land Use/Land Cover Change
 ==========================
 
