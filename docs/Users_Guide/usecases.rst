@@ -15,6 +15,11 @@ Hurricane Matthew on Red Cloud
 
 Navigate to :ref:`matthewredcloud` for more information.
 
+Hurricane Matthew on AWS
+========================
+
+Navigate to :ref:`running-on-aws` for more information.
+
 Hurricane Matthew on Windows with Intel Processor
 =================================================
 
