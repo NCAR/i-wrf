@@ -1,9 +1,9 @@
 :orphan:
 
-.. _matthewjetstream:
+.. _matthewredcloud:
 
-Running I-WRF On Jetstream2 with Hurricane Matthew Data
-*******************************************************
+Running I-WRF On Red Cloud with Hurricane Matthew Data
+******************************************************
 
 Overview
 ========
@@ -15,141 +15,152 @@ and the `Cornell Center for Advanced Computing <https://cac.cornell.edu/>`_.
 The steps below run the `Weather Research & Forecasting (WRF) <https://www.mmm.ucar.edu/models/wrf>`_ model
 and the  `METplus <https://https://dtcenter.org/community-code/metplus>`_ verification framework
 with data from `Hurricane Matthew <https://en.wikipedia.org/wiki/Hurricane_Matthew>`_
-on the `Jetstream2 cloud computing platform <https://jetstream-cloud.org/>`_.
+on the `Red Cloud cloud computing platform <https://www.cac.cornell.edu/services/cloudservices.aspx/>`_ 
+provided by Cornell Center for Advanced Computing (CAC).
 This exercise provides an introduction to using cloud computing platforms,
 running computationally complex simulations and analyses, and using containerized applications.
 
 Simulations like WRF often require greater computing resources
 than you may have on your personal computer,
-but a cloud computing platform can provided the needed computational power.
-Jetstream2 is a national cyberinfrastructure resource that is easy to use
-and is available to researchers and educators.
-This exercise runs the I-WRF programs as Docker "containers",
-which simplifies the set-up work needed to run the simulation and verification.
+but a cloud computing platform can provide the needed computational power.
+Red Cloud is a subscription-based Infrastructure as a Service cloud that provides 
+root access to virtual servers and on-demand storage to Cornell researchers.
+This exercise runs the I-WRF program as a Docker "container",
+which simplifies the set-up work needed to run the simulation.
 
 It is recommended that you follow the instructions in each section in the order presented
 to avoid encountering issues during the process.
 Most sections refer to external documentation to provide details about the necessary steps
 and to offer additional background information.
 
-Prepare to Use Jetstream2
-=========================
+Prepare to Use Red Cloud
+========================
 
-To `get started with Jetstream2 <https://jetstream-cloud.org/get-started>`_,
+To `get started with Red Cloud <https://www.cac.cornell.edu/services/projects.aspx>`_,
 you will need to:
 
-* Create an account with the `National Science Foundation (NSF) <https://www.nsf.gov/>`_'s `ACCESS program <https://access-ci.org/>`_.
-* Request a computational "allocation" from ACCESS.
-* Log in to Jetstream2's web portal.
+* Get a CAC account by doing one of the following:
 
-The sections below will guide you through this process.
+  * Start a new project by making a `project request <https://www.cac.cornell.edu/services/projects/project.aspx>`_ (Only available for Cornell Faculty and Staff).
+  * Join an existing project by `request to be added to a project <https://www.cac.cornell.edu/services/external/RequestCACid.aspx>`_.
+  * Request an exploratory account by `submitting a request <https://www.cac.cornell.edu/cu/explore.aspx>`_.
 
-Create an ACCESS Account
-------------------------
+* Log in to Red Cloud's OpenStack interface.
 
-If you do not already have one, `register for an ACCESS account <https://operations.access-ci.org/identity/new-user>`_.
-Note that you can either choose to associate your existing University/Organizational account or
-create an entirely new ACCESS account when registering. 
+The sections below will guide you through this process. 
+For an overview of Red Cloud, read Cornell TechDocs `Red Cloud documentation <https://www.cac.cornell.edu/techdocs/redcloud/#red-cloud>`_.
 
-Get an Allocation
------------------
+Start a Project
+---------------
 
-With your ACCESS account set up, you may `request an allocation <https://allocations.access-ci.org/get-your-first-project>`_
-that will allow you to use an ACCESS-affiliated cyberinfrastructure resource.
-Be sure to read all of the information on that page so that you make a suitable request.
-An "Explore" project will be sufficient to work with this exercise,
-and you will want to work with the resource "Indiana Jetstream2 CPU" (*not* GPU).
-The typical turnaround time for allocation requests is one business day.
+One way to create a CAC account is to request a project. 
+Note that you must be a Cornell faculty member or a staff member to view the pages below and start a project. 
+You may submit a `project request <https://www.cac.cornell.edu/services/projects/project.aspx>`_ at the CAC website.
+Thoroughly review the `rates <https://www.cac.cornell.edu/services/projects/rates.aspx>`_ page to understand the Red Cloud subscription service.
+Once your project is approved, you can `manage your project <https://www.cac.cornell.edu/services/projects/manage.aspx>`_, and  
+read `this page <https://www.cac.cornell.edu/services/projects/project.aspx>`_ to learn how to manage a project.
 
-Log in to the Exosphere Web Site
---------------------------------
+Join a Project
+--------------
 
-Once you have an ACCESS account and allocation,
-you can log in to their `Exosphere web dashboard <https://jetstream2.exosphere.app>`_.
-The process of identifying your allocation and ACCESS ID to use Jetstream2
-is described on `this page <https://cvw.cac.cornell.edu/jetstream/intro/jetstream-login>`__ of the
-`Introduction to Jetstream2 <https://cvw.cac.cornell.edu/jetstream>`_ Cornell Virtual Workshop,
-and on `this page <https://docs.jetstream-cloud.org/ui/exo/login>`__
-of the `Jetstream2 documentation <https://docs.jetstream-cloud.org>`_.
+To join an existing project, submit a `join request <https://www.cac.cornell.edu/services/external/RequestCACid.aspx>`_. 
+You should only do this if your PI has requested you to submit the request. 
+Once the PI of the project approves the request, an email is sent to you with the login information.
 
-While adding an allocation to your account, it is recommended that you choose
-the "Indiana University" region of Jetstream2 for completing this exercise.
+Open an Exploratory Account
+---------------------------
+
+You may also request an exploratory account if you have not made one already. 
+This account has limited computing hours and storage but is sufficient for this exercise. 
+To request an exploratory account, submit a `request <https://www.cac.cornell.edu/cu/explore.aspx>`_.
+You are also given one hour of free consulting for any help you may need.
+
+Log in to Red Cloud OpenStack Interface
+---------------------------------------
+
+Once you are given a CAC account login information,
+you can log into the `Red Cloud OpenStack web interface <https://redcloud.cac.cornell.edu/>`_.
+Note that you need to be on a project with a subscription to log in successfully.
 
 Create a Cloud Instance and Log In
 ==================================
 
-After you have logged in to Jetstream2 and added your allocation to your account,
-you are ready to create the cloud instance where you will run the simulation and verification.
+After you have logged in to the Red Cloud OpenStack interface,
+you are ready to create the cloud instance where you will run the I-WRF simulation.
 If you are not familiar with the cloud computing terms "image" and "instance",
-it is recommended that you `read about them <https://cvw.cac.cornell.edu/jetstream/intro/imagesandinstances>`__
-before proceeding.
+it is recommended that you read about them `here <https://www.cac.cornell.edu/techdocs/openstack/images/>`__ 
+and `here <https://www.cac.cornell.edu/techdocs/redcloud/Red_Cloud_Linux_Instances/>`__ before proceeding.
 
 Create an SSH Key
 -----------------
 
-You must upload a public SSH key to Jetstream2 before creating your instance.
-Jetstream2 injects that public key into the instance's default user account,
+You can either upload a public SSH key to Red Cloud or generate an SSH key pair on Red Cloud before creating your instance.
+Red Cloud injects the uploaded public key or generated public key into the instance's default user account,
 and you will need to provide the matching private SSH key to log in to the instance.
 If you are not familiar with "SSH key pairs", you should
-`read about them <https://cvw.cac.cornell.edu/jetstream/keys/about-keys>`__ before continuing.
+`read about them <https://www.cac.cornell.edu/techdocs/openstack/keypairs/>`__ before continuing.
 
-* First, `create an SSH Key on your computer <https://cvw.cac.cornell.edu/jetstream/keys/ssh-create>`_ using the "ssh-keygen" command.  That command allows you to specify the name and location of the private key file it creates, with the default being "id_rsa".  The matching public key file is saved to the same location and name with ".pub" appended to the filename.  Later instructions will assume that your private key file is named "id_rsa", but you may choose a different name now and use that name in those later instructions.
-* Then, `upload the public key to Jetstream2 <https://cvw.cac.cornell.edu/jetstream/keys/ssh-upload>`_ through the Exosphere web interface.
+* First, `create an SSH Key on your computer <https://www.cac.cornell.edu/techdocs/openstack/keypairs/#creating-a-passphrase-protected-key-pair-recommended>`_ using the "ssh-keygen" command.  That command allows you to specify the name of the private key file it creates, with the default being "id_rsa".  The matching public key file is saved and named with ".pub" appended to the filename. 
+* Then, `import the public key to Red Cloud <https://www.cac.cornell.edu/techdocs/openstack/keypairs/#importing-a-key-pair>`_ through the Red Cloud web interface.
+
+Alternatively, you can `create a key pair on Red Cloud <https://www.cac.cornell.edu/techdocs/openstack/keypairs/#creating-a-key-pair-without-a-passphrase>`_. Be sure to follow the steps and save the private key it generated with the correct format and permission before proceeding. 
 
 Create an Instance
 ------------------
 
-The Cornell Virtual Workshop topic `Creating an Instance <https://cvw.cac.cornell.edu/jetstream/create-instance>`_
-provides detailed information about creating a Jetstream2 instance.
+The Cornell TechDocs `Creating a New Linux Instance <https://www.cac.cornell.edu/techdocs/redcloud/Red_Cloud_Linux_Instances/#creating-a-new-linux-instance>`_
+provides detailed information about creating a Linux instance on Red Cloud.
 While following those steps, be sure to make the following choices for this instance:
 
-* When choosing an image as the instance source, if viewing "By Type", select the "Ubuntu 22.04 (latest)" image.  If viewing "By Image", choose the "Featured-Ubuntu22" image.
-* Choose the "Flavor" m3.quad (4 CPUs) to provide a faster simulation run-time.
-* Select a custom disk size of 100 GB - large enough to hold this exercise's data and results.
-* Select the SSH public key that you uploaded previously.
-* You do not need to set any of the Advanced Options.
+* When choosing an image as the instance source:
+  
+  * Select Boot from Source is "Image"
+  * Volume Size (GB) is 100
+  * Delete Volume on Instance Delete is "Yes"
+  * Select the "ubuntu-22.04-LTS" image
 
-After clicking the "Create" button, wait for the instance to enter the "Ready" state (it takes several minutes).
+* In Flavor, choose the "Flavor" c4.m32 (4 Virtual CPUs) to provide a faster simulation run-time.
+* In Network, select "public".
+* In Key Pair, select the SSH public key that you uploaded previously.
+
+When all the required options are selected, click on the "Launch Instance" button, and wait for the instance to enter the "Active" state.
 Note that the instance will not only be created, but will be running so that you can log in right away.
 
 Log in to the Instance
 ----------------------
 
-The Exosphere web dashboard provides the easy-to-use Web Shell for accessing your Jetstream2 instances,
-but after encountering some issues with this exercise when using Web Shell,
-we are recommending that you use the SSH command to access your instance from a shell on your computer.
-The instructions for `connecting to Jetstream2 using SSH <https://cvw.cac.cornell.edu/jetstream/instance-login/sshshell>`_
-can executed in the Command Prompt on Windows (from the Start menu, type "cmd" and select Command Prompt)
+The instructions for `connecting to Red Cloud Linux instances using SSH <https://www.cac.cornell.edu/techdocs/redcloud/Red_Cloud_Linux_Instances/#accessing-instances>`_
+can be executed in the Command Prompt on Windows (from the Start menu, type "cmd" and select Command Prompt)
 or from the Terminal application on a Mac.
 
-In either case you will need to know the location and name of the private SSH key created on your computer (see above),
-the IP address of your instance (found in the Exosphere web dashboard)
-and the default username on your instance, which is "exouser".
+In either case, you will need to know the location and name of the private SSH key created on your computer (see above),
+the IP address of your instance (found in the Red Cloud OpenStack interface)
+and the default username on your instance, which is "ubuntu".
 
 Once you are logged in to the instance you can proceed to the
 "Install Software and Download Data" section below.
-You will know that your login has been successful when the prompt has the form ``exouser@instance-name:~$``,
-which indicates your username, the instance name, and your current working directory, followed by "$".
+You will know that your login has been successful when the prompt has the form ``ubuntu@instance-name:~$``,
+which indicates your username, the instance name, and your current working directory, followed by "$"
 
-Managing a Jetstream2 Instance
+Managing a Red Cloud Instance
 ------------------------------
 
 In order to use cloud computing resources efficiently, you must know how to
-`manage your instances <https://cvw.cac.cornell.edu/jetstream/manage-instance/states-actions>`_.
-Instances incur costs whenever they are running (on Jetstream2, this is when they are "Ready").
+`manage your instances <https://www.cac.cornell.edu/techdocs/openstack/#instance-states>`_.
+Instances incur costs whenever they are running (on Red Cloud, this is when they are "Active").
 "Shelving" an instance stops it from using the cloud's CPUs and memory,
-and therefore stops it from incurring any charges against your allocation.
+and therefore stops it from incurring any charges against your project.
 
 When you are through working on this exercise,
-be sure to use the instance's "Actions" menu in the web dashboard to
-"Shelve" the instance so that it is no longer spending your credits.
-If you later return to the dashboard and want to use the instance again,
-Use the Action menu's "Unshelve" option to start the instance up again.
+be sure to use the instance's dropdown menu in the web interface to
+"Shelve" the instance so that it is no longer spending your computing hours.
+If you later return to the web interface and want to use the instance again,
+Use the dropdown menu's "Unshelve Instance" option to start the instance up again.
 Note that any programs that were running when you shelve the instance will be lost,
 but the contents of the disk are preserved when shelving.
 
 You may also want to try the "Resize" action to change the number of CPUs of the instance.
-Increasing the number of CPUs (say, to flavor "m3.8") can make your computations finish more quickly.
+Increasing the number of CPUs (say, to flavor "c8.m64") can make your computations finish more quickly.
 But of course, doubling the number of CPUs doubles the cost per hour to run the instance,
 so Shelving as soon as you are done becomes even more important!
 
@@ -157,7 +168,7 @@ Preparing the Environment
 =========================
 
 With your instance created and running and you logged in to it through SSH,
-you can now create the run folders, install Docker software and download the data to run the simulation and verification.
+you can now install the necessary software and download the data to run the simulation.
 You will only need to perform these steps once,
 as they essentially change the contents of the instance's disk
 and those changes will remain even after the instance is shelved and unshelved.
@@ -166,12 +177,7 @@ The following sections instruct you to issue numerous Linux commands in your she
 If you are not familiar with Linux, you may want to want to refer to
 `An Introduction to Linux <https://cvw.cac.cornell.edu/Linux>`_ when working through these steps.
 The commands in each section can be copied using the button in the upper right corner
-and then pasted into your shell by right-clicking.
-
-If your shell ever becomes unresponsive or disconnected from the instance,
-you can recover from that situation by rebooting the instance.
-In the Exosphere dashboard page for your instance, in the Actions menu, select "Reboot".
-The process takes several minutes, after which the instance status will return to "Ready".
+and then pasted into your web shell by right-clicking.
 
 Define Environment Variables
 ----------------------------
@@ -182,7 +188,7 @@ Copy and paste the definitions below into your shell to define the variables bef
 
     WRF_IMAGE=ncar/iwrf:latest
     METPLUS_IMAGE=dtcenter/metplus-dev:develop
-    WORKING_DIR=/home/exouser
+    WORKING_DIR=/home/ubuntu
     WRF_DIR=${WORKING_DIR}/wrf/20161006_00
     METPLUS_DIR=${WORKING_DIR}/metplus
     WRF_CONFIG_DIR=${WORKING_DIR}/i-wrf/use_cases/Hurricane_Matthew/WRF
@@ -261,8 +267,8 @@ Get the WRF and METplus Docker Images and the Observed Weather Data
 
 Once Docker is running, you must pull the correct versions of the WRF and METplus images onto your instance::
 
-    docker pull ${WRF_IMAGE}
-    docker pull ${METPLUS_IMAGE}
+    sudo docker pull ${WRF_IMAGE}
+    sudo docker pull ${METPLUS_IMAGE}
 
 METplus is run to perform verification of the results of the WRF simulation using
 observations gathered during Hurricane Matthew.
@@ -270,8 +276,8 @@ We download that data by pulling a Docker volume that holds it,
 and then referencing that volume when we run the METplus Docker container.
 The commands to pull and create the volume are::
 
-    docker pull ncar/iwrf:${OBS_DATA_VOL}.docker
-    docker create --name ${OBS_DATA_VOL} ncar/iwrf:${OBS_DATA_VOL}.docker
+    sudo docker pull ncar/iwrf:${OBS_DATA_VOL}.docker
+    sudo docker create --name ${OBS_DATA_VOL} ncar/iwrf:${OBS_DATA_VOL}.docker
 
 Download Data for WRF
 =====================
@@ -313,7 +319,7 @@ The downloaded script runs inside the container, prints lots of status informati
 and creates output files in the run folder you created.
 Execute this command to run the simulation in your shell::
 
-    docker run --shm-size 14G -it \
+    sudo docker run --shm-size 14G -it \
       -v ${WORKING_DIR}:/home/wrfuser/terrestrial_data \
       -v ${WRF_DIR}:/tmp/hurricane_matthew \
       ${WRF_IMAGE} /tmp/hurricane_matthew/run.sh
@@ -327,7 +333,7 @@ The command has numerous arguments and options, which do the following:
 * ``/tmp/hurricane_matthew/run.sh`` is the location within the container of the script that it runs.
 
 The simulation initially prints lots of information while initializing things, then settles in to the computation.
-The provided configuration simulates 48 hours of weather and takes about 12 minutes to finish on an m3.quad Jetstream2 instance.
+The provided configuration simulates 48 hours of weather and takes about 26 minutes to finish on a c4.m32 Red Cloud instance.
 Once completed, you can view the end of an output file to confirm that it succeeded::
 
     tail ${WRF_DIR}/rsl.out.0000
@@ -354,7 +360,7 @@ The verification takes about five minutes to complete.
 We use command line options to tell the METplus container several things, including where the observed data is located,
 where the METplus configuration can be found, where the WRF output data is located, and where it should create its output files::
 
-    docker run --rm -it \
+    sudo docker run --rm -it \
       --volumes-from ${OBS_DATA_VOL} \
       -v ${METPLUS_CONFIG_DIR}:/config \
       -v ${WORKING_DIR}/wrf:/data/input/wrf \

@@ -3,24 +3,24 @@
  run_hours                           = 48,
  run_minutes                         = 0,
  run_seconds                         = 0,
- start_year                          = 2016, 2016,
- start_month                         = 10,   10, 
- start_day                           = 06,   06,
- start_hour                          = 00,   00,
- end_year                            = 2016, 2016,
- end_month                           = 10,   10,
- end_day                             = 08,   08,
- end_hour                            = 00,   00,
- interval_seconds                    = 21600,
- input_from_file                     = .true.,.true.,
- history_interval                    = 180,  180,
- frames_per_outfile                  = 1, 1,
+ start_year                          = 2016,
+ start_month                         = 10, 
+ start_day                           = 06,
+ start_hour                          = 00,
+ end_year                            = 2016,
+ end_month                           = 10,
+ end_day                             = 08,
+ end_hour                            = 0,
+ interval_seconds                    = 21600
+ input_from_file                     = .true.,
+ history_interval                    = 180,
+ frames_per_outfile                  = 1,
  restart                             = .false.,
  restart_interval                    = 1440,
- io_form_history                     = 2,
- io_form_restart                     = 2,
- io_form_input                       = 2,
- io_form_boundary                    = 2,
+ io_form_history                     = 2
+ io_form_restart                     = 2
+ io_form_input                       = 2
+ io_form_boundary                    = 2
  iofields_filename                   = "vars_io.txt", "vars_io.txt",
  auxhist22_outname                   = "wrfout_zlev_d<domain>_<date>",
  auxhist22_interval                  = 180, 180,
@@ -33,16 +33,16 @@
  /
 
  &domains
- time_step                           = 90,
+ time_step                           = 150,
  time_step_fract_num                 = 0,
  time_step_fract_den                 = 1,
  max_dom                             = 1,
- e_we                                =  91,    220,
- e_sn                                = 100,    214,
- e_vert                              = 45,     45,
+ e_we                                = 91,
+ e_sn                                = 100,
+ e_vert                              = 45,
  dzstretch_s                         = 1.1
  p_top_requested                     = 5000,
- num_metgrid_levels                  = 32,
+ num_metgrid_levels                  = 32
  num_metgrid_soil_levels             = 4,
  dx                                  = 27000,
  dy                                  = 27000,
@@ -105,17 +105,17 @@
  /
 
  &namelist_quilt
- nio_tasks_per_group = 0,
- nio_groups = 1,
+ nio_tasks_per_group                 = 0,
+ nio_groups                          = 1,
  /
 
  &diags
- z_lev_diags                =  1,
- num_z_levels               =  6,
- z_levels                   =  -80,-100,-200,-300,-400,-500,
- p_lev_diags                =  1,
- num_press_levels           =  10,
- press_levels               =  92500,85000,70000,50000,40000,30000,25000,20000,15000,10000,
- use_tot_or_hyd_p           =  1,
- solar_diagnostics          =  0,
+ z_lev_diags                         =  1,
+ num_z_levels                        =  6,
+ z_levels                            =  -80,-100,-200,-300,-400,-500
+ p_lev_diags                         =  1,
+ num_press_levels                    =  10,
+ press_levels                        =  92500,85000,70000,50000,40000,30000,25000,20000,15000,10000
+ use_tot_or_hyd_p                    =  1,
+ solar_diagnostics                   =  0,
  /
