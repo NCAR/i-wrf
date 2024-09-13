@@ -64,7 +64,7 @@ Use this for the vars_io.txt file for the Hurricane Matthew case, from the Githu
 https://github.com/NCAR/i-wrf/blob/main/use_cases/Hurricane_Matthew/WRF/vars_io.txt
 
 ^^^^^^^^^^^^^^^^^^^
-METPlus Config File
+METplus Config File
 ^^^^^^^^^^^^^^^^^^^
 For the METplus configuration file for the Hurricane Matthew case, please use this file on the Github repository:
 
