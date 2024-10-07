@@ -60,6 +60,9 @@ using the --bind argument)
 * Config directory containing METplus use case configuration file
    * Local: ${SCRATCH}/i-wrf/use_cases/Hurricane_Matthew/METplus
    * Container: /config
+* Plot script directory containing WRF plotting scripts
+   * Local: ${SCRATCH}/i-wrf/use_cases/Hurricane_Matthew/Visualization
+   * Container: /plot_scripts
 * Output directory to write output
    * Local: ${SCRATCH}/metplus_out
    * Container: /data/output
@@ -67,10 +70,11 @@ using the --bind argument)
 ::
 
    LOCAL_METPLUS_CONFIG_DIR=${SCRATCH}/i-wrf/use_cases/Hurricane_Matthew/METplus
+   LOCAL_PLOT_SCRIPT_DIR=${SCRATCH}/i-wrf/use_cases/Hurricane_Matthew/Visualization
    LOCAL_FCST_INPUT_DIR=/glade/derecho/scratch/jaredlee/nsf_i-wrf/matthew
    LOCAL_OUTPUT_DIR=${SCRATCH}/metplus_out
 
-   export APPTAINER_BIND="${SCRATCH}/data-matthew-input-obs.sif:/data/input/obs:image-src=/,${LOCAL_METPLUS_CONFIG_DIR}:/config,${LOCAL_FCST_INPUT_DIR}:/data/input/wrf,${LOCAL_OUTPUT_DIR}:/data/output"
+   export APPTAINER_BIND="${SCRATCH}/data-matthew-input-obs.sif:/data/input/obs:image-src=/,${LOCAL_METPLUS_CONFIG_DIR}:/config,${LOCAL_FCST_INPUT_DIR}:/data/input/wrf,${LOCAL_OUTPUT_DIR}:/data/output,${LOCAL_PLOT_SCRIPT_DIR}:/plot_scripts"
 
 Execute the run_metplus.py command inside the container to run the use case::
 
