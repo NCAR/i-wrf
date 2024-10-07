@@ -17,11 +17,23 @@ Load the apptainer module::
 
    module load apptainer
 
-Change directory to scratch and pull the containers from DockerHub.
+Change directory to scratch and pull the images from DockerHub.
 This will create a `.sif` file in the current directory::
 
-   apptainer pull ${SCRATCH}/metplus-dev_develop.sif docker://dtcenter/metplus-dev:develop
+   apptainer pull ${SCRATCH}/iwrf-metplus.sif docker://ncar/iwrf:metplus-latest
    apptainer pull ${SCRATCH}/data-matthew-input-obs.sif oras://registry-1.docker.io/ncar/iwrf:data-matthew-input-obs
+
+.. note::
+
+   If an error is displayed when attempting to pull the METplus image,
+   creating a DockerHub account and authenticating through apptainer may be
+   necessary.
+
+   ::
+
+      apptainer remote login --username **{USERNAME}** docker://docker.io
+
+   where **{USERNAME}** is your DockerHub username.
 
 Create a directory to store the output::
 
@@ -62,7 +74,7 @@ using the --bind argument)
 
 Execute the run_metplus.py command inside the container to run the use case::
 
-   apptainer exec ${SCRATCH}/metplus-dev_develop.sif /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
+   apptainer exec ${SCRATCH}/iwrf-metplus.sif /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
 
 Check that the output data was created locally::
 
