@@ -9,6 +9,7 @@ typically from WRF model output.
 """
 
 import sys
+import os
 import numpy as np
 import datetime as dt
 import wrf
@@ -516,6 +517,9 @@ def map_plot(opts):
     # Optional: Add a legend (most useful if 2+ sets of markers)
     if lg_text is not None:
         ax.legend(loc=lg_loc, fontsize=lg_fontsize).set_zorder(15)
+
+    # create output directory if it does not already exist
+    os.makedirs(os.path.dirname(fname), exist_ok=True)
 
     # Save and close the figure
     plt.savefig(fname)
