@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 """
 plot_wrf.py
 
