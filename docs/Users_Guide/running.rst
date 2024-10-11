@@ -31,7 +31,7 @@ This will create a `.sif` file in the current directory::
 
    ::
 
-      apptainer remote login --username **{USERNAME}** docker://docker.io
+      apptainer remote login --username {USERNAME} docker://docker.io
 
    where **{USERNAME}** is your DockerHub username.
 
