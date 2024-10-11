@@ -587,11 +587,9 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-w', '--wrf_dir_parent', default='/data/input/wrf',
                         help='string specifying the directory path to the parent WRF output directories, '
-                             'above any experiment or cycle datetime subdirectories (default: '
-                             '/data/input/wrf)')
+                             'above any experiment or cycle datetime subdirectories (default: /data/input/wrf)')
     parser.add_argument('-o', '--out_dir_parent', default='/data/output/wrf',
-                        help='string specifying the directory path to the parent plot directories (default: '
-                             '/data/output/wrf)')
+                        help='string specifying the directory path to the parent plot directories (default: /data/output/wrf)')
     parser.add_argument('-f', '--cycle_dt_first', default='20161006_00',
                         help='beginning date/time of first WRF simulation [YYYYMMDD_HH] (default: 20161006_00)')
     parser.add_argument('-l', '--cycle_dt_last', default=None,

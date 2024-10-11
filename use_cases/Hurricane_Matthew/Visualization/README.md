@@ -12,11 +12,9 @@ options:
   -h, --help            show this help message and exit
   -w WRF_DIR_PARENT, --wrf_dir_parent WRF_DIR_PARENT
                         string specifying the directory path to the parent WRF output directories, above any
-                        experiment or cycle datetime subdirectories (default:
-                        /glade/derecho/scratch/jaredlee/nsf_i-wrf/matthew)
+                        experiment or cycle datetime subdirectories (default: /data/input/wrf)
   -o OUT_DIR_PARENT, --out_dir_parent OUT_DIR_PARENT
-                        string specifying the directory path to the parent plot directories (default: same as
-                        --wrf_dir_parent)
+                        string specifying the directory path to the parent plot directories (default: /data/output/wrf)
   -f CYCLE_DT_FIRST, --cycle_dt_first CYCLE_DT_FIRST
                         beginning date/time of first WRF simulation [YYYYMMDD_HH] (default: 20161006_00)
   -l CYCLE_DT_LAST, --cycle_dt_last CYCLE_DT_LAST
