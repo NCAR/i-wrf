@@ -181,12 +181,13 @@ make sure that we refer to the same resource names and file paths wherever they 
 Copy and paste the definitions below into your shell to define the variables before proceeding::
 
     WRF_IMAGE=ncar/iwrf:latest
-    METPLUS_IMAGE=dtcenter/metplus-dev:develop
+    METPLUS_IMAGE=ncar/iwrf:metplus-latest
     WORKING_DIR=/home/exouser
     WRF_DIR=${WORKING_DIR}/wrf/20161006_00
     METPLUS_DIR=${WORKING_DIR}/metplus
     WRF_CONFIG_DIR=${WORKING_DIR}/i-wrf/use_cases/Hurricane_Matthew/WRF
     METPLUS_CONFIG_DIR=${WORKING_DIR}/i-wrf/use_cases/Hurricane_Matthew/METplus
+    PLOT_SCRIPT_DIR=${WORKING_DIR}/i-wrf/use_cases/Hurricane_Matthew/Visualization
     OBS_DATA_VOL=data-matthew-input-obs
 
 Any time you open a new shell on your instance, you will need to perform this action
@@ -351,12 +352,17 @@ Run METplus
 After the WRF simulation has finished, you can run the METplus verification to compare the simulated results
 to the actual weather observations during the hurricane.
 The verification takes about five minutes to complete.
-We use command line options to tell the METplus container several things, including where the observed data is located,
-where the METplus configuration can be found, where the WRF output data is located, and where it should create its output files::
+We use command line options to tell the METplus container several things,
+including where the observed data is located,
+where the METplus configuration can be found,
+where the plotting scripts can be found,
+where the WRF output data is located,
+and where it should create its output files::
 
     docker run --rm -it \
       --volumes-from ${OBS_DATA_VOL} \
       -v ${METPLUS_CONFIG_DIR}:/config \
+      -v ${PLOT_SCRIPT_DIR}:/plot_scripts \
       -v ${WORKING_DIR}/wrf:/data/input/wrf \
       -v ${METPLUS_DIR}:/data/output ${METPLUS_IMAGE} \
       /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
