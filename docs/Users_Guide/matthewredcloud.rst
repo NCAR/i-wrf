@@ -341,16 +341,16 @@ Once completed, you can view the end of an output file to confirm that it succee
 
 The output should look something like this::
 
-    Timing for main: time 2016-10-06_11:42:30 on domain   1:    0.23300 elapsed seconds
-    Timing for main: time 2016-10-06_11:45:00 on domain   1:    0.23366 elapsed seconds
-    Timing for main: time 2016-10-06_11:47:30 on domain   1:    2.77688 elapsed seconds
-    Timing for main: time 2016-10-06_11:50:00 on domain   1:    0.23415 elapsed seconds
-    Timing for main: time 2016-10-06_11:52:30 on domain   1:    0.23260 elapsed seconds
-    Timing for main: time 2016-10-06_11:55:00 on domain   1:    0.23354 elapsed seconds
-    Timing for main: time 2016-10-06_11:57:30 on domain   1:    0.23345 elapsed seconds
-    Timing for main: time 2016-10-06_12:00:00 on domain   1:    0.23407 elapsed seconds
-    Timing for Writing wrfout_d01_2016-10-06_12:00:00 for domain        1:    0.32534 elapsed seconds
-    d01 2016-10-06_12:00:00 wrf: SUCCESS COMPLETE WRF
+    Timing for main: time 2016-10-07_23:50:00 on domain 1: 0.25548 elapsed seconds
+    Timing for main: time 2016-10-07_23:52:30 on domain 1: 0.25495 elapsed seconds
+    Timing for main: time 2016-10-07_23:55:00 on domain 1: 0.25066 elapsed seconds
+    Timing for main: time 2016-10-07_23:57:30 on domain 1: 0.25231 elapsed seconds
+    Timing for main: time 2016-10-08_00:00:00 on domain 1: 0.25795 elapsed seconds
+    Timing for Writing wrfout_d01_2016-10-08_00:00:00 for domain 1: 0.68666 elapsed seconds
+    Timing for Writing wrfout_zlev_d01_2016-10-08_00:00:00 for domain 1: 0.47411 elapsed seconds
+    Timing for Writing wrfout_plev_d01_2016-10-08_00:00:00 for domain 1: 0.47619 elapsed seconds
+    Timing for Writing restart for domain 1: 1.54598 elapsed seconds
+    d01 2016-10-08_00:00:00 wrf: SUCCESS COMPLETE WRF
 
 Run METplus
 ===========
