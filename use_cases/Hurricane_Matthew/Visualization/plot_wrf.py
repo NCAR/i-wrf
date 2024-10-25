@@ -201,7 +201,7 @@ def main(script_config_opts):
         cycle_dt_str = cycle_dt.strftime(fmt_yyyymmdd_hh)
         cycle_dt_plot = cycle_dt.strftime(fmt_time_plot)
         start_time_plot = 'Start: ' + cycle_dt_plot
-        wrf_dir = script_config_opts['wrf_dir_parent'].joinpath(cycle_dt_str, 'wrfout')
+        wrf_dir = script_config_opts['wrf_dir_parent'].joinpath(cycle_dt_str)
         out_dir = script_config_opts['out_dir_parent'].joinpath(cycle_dt_str, 'plots')
 
         # Build an array of the valid datetimes that need to be read and plotted
