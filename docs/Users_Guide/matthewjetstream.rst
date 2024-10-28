@@ -88,14 +88,14 @@ Optional information about doing those things is available here:
 
 .. dropdown:: Creating an SSH Key and uploading it to Jetstream2
 
-   You may choose to upload a public SSH key to Jetstream2 before creating your instance.
-   Jetstream2 will inject that public key into an instance's default user account,
-   and you will need to provide the matching private SSH key to log in to the instance.
-   If you are not familiar with "SSH key pairs", you should
-   `read about them <https://cvw.cac.cornell.edu/jetstream/keys/about-keys>`__ before continuing.
+    You may choose to upload a public SSH key to Jetstream2 before creating your instance.
+    Jetstream2 will inject that public key into an instance's default user account,
+    and you will need to provide the matching private SSH key to log in to the instance.
+    If you are not familiar with "SSH key pairs", you should
+    `read about them <https://cvw.cac.cornell.edu/jetstream/keys/about-keys>`__ before continuing.
 
-   * First, `create an SSH Key on your computer <https://cvw.cac.cornell.edu/jetstream/keys/ssh-create>`_ using the "ssh-keygen" command.  That command allows you to specify the name and location of the private key file it creates, with the default being "id_rsa".  The matching public key file is saved to the same location and name with ".pub" appended to the filename.  Later instructions will assume that your private key file is named "id_rsa", but you may choose a different name now and use that name in those later instructions.
-   * Then, `upload the public key to Jetstream2 <https://cvw.cac.cornell.edu/jetstream/keys/ssh-upload>`_ through the Exosphere web interface.
+    * First, `create an SSH Key on your computer <https://cvw.cac.cornell.edu/jetstream/keys/ssh-create>`_ using the "ssh-keygen" command.  That command allows you to specify the name and location of the private key file it creates, with the default being "id_rsa".  The matching public key file is saved to the same location and name with ".pub" appended to the filename.  Later instructions will assume that your private key file is named "id_rsa", but you may choose a different name now and use that name in those later instructions.
+    * Then, `upload the public key to Jetstream2 <https://cvw.cac.cornell.edu/jetstream/keys/ssh-upload>`_ through the Exosphere web interface.
 
 The Cornell Virtual Workshop topic `Creating an Instance <https://cvw.cac.cornell.edu/jetstream/create-instance>`_
 provides detailed information about creating a Jetstream2 instance.
@@ -126,16 +126,16 @@ you can do so following the information in this optional content:
 
 .. dropdown:: Logging in to a Jetstream2 Instance using SSH From a Shell
 
-   You can use the SSH command to access your instance from a shell on your computer.
-   The instructions for `connecting to Jetstream2 using SSH <https://cvw.cac.cornell.edu/jetstream/instance-login/sshshell>`_
-   can be executed in the Command Prompt on Windows (from the Start menu, type "cmd" and select Command Prompt)
-   or from the Terminal application on a Mac.
+    You can use the SSH command to access your instance from a shell on your computer.
+    The instructions for `connecting to Jetstream2 using SSH <https://cvw.cac.cornell.edu/jetstream/instance-login/sshshell>`_
+    can be executed in the Command Prompt on Windows (from the Start menu, type "cmd" and select Command Prompt)
+    or from the Terminal application on a Mac.
 
-   In either case you will need to know the location and name of the private SSH key created on your computer (see SSH section, above),
-   the IP address of your instance (found in the Exosphere web dashboard)
-   and the default username on your instance, which is "exouser".
+    In either case you will need to know the location and name of the private SSH key created on your computer (see SSH section, above),
+    the IP address of your instance (found in the Exosphere web dashboard)
+    and the default username on your instance, which is "exouser".
 
-   Once you are logged in to the instance you can proceed to the  "Install Software and Download Data" section below.
+    Once you are logged in to the instance you can proceed to the  "Install Software and Download Data" section below.
 
 Once you are logged in to the instance, your shell prompt will have the form ``exouser@instance-name:~$``,
 which indicates your username, the instance name, and your current working directory, followed by "$".
