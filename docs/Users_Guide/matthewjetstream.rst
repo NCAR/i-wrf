@@ -96,7 +96,8 @@ If you are not familiar with "SSH key pairs", you should
 
 * First, `create an SSH Key on your computer <https://cvw.cac.cornell.edu/jetstream/keys/ssh-create>`_ using the "ssh-keygen" command.  That command allows you to specify the name and location of the private key file it creates, with the default being "id_rsa".  The matching public key file is saved to the same location and name with ".pub" appended to the filename.  Later instructions will assume that your private key file is named "id_rsa", but you may choose a different name now and use that name in those later instructions.
 * Then, `upload the public key to Jetstream2 <https://cvw.cac.cornell.edu/jetstream/keys/ssh-upload>`_ through the Exosphere web interface.
-:::
+
+::::
 
 The Cornell Virtual Workshop topic `Creating an Instance <https://cvw.cac.cornell.edu/jetstream/create-instance>`_
 provides detailed information about creating a Jetstream2 instance.
@@ -139,7 +140,7 @@ and the default username on your instance, which is "exouser".
 Once you are logged in to the instance you can proceed to the
 "Install Software and Download Data" section below.
 
-:::
+::::
 
 Once you are logged in to the instance, your shell prompt will have the form ``exouser@instance-name:~$``,
 which indicates your username, the instance name, and your current working directory, followed by "$".
