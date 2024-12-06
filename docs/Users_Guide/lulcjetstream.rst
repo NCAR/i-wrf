@@ -1,6 +1,6 @@
 :orphan:
 
-.. _matthewjetstream:
+.. _lulcjetstream:
 
 Running I-WRF On Jetstream2 with LULC
 *******************************************************
@@ -8,7 +8,7 @@ Running I-WRF On Jetstream2 with LULC
 Overview
 ========
 
-The following instructions can be used to run elements of the `I-WRF weather simulation framework <https://i-wrf.org>`_ from the `National Center for Atmospheric Research (NCAR) <https://ncar.ucar.edu/>`_ and the `Cornell Center for Advanced Computing <https://cac.cornell.edu/>`_. The steps below run the `Weather Research & Forecasting (WRF) <https://www.mmm.ucar.edu/models/wrf>`_ model with data fom `The High-Resolution Rapid Refresh <https://rapidrefresh.noaa.gov/hrrr/>(HRRR)`_ on the `Jetstream2 cloud computing platform <https://jetstream-cloud.org/>`_. This exercise provides an introduction to using cloud computing platforms, running computationally complex simulations and analyses, and using containerized applications.
+The following instructions can be used to run elements of the `I-WRF weather simulation framework <https://i-wrf.org>`_ from the `National Center for Atmospheric Research (NCAR) <https://ncar.ucar.edu/>`_ and the `Cornell Center for Advanced Computing <https://cac.cornell.edu/>`_. The steps below run the `Weather Research & Forecasting (WRF) <https://www.mmm.ucar.edu/models/wrf>`_ model with data fom `The High-Resolution Rapid Refresh (HRRR) <https://rapidrefresh.noaa.gov/hrrr/>`_ on the `Jetstream2 cloud computing platform <https://jetstream-cloud.org/>`_. This exercise provides an introduction to using cloud computing platforms, running computationally complex simulations and analyses, and using containerized applications.
 
 Simulations like WRF often require greater computing resources than you may have on your personal computer, but a cloud computing platform can provided the needed computational power. Jetstream2 is a national cyberinfrastructure resource that is easy to use and is available to researchers and educators.This exercise runs the I-WRF programs as Docker "containers", which simplifies the set-up work needed to run the simulation and verification.
 
