@@ -28,13 +28,22 @@ The citation for this User's Guide should be:
 
 **Acknowledgments**
 
-The National Center for Atmospheric Research (NCAR) is sponsored by the National Science Foundation (NSF).
+The material in this repository and users guide is based upon work supported by the NSF National Center for Atmospheric Research (NSF NCAR), which is a major facility sponsored by the U.S. National Science Foundation under Cooperative Agreement No. 1852977. This work is directly sponsored by NSF under Award No. 2209711 to Cornell University ("CCSI Frameworks: Large Scale Atmospheric
+Research Using an Integrated WRF Modeling, Visualization, and Verification Framework (I-WRF)").
 
 .. toctree::
    :titlesonly:
    :numbered: 4
 
+   overview
    release-notes
+   gettingstarted
+   configuration
+   running
+   usecases
+   customization
+   glossary
+   references
 
 .. only:: html
 
