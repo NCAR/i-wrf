@@ -187,7 +187,7 @@ source /etc/bashrc
 cd /home/${WRFUSER}
 git clone https://github.com/wrf-model/WPS
 cd WPS
-git checkout develop
+git checkout v4.6.0
 cd ../
 #patch -ruN -p1 -d WPS < /tmp/WPS.patch
 cd WPS
