@@ -119,9 +119,9 @@ Get the HRRR data and namelists (GRIB2 files)::
 Start WRF
 =========
 
-With everything in place, you are now ready to run the Docker container that will perform the simulation. The downloaded script runs inside the container, prints lots of status information, and creates output files in the run folder you created. Execute this command start a container with the image we pulled earlier::
-
 TODO: change arguments as necessary.
+
+With everything in place, you are now ready to run the Docker container that will perform the simulation. The downloaded script runs inside the container, prints lots of status information, and creates output files in the run folder you created. Execute this command start a container with the image we pulled earlier::
 
     docker run --shm-size 400G -it \
     -v /media/volume/I-WRF_input:/home/wrfuser/input \
