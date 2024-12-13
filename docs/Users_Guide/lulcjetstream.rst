@@ -174,7 +174,7 @@ Finally, we can finalize the WPS process by calling metgrid.exe, which will read
 Run WRF
 =======
 
-To run the simulation with LULC modifications, we need to link the met_ems files we generated from WPS and copy the new namelist. 
+To run the simulation with LULC modifications, we need to link the met_ems files we generated from WPS and copy the new namelist::
 
     cd /home/wrfuser/WRF
     cp /home/wrfuser/input/namelist/WRF/namelist.input /home/wrfuser/WRF
