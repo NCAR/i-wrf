@@ -1,4 +1,4 @@
-ARG METPLUS_TAG=6.0.0-rc1
+ARG METPLUS_TAG=6.0.0
 
 FROM dtcenter/metplus-analysis:${METPLUS_TAG}
 
