@@ -49,8 +49,8 @@ The Cornell Virtual Workshop topic `Creating an Instance <https://cvw.cac.cornel
 TODO: Find an appropiate flavor and disk size. Current setup is very pricy!
 
 * When choosing an image as the instance source, if viewing "By Type", select the "Ubuntu 24.04" image.  If viewing "By Image", choose the "Featured-Ubuntu24" image.
-* Choose the "Flavor" r3.large (64 CPUs) to provide a faster simulation run-time. 
-* Select a custom disk size of 800 GB, which is large enough to hold this exercise's data and results.
+* Choose the "Flavor" m3.2xl (64 CPUs) to provide a faster simulation run-time. 
+* Select a custom disk size of 900 GB, which is large enough to hold this exercise's data and results.
 * For "Enable web desktop?", select Yes.
 * For "Choose an SSH public key", select None unless you want to use your own SSH key that you uploaded previously.
 * You do not need to set any of the Advanced Options.
@@ -102,7 +102,6 @@ Download Data for WPS and WRF
 
 To run WRF on the HRRR and LULC data set, you need to have several data sets to support the computation. The commands in these sections download archive files containing that data, then uncompress the archives into folders. The geographic data is large and takes several minutes to acquire, while the other dataset should already be in the attached volume. 
 
-TODO: Find a way to share the HRRR data and namelists.
 
 Get the geographic data representing the terrain in the area of the simulation::
 
@@ -110,57 +109,83 @@ Get the geographic data representing the terrain in the area of the simulation::
     wget https://www2.mmm.ucar.edu/wrf/src/wps_files/geog_high_res_mandatory.tar.gz
     tar -xzf geog_high_res_mandatory.tar.gz
     rm geog_high_res_mandatory.tar.gz
+    WPS_GEOG="/home/exouser/WPS_GEOG"
 
 Get the HRRR data and namelists (GRIB2 files)::
 
-    It's in /media/volume/I-WRF_input. Similarly, there is a /media/volume/I-WRF_output volume.
+    TODO: Find a way to share the HRRR data and the namelists.
+    Currently, it's a volume in JetStream2, in /media/volume/I-WRF_input.
+    WRF_INPUT="/media/volume/I-WRF_input"
 
+If you would like to want to run the entire procedure with one script::
 
-Start WRF
-=========
+    TODO: Change this from issue 68 to main
+    wget https://raw.githubusercontent.com/NCAR/i-wrf/refs/heads/feature_68_LULC_Instruction/use_cases/Land_Use_Land_Cover/WRF/run.sh
+    chmod +x run.sh
+    mv run.sh $WRF_INPUT
 
-TODO: change arguments as necessary.
+Create a folder for the output::
 
-With everything in place, you are now ready to run the Docker container that will perform the simulation. The downloaded script runs inside the container, prints lots of status information, and creates output files in the run folder you created. Execute this command start a container with the image we pulled earlier::
+    mkdir output
+    WRF_OUTPUT="/home/exouser/output"
 
-    docker run --shm-size 400G -it \
-    -v /media/volume/I-WRF_input:/home/wrfuser/input \
-    -v /media/volume/I-WRF_output:/home/wrfuser/output \
-    -v /home/exouser/WPS_GEOG:/home/wrfuser/WPS_GEOG \
-    ncar/iwrf:lulc-2024-10-04
+Start WRF with script
+=====================
+
+With everything in place, you are now ready to run the Docker container that will perform the simulation. If you would like to run the entire script in one command, we just have to run the script. The downloaded script runs inside the container, prints lots of status information, and creates output files in the run folder you created. Execute this command start a container with the image we pulled earlier::
+
+    docker run --shm-size 200G -it \
+    -v $WRF_INPUT:/home/wrfuser/input \
+    -v $WRF_OUTPUT:/home/wrfuser/output \
+    -v $WPS_GEOG:/home/wrfuser/WPS_GEOG \
+    ncar/iwrf:lulc-2024-10-04 /home/wrfuser/input/run.sh
 
 The command has numerous arguments and options, which do the following:
 
 * ``docker run`` creates the container if needed and then runs it.
-* ``--shm-size 400G -it`` tells the command how much shared memory to use, and to run interactively in the shell.
+* ``--shm-size 200 -it`` tells the command how much shared memory to use, and to run interactively in the shell.
 * The ``-v`` options map folders in your cloud instance to paths within the container.
 * ``ncar/iwrf:lulc-2024-10-04`` is the Docker image to use when creating the container.
 
-Since we didn't provide a script at the end, it creates a container from the image and our shell is replaced with the container's environment. This container has the necessary files to run both WPS and WRF from the data we downloaded. 
+The simulation will take a long time to run, and when the results are ready, the terminal would become available again. The output files will be in the output folder. 
+
+
+Start WPS and WRF Manually
+==========================
+
+With everything in place, you are now ready to run the Docker container that will perform the simulation. The command below is similar to the one above, but it does not run the script. Instead, it starts the container and provides a shell prompt. From there, we will run each command one by one::
+
+    docker run --shm-size 200G -it \
+    -v $WRF_INPUT:/home/wrfuser/input \
+    -v $WRF_OUTPUT:/home/wrfuser/output \
+    -v $WPS_GEOG:/home/wrfuser/WPS_GEOG \
+    ncar/iwrf:lulc-2024-10-04 
+
 
 Run WPS
 =======
 
-We now set up the environment in the container to ensure proper files are found and there will not be memoruy issues. First "source" bashrc to load the environment and then allow unlimited memory to be used in this container:: 
+We now need to set up the environment in the container to ensure proper files and programs are found and there will not be memory issues. First, "source" bashrc to load the environment and then allow unlimited memory to be used in this container:: 
 
     source /etc/bashrc
     ulimit -s unlimited
 
-To start simulation, we need to run a few commands with WRF Pre-Processing System (WPS). The geogrid.exe must be run with the correct namelist::
+
+The first step of LULC is to run a few commands with WRF Pre-Processing System (WPS). The geogrid.exe in the WPS should be run with the correct namelist::
     
     cd /home/wrfuser/WPS
     cp /home/wrfuser/input/namelist/WPS/namelist1.wps /home/wrfuser/WPS/namelist.wps
     ./geogrid.exe
 
 
-Next, link the files from our attached volumes and link the HRRR data. Call ungrib.exe to generate files with HRRR_PRS headers::
+Next, link the files from the Vtable and link the HRRR files wit Vtable. Call ungrib.exe to generate files with HRRR_PRS headers::
 
     cp /home/wrfuser/input/namelist/WPS/Vtable.hrrr.modified /home/wrfuser/WPS/ungrib/Variable_Tables/
     ln -sf ./ungrib/Variable_Tables/Vtable.hrrr.modified Vtable
     ./link_grib.csh /home/wrfuser/input/HRRR/0703/hrrr.*.wrfprs
     ./ungrib.exe
 
-We need to do the same for WRFNAT files, so we copy a new namelist, link the HRRR data, and run ungrib.exe to generate files with HRRR_NAT headers:: 
+We need to do the same steps to genereate HRRR_NAT files. So we copy another namelist and link the HRRR data, and run ungrib.exe to generate files with HRRR_NAT headers:: 
 
     cp /home/wrfuser/input/namelist/WPS/namelist2.wps /home/wrfuser/WPS/namelist.wps
     ./link_grib.csh /home/wrfuser/input/HRRR/0703/hrrr.*.wrfnat
@@ -174,23 +199,30 @@ Finally, we can finalize the WPS process by calling metgrid.exe, which will read
 Run WRF
 =======
 
-To run the simulation with LULC modifications, we need to link the met_ems files we generated from WPS and copy the new namelist::
+To run the simulation with LULC modifications, we need to link WRF/run and the met_ems files we generated from WPS and copy the new namelist::
 
     cd /home/wrfuser/WRF
-    cp /home/wrfuser/input/namelist/WRF/namelist.input /home/wrfuser/WRF
-    cp /home/wrfuser/input/namelist/WRF/wrfvar_lulc_d01.txt /home/wrfuser/WRF
-    cp /home/wrfuser/input/namelist/WRF/wrfvar_lulc_d02.txt /home/wrfuser/WRF
-    cp /home/wrfuser/input/namelist/WRF/wrfvar_lulc_d03.txt /home/wrfuser/WRF
+    ln -sf /home/wrfuser/WRF/run/* .
+    cp /home/wrfuser/input/namelist/WRF/namelist.input .
+    cp /home/wrfuser/input/namelist/WRF/wrfvar_lulc_d01.txt .
+    cp /home/wrfuser/input/namelist/WRF/wrfvar_lulc_d02.txt .
+    cp /home/wrfuser/input/namelist/WRF/wrfvar_lulc_d03.txt .
     ln -sf /home/wrfuser/WPS/met_em* .
 
 Run real.exe to generate boundary conditions for WRF input::
 
     ./main/real.exe
 
-TODO change core number as needed. 
-Run WRF simulations with 60 CPU cores::
+Create a folder named "wrfdata" and run WRF simulations with 60 CPU cores::
     
+    mkdir wrfdata
     mpiexec -n 60 -ppn 60 ./main/wrf.exe
+
+This step will take about 2 days to run. When it's finished, copy the output from wrfdata to the output folder::
+
+    mv -r wrfdata/* /home/wrfuser/output
+
+You can now exit the container by entering "exit", and the output files will be in the output folder.
 
 
 Managing Your Jetstream2 Instance
