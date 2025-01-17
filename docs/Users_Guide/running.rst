@@ -21,6 +21,18 @@ Create a working directory in the scratch area::
 
    IWRF_WORK_DIR=${SCRATCH}/iwrf_work
 
+.. note::
+
+   If an error is displayed when attempting to pull the METplus image,
+   creating a DockerHub account and authenticating through apptainer may be
+   necessary.
+
+   ::
+
+      apptainer remote login --username {USERNAME} docker://docker.io
+
+   where **{USERNAME}** is your DockerHub username.
+
 Create a directory to store the output::
 
    LOCAL_OUTPUT_DIR=${IWRF_WORK_DIR}/metplus_out
@@ -58,6 +70,9 @@ using the --bind argument)
 * Config directory containing METplus use case configuration file
    * Local: ${IWRF_WORK_DIR}/i-wrf/use_cases/Hurricane_Matthew/METplus
    * Container: /config
+* Plot script directory containing WRF plotting scripts
+   * Local: ${SCRATCH}/i-wrf/use_cases/Hurricane_Matthew/Visualization
+   * Container: /plot_scripts
 * Output directory to write output
    * Local: ${IWRF_WORK_DIR}/metplus_out
    * Container: /data/output
@@ -68,13 +83,14 @@ using the --bind argument)
 ::
 
    LOCAL_METPLUS_CONFIG_DIR=${IWRF_WORK_DIR}/i-wrf/use_cases/Hurricane_Matthew/METplus
+   LOCAL_PLOT_SCRIPT_DIR=${IWRF_WORK_DIR}/i-wrf/use_cases/Hurricane_Matthew/Visualization
    LOCAL_FCST_INPUT_DIR=/glade/derecho/scratch/jaredlee/nsf_i-wrf/matthew
 
-   export APPTAINER_BIND="${IWRF_WORK_DIR}/data-matthew-input-obs.sif:/data/input/obs:image-src=/,${LOCAL_METPLUS_CONFIG_DIR}:/config,${LOCAL_FCST_INPUT_DIR}:/data/input/wrf,${LOCAL_OUTPUT_DIR}:/data/output,${APPTAINER_TMPDIR}:${APPTAINER_TMPDIR}"
+   export APPTAINER_BIND="${SCRATCH}/data-matthew-input-obs.sif:/data/input/obs:image-src=/,${LOCAL_METPLUS_CONFIG_DIR}:/config,${LOCAL_FCST_INPUT_DIR}:/data/input/wrf,${LOCAL_OUTPUT_DIR}:/data/output,${LOCAL_PLOT_SCRIPT_DIR}:/plot_scripts,${APPTAINER_TMPDIR}:${APPTAINER_TMPDIR}"
 
 Execute the run_metplus.py command inside the container to run the use case::
 
-   apptainer exec ${IWRF_WORK_DIR}/iwrf-metplus.sif /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
+   apptainer exec ${SCRATCH}/iwrf-metplus.sif /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
 
 Check that the output data was created locally::
 
