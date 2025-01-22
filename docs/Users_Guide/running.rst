@@ -38,9 +38,10 @@ Create a directory to store the output::
    LOCAL_OUTPUT_DIR=${IWRF_WORK_DIR}/metplus_out
    mkdir -p ${LOCAL_OUTPUT_DIR}
 
-Create a directory to store temporary Apptainer files::
+Create a directory to store temporary Apptainer files
+($TMPDIR is set automatically for all users on NCAR HPC machines)::
 
-   export APPTAINER_TMPDIR=${IWRF_WORK_DIR}/tmp
+   export APPTAINER_TMPDIR=${TMPDIR}
    mkdir -p ${APPTAINER_TMPDIR}
 
 Change directory to working directory and pull the containers from DockerHub.
@@ -71,7 +72,7 @@ using the --bind argument)
    * Local: ${IWRF_WORK_DIR}/i-wrf/use_cases/Hurricane_Matthew/METplus
    * Container: /config
 * Plot script directory containing WRF plotting scripts
-   * Local: ${SCRATCH}/i-wrf/use_cases/Hurricane_Matthew/Visualization
+   * Local: ${IWRF_WORK_DIR}/i-wrf/use_cases/Hurricane_Matthew/Visualization
    * Container: /plot_scripts
 * Output directory to write output
    * Local: ${IWRF_WORK_DIR}/metplus_out
@@ -86,11 +87,11 @@ using the --bind argument)
    LOCAL_PLOT_SCRIPT_DIR=${IWRF_WORK_DIR}/i-wrf/use_cases/Hurricane_Matthew/Visualization
    LOCAL_FCST_INPUT_DIR=/glade/derecho/scratch/jaredlee/nsf_i-wrf/matthew
 
-   export APPTAINER_BIND="${SCRATCH}/data-matthew-input-obs.sif:/data/input/obs:image-src=/,${LOCAL_METPLUS_CONFIG_DIR}:/config,${LOCAL_FCST_INPUT_DIR}:/data/input/wrf,${LOCAL_OUTPUT_DIR}:/data/output,${LOCAL_PLOT_SCRIPT_DIR}:/plot_scripts,${APPTAINER_TMPDIR}:${APPTAINER_TMPDIR}"
+   export APPTAINER_BIND="${IWRF_WORK_DIR}/data-matthew-input-obs.sif:/data/input/obs:image-src=/,${LOCAL_METPLUS_CONFIG_DIR}:/config,${LOCAL_FCST_INPUT_DIR}:/data/input/wrf,${LOCAL_OUTPUT_DIR}:/data/output,${LOCAL_PLOT_SCRIPT_DIR}:/plot_scripts,${APPTAINER_TMPDIR}:${APPTAINER_TMPDIR}"
 
 Execute the run_metplus.py command inside the container to run the use case::
 
-   apptainer exec ${SCRATCH}/iwrf-metplus.sif /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
+   apptainer exec ${IWRF_WORK_DIR}/iwrf-metplus.sif /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
 
 Check that the output data was created locally::
 
