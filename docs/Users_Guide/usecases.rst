@@ -2,11 +2,6 @@
 Use Cases
 *********
 
-Generic CONUS "interesting weather"
-===================================
-
-:ref:`weatherusecase`
-
 Hurricane Matthew
 =================
 
