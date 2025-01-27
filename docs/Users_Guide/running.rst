@@ -17,11 +17,9 @@ Load the apptainer module::
 
    module load apptainer
 
-Change directory to scratch and pull the images from DockerHub.
-This will create a `.sif` file in the current directory::
+Create a working directory in the scratch area::
 
-   apptainer pull ${SCRATCH}/iwrf-metplus.sif docker://ncar/iwrf:metplus-latest
-   apptainer pull ${SCRATCH}/data-matthew-input-obs.sif oras://registry-1.docker.io/ncar/iwrf:data-matthew-input-obs
+   IWRF_WORK_DIR=${SCRATCH}/iwrf_work
 
 .. note::
 
@@ -37,11 +35,24 @@ This will create a `.sif` file in the current directory::
 
 Create a directory to store the output::
 
-   mkdir ${SCRATCH}/metplus_out
+   LOCAL_OUTPUT_DIR=${IWRF_WORK_DIR}/metplus_out
+   mkdir -p ${LOCAL_OUTPUT_DIR}
+
+Create a directory to store temporary Apptainer files
+($TMPDIR is set automatically for all users on NCAR HPC machines)::
+
+   export APPTAINER_TMPDIR=${TMPDIR}
+   mkdir -p ${APPTAINER_TMPDIR}
+
+Change directory to working directory and pull the containers from DockerHub.
+This will create a `.sif` file in the current directory::
+
+   apptainer pull ${IWRF_WORK_DIR}/iwrf-metplus.sif docker://ncar/iwrf:metplus-latest
+   apptainer pull ${IWRF_WORK_DIR}/data-matthew-input-obs.sif oras://registry-1.docker.io/ncar/iwrf:data-matthew-input-obs
 
 Clone the I-WRF GitHub repository to get the configuration files::
 
-   git clone https://github.com/NCAR/i-wrf ${SCRATCH}/i-wrf
+   git clone https://github.com/NCAR/i-wrf ${IWRF_WORK_DIR}/i-wrf
 
 Set environment variable to bind directories to container
 (note: this can also be accomplished by passing the value on the command line
@@ -58,31 +69,33 @@ using the --bind argument)
       * Local: From data-matthew-input-obs.sif
       * Container: /data/input/obs/metar
 * Config directory containing METplus use case configuration file
-   * Local: ${SCRATCH}/i-wrf/use_cases/Hurricane_Matthew/METplus
+   * Local: ${IWRF_WORK_DIR}/i-wrf/use_cases/Hurricane_Matthew/METplus
    * Container: /config
 * Plot script directory containing WRF plotting scripts
-   * Local: ${SCRATCH}/i-wrf/use_cases/Hurricane_Matthew/Visualization
+   * Local: ${IWRF_WORK_DIR}/i-wrf/use_cases/Hurricane_Matthew/Visualization
    * Container: /plot_scripts
 * Output directory to write output
-   * Local: ${SCRATCH}/metplus_out
+   * Local: ${IWRF_WORK_DIR}/metplus_out
    * Container: /data/output
+* Apptainer temp directory
+   * Local: ${APPTAINER_TMPDIR}
+   * Container: ${APPTAINER_TMPDIR}
 
 ::
 
-   LOCAL_METPLUS_CONFIG_DIR=${SCRATCH}/i-wrf/use_cases/Hurricane_Matthew/METplus
-   LOCAL_PLOT_SCRIPT_DIR=${SCRATCH}/i-wrf/use_cases/Hurricane_Matthew/Visualization
+   LOCAL_METPLUS_CONFIG_DIR=${IWRF_WORK_DIR}/i-wrf/use_cases/Hurricane_Matthew/METplus
+   LOCAL_PLOT_SCRIPT_DIR=${IWRF_WORK_DIR}/i-wrf/use_cases/Hurricane_Matthew/Visualization
    LOCAL_FCST_INPUT_DIR=/glade/derecho/scratch/jaredlee/nsf_i-wrf/matthew
-   LOCAL_OUTPUT_DIR=${SCRATCH}/metplus_out
 
-   export APPTAINER_BIND="${SCRATCH}/data-matthew-input-obs.sif:/data/input/obs:image-src=/,${LOCAL_METPLUS_CONFIG_DIR}:/config,${LOCAL_FCST_INPUT_DIR}:/data/input/wrf,${LOCAL_OUTPUT_DIR}:/data/output,${LOCAL_PLOT_SCRIPT_DIR}:/plot_scripts"
+   export APPTAINER_BIND="${IWRF_WORK_DIR}/data-matthew-input-obs.sif:/data/input/obs:image-src=/,${LOCAL_METPLUS_CONFIG_DIR}:/config,${LOCAL_FCST_INPUT_DIR}:/data/input/wrf,${LOCAL_OUTPUT_DIR}:/data/output,${LOCAL_PLOT_SCRIPT_DIR}:/plot_scripts,${APPTAINER_TMPDIR}:${APPTAINER_TMPDIR}"
 
 Execute the run_metplus.py command inside the container to run the use case::
 
-   apptainer exec ${SCRATCH}/iwrf-metplus.sif /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
+   apptainer exec ${IWRF_WORK_DIR}/iwrf-metplus.sif /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
 
 Check that the output data was created locally::
 
-   ls ${SCRATCH}/metplus_out/point_stat -1
+   ls ${IWRF_WORK_DIR}/metplus_out/point_stat -1
 
 
 Visualization
