@@ -1,0 +1,7 @@
+FROM debian:12-slim
+
+RUN mkdir -p /data/input/wrf
+
+COPY stage/wrf /data/input/wrf
+
+VOLUME /data/input/wrf
