@@ -1,9 +1,10 @@
 :orphan:
 
-.. _matthewredcloud:
+.. _lulcredcloud:
 
 Running I-WRF On Red Cloud with LULC Data
-******************************************************
+*****************************************
+
 
 Overview
 ========
@@ -12,7 +13,8 @@ The following instructions can be used to run elements of
 the `I-WRF weather simulation framework <https://i-wrf.org>`_
 from the `National Center for Atmospheric Research (NCAR) <https://ncar.ucar.edu/>`_
 and the `Cornell Center for Advanced Computing <https://cac.cornell.edu/>`_.
-The steps below run the `Weather Research & Forecasting (WRF) <https://www.mmm.ucar.edu/models/wrf>`_ model with data fom `The High-Resolution Rapid Refresh (HRRR) <https://rapidrefresh.noaa.gov/hrrr/>`_ 
+The steps below run the `Weather Research & Forecasting (WRF) <https://www.mmm.ucar.edu/models/wrf>`_ 
+model with data from `The High-Resolution Rapid Refresh (HRRR) <https://rapidrefresh.noaa.gov/hrrr/>`_ 
 on the `Red Cloud cloud computing platform <https://www.cac.cornell.edu/services/cloudservices.aspx/>`_ 
 provided by Cornell Center for Advanced Computing (CAC).
 This exercise provides an introduction to using cloud computing platforms,
@@ -31,63 +33,73 @@ to avoid encountering issues during the process.
 Most sections refer to external documentation to provide details about the necessary steps
 and to offer additional background information.
 
+
 Prepare to Use Red Cloud
 ========================
 
-To `get started with Red Cloud <https://www.cac.cornell.edu/services/projects.aspx>`_,
+To `get started with Red Cloud <https://portal.cac.cornell.edu/techdocs/redcloud2/#getting-started-on-red-cloud-v2>`_,
 you will need to:
 
-* Get a CAC account by doing one of the following:
+* Go to the `CAC portal <https://portal.cac.cornell.edu/>`_ and log in. The instructions to log in are on the `CAC TechDocs page: Login <https://portal.cac.cornell.edu/techdocs/general/CACportal/#portal-login>`_.
 
-  * Start a new project by making a `project request <https://www.cac.cornell.edu/services/projects/project.aspx>`_ (Only available for Cornell Faculty and Staff).
-  * Join an existing project by `request to be added to a project <https://www.cac.cornell.edu/services/external/RequestCACid.aspx>`_.
-  * Request an exploratory account by `submitting a request <https://www.cac.cornell.edu/cu/explore.aspx>`_.
+* Get access to Red Cloud by doing one of the following options on the CAC portal:
 
-* Log in to Red Cloud's OpenStack interface.
+  * Start a new project by making a project request. The instructions are on the `CAC TechDocs page: As a Cornell Faculty or Staff, How Do I Start a new Project? <https://portal.cac.cornell.edu/techdocs/general/CACportal/#as-a-cornell-faculty-or-staff-how-do-i-start-a-new-project>`__ (Only available for Cornell Faculty and Staff)
+
+  * Join an existing project. The instructions are on the `CAC TechDocs page: How Do I Join an Existing Project? <https://portal.cac.cornell.edu/techdocs/general/CACportal/#how-do-i-join-an-existing-project>`__
+  
+  * Request an exploratory account. The instructions are on the `CAC TechDocs page: How Do I Request an Exploratory Project? <https://portal.cac.cornell.edu/techdocs/general/CACportal/#how-do-i-request-an-exploratory-account>`__ Note that an exploratory project might not have enough compute hours to complete this set of instructions.
+
+* For the new projects and the existing projects, make sure that the project has Red Cloud subscriptions. 
+
+* Log in to Red Cloud's Horizon interface.
 
 The sections below will guide you through this process. 
-For an overview of Red Cloud, read Cornell TechDocs `Red Cloud documentation <https://www.cac.cornell.edu/techdocs/redcloud/#red-cloud>`_.
+For an overview of Red Cloud, read Cornell CAC TechDocs `Red Cloud documentation <https://www.cac.cornell.edu/techdocs/redcloud2/#red-cloud-v2>`_.
+
 
 Start a Project
 ---------------
 
-One way to create a CAC account is to request a project. 
+One way to get a CAC account is to request a project. 
 Note that you must be a Cornell faculty member or a staff member to view the pages below and start a project. 
-You may submit a `project request <https://www.cac.cornell.edu/services/projects/project.aspx>`_ at the CAC website.
+You may submit a project request at the CAC portal.
 Thoroughly review the `rates <https://www.cac.cornell.edu/services/projects/rates.aspx>`_ page to understand the Red Cloud subscription service.
-Once your project is approved, you can `manage your project <https://www.cac.cornell.edu/services/projects/manage.aspx>`_, and  
-read `this page <https://www.cac.cornell.edu/services/projects/project.aspx>`_ to learn how to manage a project.
+Once your project is approved, you can manage your project on the CAC portal. Read `Portal Overview <https://www.cac.cornell.edu/techdocs/general/CACportal/#portal-overview>`_ to learn how to manage a project. Detailed instructions to start a project are available at the `CAC TechDocs page: As a Cornell Faculty or Staff, How Do I Start a new Project? <https://portal.cac.cornell.edu/techdocs/general/CACportal/#as-a-cornell-faculty-or-staff-how-do-i-start-a-new-project>`__
+
 
 Join a Project
 --------------
 
-To join an existing project, submit a `join request <https://www.cac.cornell.edu/services/external/RequestCACid.aspx>`_. 
-You should only do this if your PI has requested you to submit the request. 
-Once the PI of the project approves the request, an email is sent to you with the login information.
+To join an existing project, submit a request to join on the CAC portal. You should only do this if your PI has requested you to submit the request. Once the PI of the project approves the request, an email is sent to you with the login information. For the full instructions, read the `CAC TechDocs page: How Do I Join an Existing Project? <https://portal.cac.cornell.edu/techdocs/general/CACportal/#how-do-i-join-an-existing-project>`__
+
 
 Open an Exploratory Account
 ---------------------------
 
 You may also request an exploratory account if you have not made one already. 
-This account has limited computing hours and storage but is sufficient for this exercise. 
-To request an exploratory account, submit a `request <https://www.cac.cornell.edu/cu/explore.aspx>`_.
-You are also given one hour of free consulting for any help you may need.
+This account has limited computing hours and storage and may be insufficient for this exercise. 
+To request an exploratory account, go to the CAC portal and submit an exploration account request. 
+You are also given one hour of free consulting for any help you may need. For the full instructions, read the `CAC TechDocs page: How Do I Request an Exploratory Project? <https://portal.cac.cornell.edu/techdocs/general/CACportal/#how-do-i-request-an-exploratory-project>`__
 
-Log in to Red Cloud OpenStack Interface
----------------------------------------
 
-Once you are given a CAC account login information,
-you can log into the `Red Cloud OpenStack web interface <https://redcloud.cac.cornell.edu/>`_.
+Log in to Red Cloud Horizon Web Interface
+-----------------------------------------
+
+Once you are in a project with Red Cloud subscription,
+you can log into the `Red Cloud Horizon web interface <https://redcloud2.cac.cornell.edu/>`_.
 Note that you need to be on a project with a subscription to log in successfully.
+
 
 Create a Cloud Instance and Log In
 ==================================
 
-After you have logged in to the Red Cloud OpenStack interface,
+After you have logged in to the Red Cloud Horizon web interface,
 you are ready to create the cloud instance where you will run the I-WRF simulation.
 If you are not familiar with the cloud computing terms "image" and "instance",
-it is recommended that you read about them `here <https://www.cac.cornell.edu/techdocs/openstack/images/>`__ 
-and `here <https://www.cac.cornell.edu/techdocs/redcloud/Red_Cloud_Linux_Instances/>`__ before proceeding.
+it is recommended that you read about them `here <https://www.cac.cornell.edu/techdocs/redcloud2/compute/#images>`__ 
+and `here <https://www.cac.cornell.edu/techdocs/redcloud2/run_linux_instances/>`__ before proceeding.
+
 
 Create an SSH Key
 -----------------
@@ -96,38 +108,51 @@ You can either upload a public SSH key to Red Cloud or generate an SSH key pair 
 Red Cloud injects the uploaded public key or generated public key into the instance's default user account,
 and you will need to provide the matching private SSH key to log in to the instance.
 If you are not familiar with "SSH key pairs", you should
-`read about them <https://www.cac.cornell.edu/techdocs/openstack/keypairs/>`__ before continuing.
+`read about them <https://www.cac.cornell.edu/techdocs/redcloud2/compute/#keypairs>`__ before continuing.
 
 * First, `create an SSH Key on your computer <https://www.cac.cornell.edu/techdocs/openstack/keypairs/#creating-a-passphrase-protected-key-pair-recommended>`_ using the "ssh-keygen" command.  That command allows you to specify the name of the private key file it creates, with the default being "id_rsa".  The matching public key file is saved and named with ".pub" appended to the filename. 
-* Then, `import the public key to Red Cloud <https://www.cac.cornell.edu/techdocs/openstack/keypairs/#importing-a-key-pair>`_ through the Red Cloud web interface.
+* Then, `import the public key to Red Cloud <https://www.cac.cornell.edu/techdocs/redcloud2/horizon_ssh_keys/#import-a-public-key>`_ through the Red Cloud web interface.
 
-Alternatively, you can `create a key pair on Red Cloud <https://www.cac.cornell.edu/techdocs/openstack/keypairs/#creating-a-key-pair-without-a-passphrase>`_. Be sure to follow the steps and save the private key it generated with the correct format and permission before proceeding. 
+Alternatively, you can `create a key pair on Red Cloud <https://www.cac.cornell.edu/techdocs/redcloud2/horizon_ssh_keys/#create-a-new-ssh-key-pair>`_. Be sure to follow the steps and save the private key it generated with the correct format and permission before proceeding. 
+
+
+Create a Security Group
+-----------------------
+
+Security groups are firewalls that control inbound and outbound network traffic to your instances. To access a Linux instance, the rule SSH must be enabled in the security group. You can read more about security groups `here <https://www.cac.cornell.edu/techdocs/redcloud2/network/#security>`__. To create such a security group, follow the steps below:
+
+* First, create a security group with `these instructions <https://www.cac.cornell.edu/techdocs/redcloud2/horizon_security_groups/#create-a-security-group>`__.
+
+* Then, add the SSH rule to the security group to allow SSH traffic with `these instructions <https://www.cac.cornell.edu/techdocs/redcloud2/horizon_security_groups/#manage-your-security-group>`__.
+
 
 Create an Instance
 ------------------
 
-The Cornell TechDocs `Creating a New Linux Instance <https://www.cac.cornell.edu/techdocs/redcloud/Red_Cloud_Linux_Instances/#creating-a-new-linux-instance>`_
+The Cornell TechDocs `Creating a New Linux Instance <https://www.cac.cornell.edu/techdocs/redcloud2/run_linux_instances/#creating-a-new-linux-instance>`_
 provides detailed information about creating a Linux instance on Red Cloud.
 While following those steps, be sure to make the following choices for this instance:
 
 * When choosing an image as the instance source:
   
   * Select Boot from Source is "Image"
-  * Volume Size (GB) is 1000
+  * Volume Size (GB) is 1500
   * Delete Volume on Instance Delete is "Yes"
   * Select the "ubuntu-24.04-LTS" image
 
 * In Flavor, choose the "Flavor" c64.m120 (64 Virtual CPUs) to provide a faster simulation run-time. Note that this will consume subscriptions very fast.
 * In Network, select "public".
+* In Security Groups, select the group with SSH rule enabled.
 * In Key Pair, select the SSH public key that you uploaded previously.
 
 When all the required options are selected, click on the "Launch Instance" button, and wait for the instance to enter the "Active" state.
-Note that the instance will not only be created, but will be running so that you can log in right away.
+Note that the instance will not only be created, but also running so that you can log in right away.
+
 
 Log in to the Instance
 ----------------------
 
-The instructions for `connecting to Red Cloud Linux instances using SSH <https://www.cac.cornell.edu/techdocs/redcloud/Red_Cloud_Linux_Instances/#accessing-instances>`_
+The instructions for `connecting to Red Cloud Linux instances using SSH <https://www.cac.cornell.edu/techdocs/redcloud2/run_linux_instances/#accessing-instances>`_
 can be executed in the Command Prompt on Windows (from the Start menu, type "cmd" and select Command Prompt)
 or from the Terminal application on a Mac.
 
@@ -135,21 +160,22 @@ In either case, you will need to know the location and name of the private SSH k
 the IP address of your instance (found in the Red Cloud OpenStack interface)
 and the default username on your instance, which is "ubuntu".
 
-Once you are logged in to the instance you can proceed to the
+Once you are logged in to the instance, you can proceed to the
 "Install Software and Download Data" section below.
 You will know that your login has been successful when the prompt has the form ``ubuntu@instance-name:~$``,
 which indicates your username, the instance name, and your current working directory, followed by "$"
 
+
 Managing a Red Cloud Instance
-------------------------------
+-----------------------------
 
 In order to use cloud computing resources efficiently, you must know how to
-`manage your instances <https://www.cac.cornell.edu/techdocs/openstack/#instance-states>`_.
+`manage your instances <https://www.cac.cornell.edu/techdocs/redcloud2/compute/#instance-states>`_.
 Instances incur costs whenever they are running (on Red Cloud, this is when they are "Active").
 "Shelving" an instance stops it from using the cloud's CPUs and memory,
 and therefore stops it from incurring any charges against your project.
 
-When you are through working on this exercise,
+When you are finished with this exercise,
 be sure to use the instance's dropdown menu in the web interface to
 "Shelve" the instance so that it is no longer spending your computing hours.
 If you later return to the web interface and want to use the instance again,
@@ -158,9 +184,9 @@ Note that any programs that were running when you shelve the instance will be lo
 but the contents of the disk are preserved when shelving.
 
 You may also want to try the "Resize" action to change the number of CPUs of the instance.
-Increasing the number of CPUs (say, to flavor "c8.m64") can make your computations finish more quickly.
-But of course, doubling the number of CPUs doubles the cost per hour to run the instance,
-so Shelving as soon as you are done becomes even more important!
+Decreasing the number of CPUs (say, to flavor "c8.m64") may slow down your computations, but it will also reduce the cost per hour to run the instance.
+Nonetheless, it's important to shelve the instance as soon as you are done. 
+
 
 Preparing the Environment
 =========================
@@ -175,40 +201,84 @@ The following sections instruct you to issue numerous Linux commands in your she
 If you are not familiar with Linux, you may want to want to refer to
 `An Introduction to Linux <https://cvw.cac.cornell.edu/Linux>`_ when working through these steps.
 The commands in each section can be copied using the button in the upper right corner
-and then pasted into your web shell by right-clicking.
+and then pasted into your shell by right-clicking.
 
 
-Download Data for WPS and WRF
-=============================
+Download and Access Data for WPS and WRF
+========================================
 
-To run WRF on the HRRR and LULC data set, you need to have several data sets to support the computation. The commands in these sections download archive files containing that data, then uncompress the archives into folders. The geographic data is large and takes several minutes to acquire, while the other dataset should already be in the attached volume. 
+Install and Enable CephFS
+-------------------------
+
+For this exericse, you need to access the LULC use case data. In total, the LULC use case data are close to 90 GB in size. Usually, such massive data cannot be shared easily. However, Red Cloud now has a Ceph cluster, a distributed file system that stores the data locally at Cornell CAC. Any Linux machine on the Cornell network can access this data once CephFS is installed.
+ 
+First, update your instance::
+
+    sudo apt update
+
+Then, install the CephFS client::
+
+    sudo apt install ceph-common
+
+The CephFS mounting steps are slightly more complicated. When a CephFS share is created, access rules must be set for writing or reading the data. This credential is called a keyring, which consists of an entity name (accessTo) and a key (accessKey). For this exercise, below is the credential for read-only access to the LULC data::
+
+    accessTo="globus-public"
+    accessKey="AQCewqNnk5WcOBAAngE0Ktm1SfPV1711Q82uVw==" 
+
+The following commands set up the keyring::
+
+    mkdir -p /etc/ceph
+    echo -e "[client.${accessTo}]\n    key = ${accessKey}" | sudo tee /etc/ceph/ceph.client.${accessTo}.keyring
+
+The keyring file must be only readable to root::
+
+    sudo chown root:root /etc/ceph/ceph.client.${accessTo}.keyring
+    sudo chmod 600 /etc/ceph/ceph.client.${accessTo}.keyring
+
+Choose the mount location, which will be in the home directory::
+
+    cephfsPath="128.84.20.11:6789,128.84.20.12:6789,128.84.20.15:6789,128.84.20.13:6789,128.84.20.14:6789:/volumes/_nogroup/a33ce441-0ebd-4fab-b850-c0124bc46b70/89b3c9d9-b31c-4d64-9251-38b86a874c7d"
+    mountPoint="/home/ubuntu/lulc_input"
+
+Mount to the location::
+
+    echo "${cephfsPath} ${mountPoint} ceph name=${accessTo},x-systemd.device-timeout=30,x-systemd.mount-timeout=30,noatime,_netdev,rw 0 2" | sudo tee -a /etc/fstab
+    sudo systemctl daemon-reload
+    mkdir -p ${mountPoint}
+    sudo mount ${mountPoint}
+
+To test if mount is successful, run the following command::
+
+    df -h ${mountPoint}
+
+If CephFS is mounted correctly, the following output is shown::
+
+    Filesystem                                                                                                                                                                             Size  Used Avail Use% Mounted on
+    128.84.20.11:6789,128.84.20.12:6789,128.84.20.15:6789,128.84.20.13:6789,128.84.20.14:6789:/volumes/_nogroup/a33ce441-0ebd-4fab-b850-c0124bc46b70/89b3c9d9-b31c-4d64-9251-38b86a874c7d  100G   85G   16G  85% /home/ubuntu/lulc_input
 
 
-Get the geographic data representing the terrain in the area of the simulation::
+Set Input and Ouput Paths
+-------------------------
 
-    cd ~
-    wget https://www2.mmm.ucar.edu/wrf/src/wps_files/geog_high_res_mandatory.tar.gz
-    tar -xzf geog_high_res_mandatory.tar.gz
-    rm geog_high_res_mandatory.tar.gz
-    WPS_GEOG="~/WPS_GEOG"
+Copy and paste the following lines to set up paths of the input and output files::
 
-Get the HRRR data and namelists (GRIB2 files)::
+    mkdir ~/lulc_output
+    WRF_OUTPUT=~/lulc_output
+    WRF_INPUT=~/lulc_input
 
-    TODO: Find a way to share the HRRR data and the namelists.
-    Currently, it's a volume in JetStream2, in /media/volume/I-WRF_input.
-    WRF_INPUT="/mnt/I-WRF_input"
 
-If you would like to want to run the entire procedure with one script::
+(Optional) Exercise Script
+--------------------------
+
+If you would like to want to run the entire exercise with one script::
 
     TODO: Change this from issue 68 to main
     wget https://raw.githubusercontent.com/NCAR/i-wrf/refs/heads/feature_68_LULC_Instruction/use_cases/Land_Use_Land_Cover/WRF/run.sh
     chmod +x run.sh
-    mv run.sh $WRF_INPUT
+    mkdir ~/lulc_script
+    WRF_SCRIPT=~/lulc_script
+    mv run.sh $WRF_SCRIPT
 
-Create a folder for the output::
-
-    mkdir output
-    WRF_OUTPUT="~/output"
 
 Install Docker and Pull Docker Objects
 ======================================
@@ -250,105 +320,176 @@ If the command seems to succeed, confirm that the daemon is running using the st
 Repeat these efforts as necessary until it is started.
 
 
-Get the WRF Docker Image
-------------------------
+Get the LULC Docker Image
+-------------------------
 
-Once Docker is running, you must pull the correct versions of the WRF and METplus images onto your instance::
+Once Docker is running, you must pull the correct versions of the WRF image onto your instance::
 
-    docker pull ncar/iwrf:lulc-2024-10-04
+    sudo docker pull ncar/iwrf:lulc-2024-10-04
     
 
-Start WRF with script
+Using screen in Linux
 =====================
+As the simulation will take a long time to run, any disconnects from the instance will interrupt the simulation. It's recommended to use the Linux command "screen" in this scenario to create a screen session. The advantage of screen is that even if you disconnect from a screen session, the task will be still running, you can reconnect to the screen session at any time to check the progress. Disconnecting and reconnecting are referred to as "detaching" and "attaching." 
 
-With everything in place, you are now ready to run the Docker container that will perform the simulation. If you would like to run the entire script in one command, we just have to run the script. The downloaded script runs inside the container, prints lots of status information, and creates output files in the run folder you created. Execute this command start a container with the image we pulled earlier::
+To start a screen session with "lulc" as the session name, enter the following::
 
-    docker run --shm-size 200G -it \
-    -v $WRF_INPUT:/home/wrfuser/input \
-    -v $WRF_OUTPUT:/home/wrfuser/output \
-    -v $WPS_GEOG:/home/wrfuser/WPS_GEOG \
-    ncar/iwrf:lulc-2024-10-04 /home/wrfuser/input/run.sh
+    screen -S lulc
+
+At any time, enter the following to show the currently running sessions and attached sessions, if any::
+
+    screen -ls
+
+Inside a session, if you want to detach from it, you would need to press a combination of keys::
+    
+    Ctrl+A,  D
+
+To attach to the screen session "lulc", enter the following:: 
+
+    screen -r lulc
+
+
+Start WPS and WRF with script
+=============================
+
+With everything in place, you are now ready to run the Docker container that will perform the simulation. First, make sure you are in a screen session. If you would like to run the entire script in one command, you just have to run the script. The downloaded script runs inside the container, prints lots of status information, and creates output files in the output folder you created. Execute this command to start a container with the image we pulled earlier::
+
+    sudo docker run --shm-size 100G -it \
+    -v $WRF_INPUT:/home/wrfuser/lulc_input \
+    -v $WRF_OUTPUT:/home/wrfuser/lulc_output \
+    -v $WRF_SCRIPT:/home/wrfuser/lulc_script \
+    ncar/iwrf:lulc-2024-10-04 sudo /home/wrfuser/lulc_script/run.sh
 
 The command has numerous arguments and options, which do the following:
 
 * ``docker run`` creates the container if needed and then runs it.
-* ``--shm-size 200 -it`` tells the command how much shared memory to use, and to run interactively in the shell.
+* ``--shm-size 100 -it`` tells the command how much shared memory to use, and to run interactively in the shell.
 * The ``-v`` options map folders in your cloud instance to paths within the container.
 * ``ncar/iwrf:lulc-2024-10-04`` is the Docker image to use when creating the container.
 
-The simulation will take a long time to run, and when the results are ready, the terminal would become available again. The output files will be in the output folder. 
+The simulation will take a long time to run, and when the results are ready, the terminal will become available again. The output files will be in the output folder.
 
 
-Start WPS and WRF Manually
-==========================
+Run WPS and WRF Manually
+========================
 
 With everything in place, you are now ready to run the Docker container that will perform the simulation. The command below is similar to the one above, but it does not run the script. Instead, it starts the container and provides a shell prompt. From there, we will run each command one by one::
 
-    docker run --shm-size 200G -it \
-    -v $WRF_INPUT:/home/wrfuser/input \
-    -v $WRF_OUTPUT:/home/wrfuser/output \
-    -v $WPS_GEOG:/home/wrfuser/WPS_GEOG \
-    ncar/iwrf:lulc-2024-10-04 
+    sudo docker run --shm-size 100G -it \
+    -v $WRF_INPUT:/home/wrfuser/lulc_input \
+    -v $WRF_OUTPUT:/home/wrfuser/lulc_output \
+    ncar/iwrf:lulc-2024-10-04 bash
+
+The command has numerous arguments and options, which do the following:
+
+* ``docker run`` creates the container if needed and then runs it.
+* ``--shm-size 100 -it`` tells the command how much shared memory to use, and to run interactively in the shell.
+* The ``-v`` options map folders in your cloud instance to paths within the container.
+* ``ncar/iwrf:lulc-2024-10-04`` is the Docker image to use when creating the container.
 
 
 Run WPS
 =======
 
-We now need to set up the environment in the container to ensure proper files and programs are found and there will not be memory issues. First, "source" bashrc to load the environment and then allow unlimited memory to be used in this container:: 
+We now need to set up the environment in the container to ensure proper files and executables are in the path and resolve any memory issues. First, load the environment in "/etc/bashrc" with "source" and then allow unlimited memory to be used in this container:: 
 
     source /etc/bashrc
     ulimit -s unlimited
 
+And define some environment variables for input and output paths::
 
-The first step of LULC is to run a few commands with WRF Pre-Processing System (WPS). The geogrid.exe in the WPS should be run with the correct namelist::
+    WPS=/home/wrfuser/WPS
+    WRF=/home/wrfuser/WRF
+    LULC_OUTPUT=/home/wrfuser/lulc_output
+    LULC_WPS_INPUT=/home/wrfuser/lulc_input/WPS_input
+    LULC_WRF_INPUT=/home/wrfuser/lulc_input/WRF_input
+
+The first step of the LULC use case is to run the WRF Pre-Processing System (WPS). Start with running "geogrid.exe" with "WPS_GEOG" data. The file "namelist.wps" directs "geogrid.exe" to read domain configuration parameters from the WPS_GEOG data directory::
     
-    cd /home/wrfuser/WPS
-    cp /home/wrfuser/input/namelist/WPS/namelist1.wps /home/wrfuser/WPS/namelist.wps
+    cd $WPS
+    cp $LULC_WPS_INPUT/namelist/namelist_PRS.wps $WPS/namelist.wps
+    ln -fs $LULC_WPS_INPUT/WPS_GEOG $WPS
     ./geogrid.exe
 
 
-Next, link the files from the Vtable and link the HRRR files wit Vtable. Call ungrib.exe to generate files with HRRR_PRS headers::
+Next, link the Vtable and link the HRRR files with the extension "wrfprs". Call "ungrib.exe" to generate files with HRRR_PRS headers::
 
-    cp /home/wrfuser/input/namelist/WPS/Vtable.hrrr.modified /home/wrfuser/WPS/ungrib/Variable_Tables/
-    ln -sf ./ungrib/Variable_Tables/Vtable.hrrr.modified Vtable
-    ./link_grib.csh /home/wrfuser/input/HRRR/0703/hrrr.*.wrfprs
+    cd $WPS
+    cp $LULC_WPS_INPUT/namelist/Vtable.hrrr.modified $WPS/ungrib/Variable_Tables/
+    ln -sf $WPS/ungrib/Variable_Tables/Vtable.hrrr.modified $WPS/Vtable
+    ./link_grib.csh $LULC_WPS_INPUT/HRRR_0703/hrrr.*.wrfprs
     ./ungrib.exe
 
-We need to do the same steps to genereate HRRR_NAT files. So we copy another namelist and link the HRRR data, and run ungrib.exe to generate files with HRRR_NAT headers:: 
+Do the same with HRRR files with the extension "wrfnat" and generate files with HRRR_PRS headers. Note that we need a new "namelist.wps"::
 
-    cp /home/wrfuser/input/namelist/WPS/namelist2.wps /home/wrfuser/WPS/namelist.wps
-    ./link_grib.csh /home/wrfuser/input/HRRR/0703/hrrr.*.wrfnat
+    cd $WPS
+    cp $LULC_WPS_INPUT/namelist/namelist_NAT.wps $WPS/namelist.wps
+    ./link_grib.csh $LULC_WPS_INPUT/HRRR_0703/hrrr.*.wrfnat
     ./ungrib.exe
 
-Finally, we can finalize the WPS process by calling metgrid.exe, which will read both HRRR_PRS and HRRR_NAT files::
+Finally, we can finalize the WPS process by calling "metgrid.exe", which will read both HRRR_PRS and HRRR_NAT files::
 
+    cd $WPS
     ./metgrid.exe
 
 
 Run WRF
 =======
 
-To run the simulation with LULC modifications, we need to link WRF/run and the met_ems files we generated from WPS and copy the new namelist::
+Control Simulation
+------------------
 
-    cd /home/wrfuser/WRF
-    ln -sf /home/wrfuser/WRF/run/* .
-    cp /home/wrfuser/input/namelist/WRF/namelist.input .
-    cp /home/wrfuser/input/namelist/WRF/wrfvar_lulc_d01.txt .
-    cp /home/wrfuser/input/namelist/WRF/wrfvar_lulc_d02.txt .
-    cp /home/wrfuser/input/namelist/WRF/wrfvar_lulc_d03.txt .
-    ln -sf /home/wrfuser/WPS/met_em* .
+The control simulation runs WRF with the files generated from WPS. First, copy the namelist and WRF variable files and link the "met_em" files from WPS::
 
-Run real.exe to generate boundary conditions for WRF input::
+    cd $WRF
+    ln -sf $WRF/run/* $WRF
+    cp $LULC_WRF_INPUT/namelist/namelist.input $WRF
+    cp $LULC_WRF_INPUT/ctl/wrfvar_lulc_d01.txt $WRF
+    cp $LULC_WRF_INPUT/ctl/wrfvar_lulc_d02.txt $WRF
+    cp $LULC_WRF_INPUT/ctl/wrfvar_lulc_d03.txt $WRF
+    ln -sf $WPS/met_em* $WRF
 
+Run "real.exe" to generate boundary conditions for WRF input. The files generated from this step are "wrfbdy_d01", "wrfinput_d01", "wrfinput_d02", and "wrfinput_d03". Paste the following::
+
+    cd $WRF
     ./main/real.exe
 
-Create a folder named "wrfdata" and run WRF simulations with 60 CPU cores::
+Create a folder named "wrfdata" in the WRF directory and run WRF simulation with 60 CPU cores::
     
-    mkdir wrfdata
+    cd $WRF
+    mkdir $WRF/wrfdata
     mpiexec -n 60 -ppn 60 ./main/wrf.exe
 
-This step will take about 2 days to run. When it's finished, copy the output from wrfdata to the output folder::
+This step will take about 2 days to run. When it is finished, copy the output from "wrfdata" to the output folder::
 
-    mv -r wrfdata/* /home/wrfuser/output
+    mv $WRF/wrfdata $LULC_OUTPUT/ctl
 
-You can now exit the container by entering "exit", and the output files will be in the output folder.
+
+DFW4X Simulation
+----------------
+
+First, remove the files used for the control simulation::
+
+    cd $WRF
+    rm met_em*
+    rm wrfbdy_d01
+    rm wrfinput*
+
+Link the appropriate files for DFW4X simulation::
+
+    ln -sf $WRF/run/* $WRF
+    ln -sf $LULC_WRF_INPUT/dfw4x/wrfbdy_d01 $WRF
+    ln -sf $LULC_WRF_INPUT/dfw4x/wrfinput* $WRF
+    ln -sf $LULC_WRF_INPUT/dfw4x/met_em* $WRF
+
+Create a folder named "wrfdata" in the WRF directory and run WRF simulation with 60 CPU cores::
+    
+    cd $WRF
+    mkdir $WRF/wrfdata
+    mpiexec -n 60 -ppn 60 ./main/wrf.exe
+
+When it is finished, copy the output from "wrfdata" to the output folder::
+
+    mv $WRF/wrfdata $LULC_OUTPUT/dfw4x
+
+You can now exit the container by entering "exit", and the output files will be in "lulc_output".
