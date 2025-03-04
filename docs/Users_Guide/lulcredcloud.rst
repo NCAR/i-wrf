@@ -367,7 +367,7 @@ The command has numerous arguments and options, which do the following:
 * The ``-v`` options map folders in your cloud instance to paths within the container.
 * ``ncar/iwrf:lulc-2024-10-04`` is the Docker image to use when creating the container.
 
-The simulation will take a long time to run, and when the results are ready, the terminal will become available again. The output files will be in the output folder.
+The simulation will take a long time to run, and when the results are ready, the terminal will become available again. The output files will be in the "lulc_output" folder. See the "View Output" section below for instructions on how to view the output.
 
 
 Run WPS and WRF Manually
@@ -492,4 +492,18 @@ When it is finished, copy the output from "wrfdata" to the output folder::
 
     mv $WRF/wrfdata $LULC_OUTPUT/dfw4x
 
-You can now exit the container by entering "exit", and the output files will be in "lulc_output".
+
+After the copying is done, you may exit the container by entering "exit".
+
+
+View Output
+===========
+
+To view the outputs in the "lulc_output" folder, you must first give view permissions to the folder::
+
+    sudo chmod -R 777 $WRF_OUTPUT
+
+Use the "ls" command to list the files in the "ctl" or "dfw4x" folders::
+
+    ls $WRF_OUTPUT/ctl
+    ls $WRF_OUTPUT/dfw4x
