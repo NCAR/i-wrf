@@ -68,7 +68,7 @@ Now you can copy and paste the definitions below into your shell to define the o
     set WRF_CONFIG_DIR=%WORKING_DIR%\i-wrf-main\use_cases\Hurricane_Matthew\WRF
     set METPLUS_CONFIG_DIR=%WORKING_DIR%\i-wrf-main\use_cases\Hurricane_Matthew\METplus
     set PLOT_SCRIPT_DIR=%WORKING_DIR%\i-wrf-main\use_cases\Hurricane_Matthew\Visualization
-    set OBS_DATA_VOL=data-matthew-input-obs
+    set OBS_DATA_VOL=matthew-input-obs
 
 Any time you open a new shell on your instance, you will need to perform this action
 to redefine the variables before executing the commands that follow.
@@ -150,8 +150,8 @@ then creating a container from that volume,
 and then referencing that volume when we run the METplus Docker container.
 The commands to pull the volume and create a container for it are::
 
-    docker pull ncar/iwrf:%OBS_DATA_VOL%.docker
-    docker create --name %OBS_DATA_VOL% ncar/iwrf:%OBS_DATA_VOL%.docker
+    docker pull ncar/iwrf-data:%OBS_DATA_VOL%.docker
+    docker create --name %OBS_DATA_VOL% ncar/iwrf-data:%OBS_DATA_VOL%.docker
 
 Download Data for WRF
 =====================
