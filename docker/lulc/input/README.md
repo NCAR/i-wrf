@@ -45,7 +45,7 @@ mksquashfs wrf/ input_wrf.squashfs
 apptainer sif new input_wrf.sif
 apptainer sif add --datatype 4 --partarch 2 --partfs 1 --parttype 3 input_wrf.sif input_wrf.squashfs
 
-apptainer remote login --username MY_USERNAME oras://registry-1.docker.io
+apptainer registry login --username MY_USERNAME oras://registry-1.docker.io
 apptainer push -U input_wrf.sif oras://registry-1.docker.io/ncar/iwrf-data:lulc-input-wrf-d03.apptainer
 ```
 
@@ -55,6 +55,6 @@ mksquashfs obs/ input_obs.squashfs
 apptainer sif new input_obs.sif
 apptainer sif add --datatype 4 --partarch 2 --partfs 1 --parttype 3 input_obs.sif input_obs.squashfs
 
-apptainer remote login --username MY_USERNAME oras://registry-1.docker.io
+apptainer registry login --username MY_USERNAME oras://registry-1.docker.io
 apptainer push -U input_obs.sif oras://registry-1.docker.io/ncar/iwrf-data:lulc-input-obs-d03.apptainer
 ```
