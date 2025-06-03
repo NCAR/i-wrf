@@ -6,7 +6,35 @@ Input will need to be uploaded to DockerHub following both sets of instructions 
 
 * Create a working directory
 * Under the working directory, create directories stage/wrf and stage/obs to stage WRF and observation data respectively
-* Add data files to the appropriate staging directories
+* Add the observation data files to the stage/obs staging directories
+* Subset the WRF data to remove fields that are not used by the use cases.
+
+### Subset WRF data
+
+This assumes that the full WRF files are in a directory called full/wrf and the stage/wrf directory already exists.
+
+### Subset hourly files to include RAINC, RAINNC, REFD_MAX, HAILNC, HAIL_MAX2D, and dimension variables
+
+```
+for f in full/wrf/wrfout_d03_2017-07-0*00.morr*
+do
+    echo ncks -v Times,XLAT,XLONG,RAINC,RAINNC,REFD_MAX,HAILNC,HAIL_MAX2D $f stage${f:4}
+    ncks -v Times,XLAT,XLONG,RAINC,RAINNC,REFD_MAX,HAILNC,HAIL_MAX2D $f stage${f:4}
+done
+```
+
+### Subset 10 minute files to include RAINC, RAINNC, HAILNC, and dimension variables
+
+```
+for minutes in 10 20 30 40 50
+do
+    for f in full/wrf/wrfout_d03_2017-07-0*${minutes}.morr*
+    do
+        echo ncks -v Times,XLAT,XLONG,RAINC,RAINNC,HAILNC $f stage${f:4}
+        ncks -v Times,XLAT,XLONG,RAINC,RAINNC,HAILNC $f stage${f:4}
+    done
+done
+```
 
 ## Docker
 
