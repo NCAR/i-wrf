@@ -168,7 +168,7 @@ make sure that we refer to the same resource names and file paths wherever they 
 Copy and paste the definitions below into your shell to define the variables before proceeding::
 
     WRF_IMAGE=ncar/iwrf:latest
-    METPLUS_IMAGE=ncar/iwrf:metplus-latest
+    METPLUS_IMAGE=ncar/iwrf-metplus:latest
     WORKING_DIR=/home/exouser
     WRF_DIR=${WORKING_DIR}/wrf/20161006_00
     METPLUS_DIR=${WORKING_DIR}/metplus
