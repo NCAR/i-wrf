@@ -62,7 +62,7 @@ or changes the path entirely to use a different location on your computer::
 Now you can copy and paste the definitions below into your shell to define the other variables before proceeding::
 
     set WRF_IMAGE=ncar/iwrf:latest
-    set METPLUS_IMAGE=ncar/iwrf:metplus-latest
+    set METPLUS_IMAGE=ncar/iwrf-metplus:latest
     set WRF_DIR=%WORKING_DIR%\wrf\20161006_00
     set METPLUS_DIR=%WORKING_DIR%\metplus
     set WRF_CONFIG_DIR=%WORKING_DIR%\i-wrf-main\use_cases\Hurricane_Matthew\WRF

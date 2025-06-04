@@ -47,7 +47,7 @@ Create a directory to store temporary Apptainer files
 Change directory to working directory and pull the containers from DockerHub.
 This will create a `.sif` file in the current directory::
 
-   apptainer pull ${IWRF_WORK_DIR}/iwrf-metplus.sif docker://ncar/iwrf:metplus-latest
+   apptainer pull ${IWRF_WORK_DIR}/iwrf-metplus.sif docker://ncar/iwrf-metplus:latest
    apptainer pull ${IWRF_WORK_DIR}/data-matthew-input-obs.sif oras://registry-1.docker.io/ncar/iwrf-data:matthew-input-obs
 
 Clone the I-WRF GitHub repository to get the configuration files::
