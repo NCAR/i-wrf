@@ -14,7 +14,7 @@ Copy and paste the following lines to set up paths of the input, output, and con
 Run WPS and WRF Manually
 ========================
 
-The instructions below will run WPS and WRF manually. It runs WPS and WRF and simulate the weather between 12:00, July 3 2017 to 15:00, July 3 2017, just a window of three hours over the Dallas-Fort Worth area. This simulation will take about 7 hours to run. If you would like to try the full simulation (between 12:00, July 3 2017 to 00:00, July 5 2017), read :ref:`Full Simulation`.
+The instructions below will run WPS and WRF manually. It runs WPS and WRF and simulate the weather between 12:00, July 3 2017 to 15:00, July 3 2017, just a window of three hours over the Dallas-Fort Worth area. This simulation will take about 7 hours to run. If you would like to try the full simulation (between 12:00, July 3 2017 to 00:00, July 5 2017), read "Start WPS and WRF with a Script (Full Simulation)" Below.
 
 You are ready to run the Docker container that will perform the simulation. First, make sure you are in a screen session. The command below starts the container and provides a shell prompt. From there, we will run each command one by one::
 
@@ -151,8 +151,6 @@ When it's finished, move the outputs from ``wrfdata`` to the output directory::
 After moving the outputs, you may exit the container by entering ``exit``.
 
 
-
-.. _Full Simulation:
 
 Start WPS and WRF with a Script (Full Simulation)
 =================================================
