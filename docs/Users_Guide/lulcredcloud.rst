@@ -56,7 +56,7 @@ you will need to:
   
   * Request an exploratory account. The instructions are on the `CAC TechDocs page: How Do I Request an Exploratory Project? <https://portal.cac.cornell.edu/techdocs/general/CACportal/#how-do-i-request-an-exploratory-project>`__ Note that an exploratory project does not have enough compute hours to complete this set of instructions.
 
-* For new projects and the existing projects, make sure that the project has Red Cloud subscriptions. 
+* For new projects and existing projects, make sure that the project has Red Cloud subscriptions. 
 
 * Log in to Red Cloud's `Red Cloud Horizon web interface <https://redcloud2.cac.cornell.edu/>`_.
 
@@ -68,7 +68,7 @@ Start a Project
 ---------------
 
 One way to get a CAC account is to request a project. 
-Note that you must be a Cornell faculty member or staff to view the pages below and start a project. 
+Note that you must be a Cornell faculty member or staff member to view the pages below and start a project. 
 You may submit a project request at the CAC portal.
 Thoroughly review the `rates <https://portal.cac.cornell.edu/rates>`_ (login required) page to understand the Red Cloud subscription service.
 Once your project is approved, you can manage your project on the CAC portal. Read the `Portal Overview <https://portal.cac.cornell.edu/techdocs/general/CACportal/#portal-overview>`_ to learn how to manage a project. Detailed instructions to start a project are available at the `CAC TechDocs page: As a Cornell Faculty or Staff, How Do I Start a New Project? <https://portal.cac.cornell.edu/techdocs/general/CACportal/#as-a-cornell-faculty-or-staff-how-do-i-start-a-new-project>`__
@@ -100,11 +100,9 @@ and you will need to provide the matching private SSH key to log in to the insta
 If you are not familiar with "SSH key pairs", you should
 `read about them <https://portal.cac.cornell.edu/techdocs/redcloud/compute/#keypairs>`__ before continuing.
 
-* `Create an SSH Key on your computer <https://portal.cac.cornell.edu/techdocs/openstack/keypairs/#creating-a-passphrase-protected-key-pair-recommended>`_ using the "ssh-keygen" command.  That command allows you to specify the name of the private key file it creates, with the default being "id_rsa".  The matching public key file is saved and named with ".pub" appended to the filename.
-* `Import the public key to Red Cloud <https://portal.cac.cornell.edu/techdocs/redcloud/horizon_ssh_keys/#import-a-public-key>`_ through the Red Cloud web interface.
+* It's highly recommended that you `create a key pair on Red Cloud <https://portal.cac.cornell.edu/techdocs/redcloud/horizon_ssh_keys/#create-a-new-ssh-key-pair>`_. Be sure to follow the steps and save the private key it generated with the correct format and permission before proceeding. This is the easiest way to generate a key pair for this exercise. 
 
-Alternatively, you can `create a key pair on Red Cloud <https://portal.cac.cornell.edu/techdocs/redcloud/horizon_ssh_keys/#create-a-new-ssh-key-pair>`_. Be sure to follow the steps and save the private key it generated with the correct format and permission before proceeding.
-
+* Alternatively, `create an SSH Key on your computer <https://portal.cac.cornell.edu/techdocs/clusterinfo/linuxconnect/#public-key-authentication>`_ using the "ssh-keygen" command. That command allows you to specify the name of the private key file it creates, with the default being "id_rsa".  The matching public key file is saved and named with ".pub" appended to the filename. Then, `import the public key to Red Cloud <https://portal.cac.cornell.edu/techdocs/redcloud/horizon_ssh_keys/#import-a-public-key>`_ through the Red Cloud web interface.
 
 Create a Security Group
 -----------------------
@@ -141,7 +139,7 @@ While following those steps, be sure to make the following choices for this inst
 
 * In Flavor, choose the "Flavor" c64.m120 (64 Virtual CPUs) to provide a faster simulation run-time. Note that this will consume Red Cloud subscriptions very fast.
 * In Network, select "public".
-* In Security Groups, select "campus_only_ssh" or the security group you created.
+* In Security Groups, select "campus-only-ssh" or the security group you created.
 * In Key Pair, select the SSH public key that you created or uploaded previously.
 
 When all the required options are selected, click on the "Launch Instance" button, and wait for the instance to enter the "Active" state. Note that the instance will not only be created, but also running so that you can log in after a couple of minutes.
@@ -294,18 +292,26 @@ Mount to the location::
     mkdir -p ${mountPoint}
     sudo mount ${mountPoint}
 
-You might encounter some errors during the mount step. Disregard the errors, and run the following command to test if mount is successful::
+You might encounter some errors during the mount step. Disregard these errors, and run the following command to test if mount is successful::
 
     df -h ${mountPoint}
 
 If the CephFS share is mounted correctly, the following output is shown:
 
-..
+.. raw:: html
+
+    <style>
+        .no-copybutton .copybtn {
+            display: none !important;
+        }
+    </style>
+
+.. code-block:: console
+    :class: no-copybutton
 
     Filesystem                                                                                                                                                                             Size  Used Avail Use% Mounted on
     128.84.20.11:6789,128.84.20.12:6789,128.84.20.15:6789,128.84.20.13:6789,128.84.20.14:6789:/volumes/_nogroup/e91d7ccd-9845-4d2a-acc6-d40e572ee796/937df611-6035-47bc-92ed-ad09fb225715  100G   85G   16G  85% /home/ubuntu/lulc_input
 
-..
     
 .. include:: lulcconfigfiles.rst
 
@@ -322,16 +328,33 @@ If you do not have the resource to run the entire simulation but would like to s
     accessTo="iwrf-lulc-output-read-only"
     accessKey="AQCe60lo0kUiJBAAkf9bYacxnfjVM4zcku67Xw==" 
     cephfsPath="128.84.20.11:6789,128.84.20.12:6789,128.84.20.15:6789,128.84.20.13:6789,128.84.20.14:6789:/volumes/_nogroup/4686628e-540f-4e99-8cd1-9e53dcb9f97d/686fafb3-94a2-4547-b33a-178f1f59ff8f"
-    mountPoint="/home/ubuntu/lulc_full_ouput"
+    mountPoint="/home/ubuntu/lulc_full_output"
+
+::
 
     mkdir -p /etc/ceph
     echo -e "[client.${accessTo}]\n    key = ${accessKey}" | sudo tee /etc/ceph/ceph.client.${accessTo}.keyring
+
+::
+
     sudo chown root:root /etc/ceph/ceph.client.${accessTo}.keyring
     sudo chmod 600 /etc/ceph/ceph.client.${accessTo}.keyring
+
+::
+
     echo "${cephfsPath} ${mountPoint} ceph name=${accessTo},x-systemd.device-timeout=30,x-systemd.mount-timeout=30,noatime,_netdev,rw 0 2" | sudo tee -a /etc/fstab
+
+::
+
     sudo systemctl daemon-reload
+
+::
+
     mkdir -p ${mountPoint}
     sudo mount ${mountPoint}
+
+::
+      
     df -h ${mountPoint}
 
-The full outputs should be in ``/home/ubuntu/lulc_full_ouput``.
+The full output should be in ``/home/ubuntu/lulc_full_output``.

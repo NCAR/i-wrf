@@ -6,4 +6,5 @@ Both WPS and WRF require some configuration files to direct their behavior, and 
 
     git clone https://github.com/NCAR/i-wrf ~/i-wrf
     cp -r ~/i-wrf/use_cases/Land_Use_Land_Cover ~/lulc_configs
+    chmod 777 ~/lulc_configs/run_full.sh
     

@@ -21,7 +21,7 @@ This science use case focuses on a deep convection system that passed over the D
 
 Simulations like WRF often require greater computing resources
 than you may have on your personal computer,
-but a cloud computing platform can provided the needed computational power.
+but a cloud computing platform can provide the needed computational power.
 Jetstream2 is a national cyberinfrastructure resource that is easy to use
 and is available to researchers and educators.
 This exercise runs the I-WRF programs as Docker "containers",
@@ -56,7 +56,7 @@ If there are no allocation owners who can add you to their allocation and you ar
 you may `request an allocation <https://allocations.access-ci.org/get-your-first-project>`_
 that will allow you to use an ACCESS-affiliated cyberinfrastructure resource.
 Note that allocations may only be requested by faculty, staff and graduate researchers,
-so undergraduates must work with a faculty sponsor to requeste an allocation.
+so undergraduates must work with a faculty sponsor to request an allocation.
 
 Be sure to read all of the information on the request page so that you make a suitable request.
 Note that you will need to describe the project for which the allocation is intended
@@ -129,9 +129,9 @@ Log in to the Instance
 
 The Exosphere web dashboard provides two easy-to-use methods for logging in to your instance through a web browser.
 The "Web Shell" button will open a terminal to your instance,
-and the "Wed Desktop" button will open a view of the instance's graphical desktop (if enabled).
+and the "Web Desktop" button will open a view of the instance's graphical desktop (if enabled).
 Both views open in a new browser tab, and Exosphere automatically logs you in to the instance.
-For this tutorial, either options will work, as you will be mostly using the terminals. 
+For this tutorial, either option will work, as you will be mostly using the terminals. 
 
 If you wish to log in to the instance from a shell on your computer,
 you can do so following the information in this optional content:
@@ -192,7 +192,7 @@ as they essentially change the contents of the instance's disk
 and those changes will remain even after the instance is shelved and unshelved.
 
 The following sections instruct you to issue numerous Linux commands in your shell.
-If you are not familiar with Linux, you may want to want to refer to
+If you are not familiar with Linux, you may want to refer to
 `An Introduction to Linux <https://cvw.cac.cornell.edu/Linux>`_ when working through these steps.
 The commands in each section can be copied using the button in the upper right corner
 and then pasted into your shell by right-clicking.
@@ -273,12 +273,20 @@ Run the following command to test if mount is successful::
 
 If the CephFS share is mounted correctly, the following output is shown:
 
-..
+.. raw:: html
+
+    <style>
+        .no-copybutton .copybtn {
+            display: none !important;
+        }
+    </style>
+
+.. code-block:: console
+    :class: no-copybutton
 
     Filesystem                                                                                                                                                                                       Size  Used Avail Use% Mounted on
     149.165.158.38:6789,149.165.158.22:6789,149.165.158.54:6789,149.165.158.70:6789,149.165.158.86:6789:/volumes/_nogroup/6e81fe46-b69e-4d33-be08-a2580b420b81/6cc28fc1-35f3-41b4-8652-f14555097810  100G   85G   16G  85% /home/exouser/lulc_input
 
-.. 
 
 .. include:: lulcconfigfiles.rst
 
@@ -290,21 +298,38 @@ If the CephFS share is mounted correctly, the following output is shown:
 View Full WRF Output
 --------------------
 
-If you do not have the resource to run the entire simulation but would like to see the results, paste the following commands to access the full output Ceph share::
+If you do not have the resources to run the entire simulation but would like to see the results, paste the following commands to access the full output Ceph share::
 
     accessTo="iwrf-lulc-output-read-only"
     accessKey="AQCv7EloaSlPERAAlXaru8qHfl6d+/3u+yx36g==" 
     cephfsPath="149.165.158.38:6789,149.165.158.22:6789,149.165.158.54:6789,149.165.158.70:6789,149.165.158.86:6789:/volumes/_nogroup/83cfc802-c288-4727-991d-e33da52b36e4/4fd211a1-c611-4948-8444-bb4ec166b7a7"
-    mountPoint="/home/exouser/lulc_full_ouput"
+    mountPoint="/home/exouser/lulc_full_output"
+
+::
 
     mkdir -p /etc/ceph
     echo -e "[client.${accessTo}]\n    key = ${accessKey}" | sudo tee /etc/ceph/ceph.client.${accessTo}.keyring
+
+::
+
     sudo chown root:root /etc/ceph/ceph.client.${accessTo}.keyring
     sudo chmod 600 /etc/ceph/ceph.client.${accessTo}.keyring
+
+::
+
     echo "${cephfsPath} ${mountPoint} ceph name=${accessTo},x-systemd.device-timeout=30,x-systemd.mount-timeout=30,noatime,_netdev,rw 0 2" | sudo tee -a /etc/fstab
+
+::
+
     sudo systemctl daemon-reload
+
+::
+
     mkdir -p ${mountPoint}
     sudo mount ${mountPoint}
+
+::
+
     df -h ${mountPoint}
 
-The full outputs should be in ``/home/exouser/lulc_full_ouput``.
+The full output should be in ``/home/exouser/lulc_full_output``.
