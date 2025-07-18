@@ -30,3 +30,8 @@ Running on SYSTEM NAME
 Update section with links to the documentation describing how to run on specific systems.
 
 See :ref:`usecasetemplate` for how to set up run documentation.
+
+Running on NCAR HPCs
+--------------------
+
+Navigate to :ref:`lulcncarhpc` for more information.
