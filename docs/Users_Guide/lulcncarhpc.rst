@@ -46,6 +46,19 @@ Load Required Modules
 NCAR HPC systems use environment modules to manage software. Load the Apptainer module which provides the containerization software needed to run METplus::
 
    module load apptainer
+Confirm Bash Shell
+------------------
+
+The following commands are formatted to run in the Linux Bash shell, which you may or may not be running by default. Copy and paste the following command to print your default shell::
+
+   echo $SHELL
+
+If needed, switch to the :code:`bash` shell by running::
+
+   bash
+   ${BASH_ENV}
+
+Note that you can modify your default login shell through the `Systems Account Manager (SAM) <https://sam.ucar.edu/>`_ but changes can take up to several hours to take effect.
 
 Define Environment Variables
 ----------------------------
