@@ -111,7 +111,7 @@ You must pull the METplus software container and the input data containers that 
    apptainer pull ${IWRF_WORK_DIR}/data-lulc-input-obs.sif docker://ncar/iwrf-data:lulc-input-obs-d03.apptainer
    apptainer pull ${IWRF_WORK_DIR}/data-lulc-input-wrf.sif docker://ncar/iwrf-data:lulc-input-wrf-d03.apptainer
 
-These commands download three container images: the METplus software, the observational data, and the WRF simulation data. The process may take several minutes depending on your network connection.
+These commands download three container images: the METplus software, the observational data, and the WRF simulation data. Processing the METplus software can take up to 15 minutes and the data containers can take several minutes each.
 
 Run METplus
 ===========
