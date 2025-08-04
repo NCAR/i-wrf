@@ -42,13 +42,15 @@ Apptainer is available as a module. To load apptainer, run the following::
 
     module load apptainer
 
+Refer to `NCAR HPC User Documentation <https://ncar-hpc-docs-arc-iframe.readthedocs.io/>`_
+for additional details.
 
 Jetstream2
 ^^^^^^^^^^
 
-If running on a Jetstream2 instance, Docker must be installed on the instance.
+If running on a `Jetstream2 <https://jetstream-cloud.org/index.html>`_ instance, Docker must be installed on the instance.
 The `instructions for installing Docker Engine on Ubuntu <https://docs.docker.com/engine/install/ubuntu/>`_
-are very thorough and make a good reference, but we only need to perform a subset of those steps.
+are very thorough and serve as a good reference, but we only need to perform a subset of those steps.
 These commands run a script that sets up the Docker software repository on your instance,
 then installs Docker::
 
@@ -73,7 +75,6 @@ wait a few minutes and issue this command to try again to start it::
 If the command seems to succeed, confirm that the daemon is running using the status command above.
 Repeat these efforts as necessary until it is started.
 
-
 User Workstation
 ^^^^^^^^^^^^^^^^
 
@@ -82,3 +83,14 @@ please refer to the installation instructions for the tools.
 
 Docker: `Get Docker <https://docs.docker.com/get-docker>`_
 Apptainer: `Installing Apptainer <https://apptainer.org/docs/admin/main/installation.html>`_
+
+Next Steps
+==========
+
+Once you have confirmed access to a platform on which you can run
+`Docker <https://www.docker.com/>`_ or `Apptainer <https://apptainer.org>`_, the next
+step is running an I-WRF use case. Instructions are provided for a handful of use
+cases, but :ref:`use-case-matthew` is the simplest and serves as a great starting
+place. Users are strongly encourged to run the :ref:`use-case-matthew` use case before
+proceeding to more complex ones or making any changes to the default configuration
+settings.

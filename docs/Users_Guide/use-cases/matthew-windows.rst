@@ -1,12 +1,10 @@
-:orphan:
-
-.. _matthewwindows:
+.. _matthew-windows:
 
 Running I-WRF On Windows (Intel CPU) with Hurricane Matthew Data
-****************************************************************
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Overview
-========
+""""""""
 
 The following instructions can be used to run elements of
 the `I-WRF weather simulation framework <https://i-wrf.org>`_
@@ -35,7 +33,7 @@ Most sections refer to external documentation to provide details about the neces
 and to offer additional background information.
 
 Preparing the Environment
-=========================
+"""""""""""""""""""""""""
 
 You will now create the run folders, install the software and download the data
 that are needed to run the simulation and verification.
@@ -48,7 +46,7 @@ To open such a shell:
 * A black shell window should open.
 
 Define Environment Variables
-----------------------------
+""""""""""""""""""""""""""""
 
 We will be using some environment variables throughout this exercise to
 make sure that we refer to the same resource names and file paths wherever they are used.
@@ -74,7 +72,7 @@ Any time you open a new shell on your instance, you will need to perform this ac
 to redefine the variables before executing the commands that follow.
 
 Create the WRF and METplus Run Folders
---------------------------------------
+""""""""""""""""""""""""""""""""""""""
 
 The simulation is performed using a script that expects to run in a folder where it can create result files.
 The first command below creates a folder (named "wrf") under the user's home directory,
@@ -86,7 +84,7 @@ Similarly, a run folder named "metplus" must be created for the METplus process 
     mkdir %METPLUS_DIR%
 
 Download Configuration Files
-----------------------------
+""""""""""""""""""""""""""""
 
 Both WRF and METplus require some configuration files to direct their behavior,
 and those must be downloaded from GitHub:
@@ -103,7 +101,7 @@ These commands perform the necessary operations::
     copy /y %WRF_CONFIG_DIR%\run.sh %WRF_DIR%
 
 Install Docker and Pull Docker Objects
-======================================
+""""""""""""""""""""""""""""""""""""""
 
 As mentioned above, the WRF and METplus software are provided as Docker images that will run as a
 `"container" <https://docs.docker.com/guides/docker-concepts/the-basics/what-is-a-container/>`_
@@ -112,7 +110,7 @@ To run a Docker container, you must first install the Docker Engine on your inst
 You can then "pull" (download) the WRF and METplus images that will be run as containers.
 
 Install Docker Desktop
-----------------------
+""""""""""""""""""""""
 
 In order to install Docker on your Windows computer, one or more Windows services must be enabled
 (these services allow virtualization and running of containers).
@@ -135,7 +133,7 @@ If your engine isn't running or you encounter any other issues,
 visit the `Troubleshoot Docker Desktop page <https://docs.docker.com/desktop/troubleshoot/overview/>`_.
 
 Get the WRF and METplus Docker Images and the Observed Weather Data
--------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 Once Docker is running, you must pull the correct versions of the WRF and METplus images onto your instance.
 Open a Command Prompt shell as done before, execute the commands to define the environment variables, and then issue these commands::
@@ -154,7 +152,7 @@ The commands to pull the volume and create a container for it are::
     docker create --name %OBS_DATA_VOL% ncar/iwrf-data:%OBS_DATA_VOL%.docker
 
 Download Data for WRF
-=====================
+"""""""""""""""""""""
 
 To run WRF on the Hurricane Matthew data, you need to have
 three data sets to support the computation.
@@ -172,15 +170,15 @@ The steps to process each data set are the same:
 
 Begin by download all of the data sets in this table:
 
-+-------------------+----------------------------------------------------------------------------+---------------+
++"""""""""""""""""""+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""+"""""""""""""""+
 | Data Set          | URL                                                                        | Destination   |
-+===================+============================================================================+===============+
++"""""""""""""""""""+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""+"""""""""""""""+
 | Terrain           | https://www2.mmm.ucar.edu/wrf/src/wps_files/geog_high_res_mandatory.tar.gz | %WORKING_DIR% |
-+-------------------+----------------------------------------------------------------------------+---------------+
++"""""""""""""""""""+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""+"""""""""""""""+
 | Case study        | https://www2.mmm.ucar.edu/wrf/TUTORIAL_DATA/matthew_1deg.tar.gz            | %WRF_DIR%     |
-+-------------------+----------------------------------------------------------------------------+---------------+
++"""""""""""""""""""+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""+"""""""""""""""+
 | Sea Surface Temps | https://www2.mmm.ucar.edu/wrf/TUTORIAL_DATA/matthew_sst.tar.gz             | %WRF_DIR%     |
-+-------------------+----------------------------------------------------------------------------+---------------+
++"""""""""""""""""""+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""+"""""""""""""""+
 
 Now, in your command prompt window, change directory ("cd") to the folder where those files were downloaded.
 Then, copy/paste the commands below to unzip the data and delete the downloaded files::
@@ -195,7 +193,7 @@ Then, copy/paste the commands below to unzip the data and delete the downloaded 
     del -f matthew_sst.tar.gz
 
 Run WRF
-=======
+"""""""
 
 With everything in place, you are now ready to run the Docker container that will perform the simulation.
 The downloaded script runs inside the container, prints lots of status information,
@@ -236,7 +234,7 @@ The output should look something like this::
     d01 2016-10-08_00:00:00 wrf: SUCCESS COMPLETE WRF
 
 Run METplus
-===========
+"""""""""""
 
 After the WRF simulation has finished, you can run the METplus verification to compare the simulated results
 to the actual weather observations during the hurricane.

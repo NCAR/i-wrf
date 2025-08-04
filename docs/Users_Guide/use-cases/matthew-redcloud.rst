@@ -1,12 +1,10 @@
-:orphan:
-
-.. _matthewredcloud:
+.. _matthew-redcloud:
 
 Running I-WRF On Red Cloud with Hurricane Matthew Data
-******************************************************
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Overview
-========
+""""""""
 
 The following instructions can be used to run elements of
 the `I-WRF weather simulation framework <https://i-wrf.org>`_
@@ -34,7 +32,7 @@ Most sections refer to external documentation to provide details about the neces
 and to offer additional background information.
 
 Prepare to Use Red Cloud
-========================
+""""""""""""""""""""""""
 
 To `get started with Red Cloud <https://www.cac.cornell.edu/services/projects.aspx>`_,
 you will need to:
@@ -51,7 +49,7 @@ The sections below will guide you through this process.
 For an overview of Red Cloud, read Cornell TechDocs `Red Cloud documentation <https://www.cac.cornell.edu/techdocs/redcloud/#red-cloud>`_.
 
 Start a Project
----------------
+"""""""""""""""
 
 One way to create a CAC account is to request a project. 
 Note that you must be a Cornell faculty member or a staff member to view the pages below and start a project. 
@@ -61,14 +59,14 @@ Once your project is approved, you can `manage your project <https://www.cac.cor
 read `this page <https://www.cac.cornell.edu/services/projects/project.aspx>`_ to learn how to manage a project.
 
 Join a Project
---------------
+""""""""""""""
 
 To join an existing project, submit a `join request <https://www.cac.cornell.edu/services/external/RequestCACid.aspx>`_. 
 You should only do this if your PI has requested you to submit the request. 
 Once the PI of the project approves the request, an email is sent to you with the login information.
 
 Open an Exploratory Account
----------------------------
+"""""""""""""""""""""""""""
 
 You may also request an exploratory account if you have not made one already. 
 This account has limited computing hours and storage but is sufficient for this exercise. 
@@ -76,14 +74,14 @@ To request an exploratory account, submit a `request <https://www.cac.cornell.ed
 You are also given one hour of free consulting for any help you may need.
 
 Log in to Red Cloud OpenStack Interface
----------------------------------------
+"""""""""""""""""""""""""""""""""""""""
 
 Once you are given a CAC account login information,
 you can log into the `Red Cloud OpenStack web interface <https://redcloud.cac.cornell.edu/>`_.
 Note that you need to be on a project with a subscription to log in successfully.
 
 Create a Cloud Instance and Log In
-==================================
+""""""""""""""""""""""""""""""""""
 
 After you have logged in to the Red Cloud OpenStack interface,
 you are ready to create the cloud instance where you will run the I-WRF simulation.
@@ -92,7 +90,7 @@ it is recommended that you read about them `here <https://www.cac.cornell.edu/te
 and `here <https://www.cac.cornell.edu/techdocs/redcloud/Red_Cloud_Linux_Instances/>`__ before proceeding.
 
 Create an SSH Key
------------------
+"""""""""""""""""
 
 You can either upload a public SSH key to Red Cloud or generate an SSH key pair on Red Cloud before creating your instance.
 Red Cloud injects the uploaded public key or generated public key into the instance's default user account,
@@ -100,13 +98,13 @@ and you will need to provide the matching private SSH key to log in to the insta
 If you are not familiar with "SSH key pairs", you should
 `read about them <https://www.cac.cornell.edu/techdocs/openstack/keypairs/>`__ before continuing.
 
-* First, `create an SSH Key on your computer <https://www.cac.cornell.edu/techdocs/openstack/keypairs/#creating-a-passphrase-protected-key-pair-recommended>`_ using the "ssh-keygen" command.  That command allows you to specify the name of the private key file it creates, with the default being "id_rsa".  The matching public key file is saved and named with ".pub" appended to the filename. 
+* First, `create a Red Cloud SSH Key on your computer <https://www.cac.cornell.edu/techdocs/openstack/keypairs/#creating-a-passphrase-protected-key-pair-recommended>`_ using the "ssh-keygen" command.  That command allows you to specify the name of the private key file it creates, with the default being "id_rsa".  The matching public key file is saved and named with ".pub" appended to the filename. 
 * Then, `import the public key to Red Cloud <https://www.cac.cornell.edu/techdocs/openstack/keypairs/#importing-a-key-pair>`_ through the Red Cloud web interface.
 
 Alternatively, you can `create a key pair on Red Cloud <https://www.cac.cornell.edu/techdocs/openstack/keypairs/#creating-a-key-pair-without-a-passphrase>`_. Be sure to follow the steps and save the private key it generated with the correct format and permission before proceeding. 
 
 Create an Instance
-------------------
+""""""""""""""""""
 
 The Cornell TechDocs `Creating a New Linux Instance <https://www.cac.cornell.edu/techdocs/redcloud/Red_Cloud_Linux_Instances/#creating-a-new-linux-instance>`_
 provides detailed information about creating a Linux instance on Red Cloud.
@@ -127,7 +125,7 @@ When all the required options are selected, click on the "Launch Instance" butto
 Note that the instance will not only be created, but will be running so that you can log in right away.
 
 Log in to the Instance
-----------------------
+""""""""""""""""""""""
 
 The instructions for `connecting to Red Cloud Linux instances using SSH <https://www.cac.cornell.edu/techdocs/redcloud/Red_Cloud_Linux_Instances/#accessing-instances>`_
 can be executed in the Command Prompt on Windows (from the Start menu, type "cmd" and select Command Prompt)
@@ -143,10 +141,10 @@ You will know that your login has been successful when the prompt has the form `
 which indicates your username, the instance name, and your current working directory, followed by "$"
 
 Managing a Red Cloud Instance
-------------------------------
+""""""""""""""""""""""""""""""
 
 In order to use cloud computing resources efficiently, you must know how to
-`manage your instances <https://www.cac.cornell.edu/techdocs/openstack/#instance-states>`_.
+`manage your Red Cloud instances <https://www.cac.cornell.edu/techdocs/openstack/#instance-states>`_.
 Instances incur costs whenever they are running (on Red Cloud, this is when they are "Active").
 "Shelving" an instance stops it from using the cloud's CPUs and memory,
 and therefore stops it from incurring any charges against your project.
@@ -165,7 +163,7 @@ But of course, doubling the number of CPUs doubles the cost per hour to run the 
 so Shelving as soon as you are done becomes even more important!
 
 Preparing the Environment
-=========================
+"""""""""""""""""""""""""
 
 With your instance created and running and you logged in to it through SSH,
 you can now install the necessary software and download the data to run the simulation.
@@ -180,7 +178,7 @@ The commands in each section can be copied using the button in the upper right c
 and then pasted into your web shell by right-clicking.
 
 Define Environment Variables
-----------------------------
+""""""""""""""""""""""""""""
 
 We will be using some environment variables throughout this exercise to
 make sure that we refer to the same resource names and file paths wherever they are used.
@@ -200,7 +198,7 @@ Any time you open a new shell on your instance, you will need to perform this ac
 to redefine the variables before executing the commands that follow.
 
 Create the WRF and METplus Run Folders
---------------------------------------
+""""""""""""""""""""""""""""""""""""""
 
 The simulation is performed using a script that expects to run in a folder where it can create result files.
 The first command below creates a folder (named "wrf") under the user's home directory,
@@ -212,7 +210,7 @@ Similarly, a run folder named "metplus" must be created for the METplus process 
     mkdir -p ${METPLUS_DIR}
 
 Download Configuration Files
-----------------------------
+""""""""""""""""""""""""""""
 
 Both WRF and METplus require some configuration files to direct their behavior,
 and those are downloaded from the I-WRF GitHub repository.
@@ -225,10 +223,10 @@ These commands perform the necessary operations::
     cp ${WRF_CONFIG_DIR}/run.sh ${WRF_DIR}
 
 Install Docker and Pull Docker Objects
-======================================
+""""""""""""""""""""""""""""""""""""""
 
 Install Docker
---------------
+""""""""""""""
 
 As mentioned above, the WRF and METplus software are provided as Docker images that will run as a
 `"container" <https://docs.docker.com/guides/docker-concepts/the-basics/what-is-a-container/>`_
@@ -264,7 +262,7 @@ If the command seems to succeed, confirm that the daemon is running using the st
 Repeat these efforts as necessary until it is started.
 
 Get the WRF and METplus Docker Images and the Observed Weather Data
--------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 Once Docker is running, you must pull the correct versions of the WRF and METplus images onto your instance::
 
@@ -281,7 +279,7 @@ The commands to pull and create the volume are::
     sudo docker create --name ${OBS_DATA_VOL} ncar/iwrf-data:${OBS_DATA_VOL}.docker
 
 Download Data for WRF
-=====================
+"""""""""""""""""""""
 
 To run WRF on the Hurricane Matthew data set, you need to have
 several data sets to support the computation.
@@ -313,7 +311,7 @@ Get the SST (Sea Surface Temperature) data::
     rm -f matthew_sst.tar.gz
 
 Run WRF
-=======
+"""""""
 
 With everything in place, you are now ready to run the Docker container that will perform the simulation.
 The downloaded script runs inside the container, prints lots of status information,
@@ -353,7 +351,7 @@ The output should look something like this::
     d01 2016-10-08_00:00:00 wrf: SUCCESS COMPLETE WRF
 
 Run METplus
-===========
+"""""""""""
 
 After the WRF simulation has finished, you can run the METplus verification to compare the simulated results
 to the actual weather observations during the hurricane.

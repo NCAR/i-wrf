@@ -33,6 +33,7 @@ Research Using an Integrated WRF Modeling, Visualization, and Verification Frame
 
 .. toctree::
    :titlesonly:
+   :maxdepth: 1
    :numbered: 4
 
    overview
@@ -40,7 +41,7 @@ Research Using an Integrated WRF Modeling, Visualization, and Verification Frame
    gettingstarted
    configuration
    running
-   usecases
+   use-cases
    customization
    glossary
    references
@@ -53,4 +54,3 @@ Research Using an Integrated WRF Modeling, Visualization, and Verification Frame
    * :ref:`genindex`
    * :ref:`search`
 
-      
