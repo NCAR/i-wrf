@@ -9,7 +9,7 @@ Running I-WRF on NCAR HPCs with Land Use/Land Cover Change Data
 Overview
 ========
 
-The following instructions can be used to run METplus verification for the Land Use/Land Cover Change (LULC) use case of the I-WRF weather simulation framework from the National Center for Atmospheric Research (NCAR) on NCAR High Performance Computing (HPC) platforms. The steps below configure and execute the METplus verification framework using containerized applications with Apptainer (formerly Singularity) to analyze I-WRF LULC simulation output.
+The following instructions can be used to run METplus verification for the Land Use/Land Cover Change (LULC) use case of the I-WRF weather simulation framework from the National Center for Atmospheric Research (NCAR) on NCAR High Performance Computing (HPC) platforms. The steps below configure and execute the METplus verification framework using applications containerized with `Apptainer <https://apptainer.org/>`_ (formerly Singularity) to analyze I-WRF LULC simulation output.
 
 The LULC use case examines how changes in land surface characteristics impact weather patterns and atmospheric dynamics through idealized modeling scenarios. METplus provides statistical analysis and evaluation tools to quantify these meteorological impacts, making this verification workflow valuable for studies in urban meteorology, land-atmosphere interactions, and climate change impact assessment.
 
