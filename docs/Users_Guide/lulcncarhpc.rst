@@ -46,6 +46,7 @@ Load Required Modules
 NCAR HPC systems use environment modules to manage software. Load the Apptainer module which provides the containerization software needed to run METplus::
 
    module load apptainer
+
 Confirm Bash Shell
 ------------------
 
