@@ -25,7 +25,7 @@ To get started with running METplus verification on NCAR HPC systems, you will n
 
 NCAR HPC access is typically provided to researchers affiliated with NCAR, university collaborators, or those with approved allocations. If you need to request access:
 
-* Visit the NCAR CISL user registration page to create an account
+* Visit the `Getting Started with NSF NCAR HPC Resources <https://ncar-hpc-docs-arc-iframe.readthedocs.io/getting-started/#getting-started-with-nsf-ncar-hpc-resources>`_ page to create an account
 * Provide information about your research project and institutional affiliation
 * Wait for account approval, which typically takes 1-2 business days
 * Once approved, you can log in to the HPC systems using SSH
