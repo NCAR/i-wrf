@@ -30,7 +30,7 @@ NCAR HPC access is typically provided to researchers affiliated with NCAR, unive
 * Wait for account approval, which typically takes 1-2 business days
 * Once approved, you can log in to the HPC systems using SSH
 
-Most NCAR HPC systems use a batch job scheduling system for computational work. While this exercise can be run interactively for demonstration purposes, production runs should be submitted through the job scheduler. Refer to the NCAR HPC documentation for specific guidance on your target system.
+Most NCAR HPC systems use a batch job scheduling system for computational work. While this exercise can be run interactively for demonstration purposes, production runs should be submitted through the job scheduler. Refer to the `NCAR HPC documentation <https://arc.ucar.edu/docs>`_ for specific guidance on your target system.
 Once you have access to an NCAR HPC system, you can log in using SSH from your local machine or through NCAR's web-based interfaces where available.
 
 Preparing the Environment
