@@ -38,10 +38,9 @@ Research Using an Integrated WRF Modeling, Visualization, and Verification Frame
 
    overview
    release-notes
-   gettingstarted
+   getting-started
    configuration
-   running
-   use-cases
+   running-use-cases
    customization
    glossary
    references
