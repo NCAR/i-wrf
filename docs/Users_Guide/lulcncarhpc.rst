@@ -69,7 +69,7 @@ We will be using environment variables throughout this exercise to ensure consis
     LOCAL_OUTPUT_DIR=${IWRF_WORK_DIR}/metplus_out
     export APPTAINER_TMPDIR=${TMPDIR}
 
-Any time you open a new shell session on the HPC system, you will need to reload the apptainer module and redefine these variables before executing the commands that follow.
+Any time you open a new shell session on the HPC system, you will need to reload the apptainer module, switch shells, if needed, and redefine these variables before executing the commands that follow.
 
 Create Working Directories
 --------------------------
