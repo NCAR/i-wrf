@@ -13,12 +13,14 @@ so the Windows 10 or 11 computer you use must contain an Intel processor
 (note that these instructions are not intended for use on a system running Windows Server).
 Your Windows account will also need to have administrative privileges in order to perform all necessary steps.
 
-During the I-WRF exercises, you will create the run folders, install the software and download the data
-that are needed to run the simulation and verification.
-You will only need to perform these steps once.
-The following sections instruct you to issue numerous DOS commands in a Windows "Command Prompt" shell.
-To open such a shell:
+.. dropdown:: Instructions
 
-  * Click the Start icon and then type :code:`cmd` to display matching commands.
-  * Right click on the "Command Prompt" option that is shown and select "Run as administrator".
-  * A black shell window should open.
+  During the I-WRF exercises, you will create the run folders, install the software and download the data
+  that are needed to run the simulation and verification.
+  You will only need to perform these steps once.
+  The I-WRF exercises will instruct you to issue numerous DOS commands in a Windows "Command Prompt" shell.
+  To open such a shell:
+
+    * Click the Start icon and then type :code:`cmd` to display matching commands.
+    * Right click on the "Command Prompt" option that is shown and select "Run as administrator".
+    * A black shell window should open.
