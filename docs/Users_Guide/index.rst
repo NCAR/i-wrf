@@ -46,11 +46,3 @@ Research Using an Integrated WRF Modeling, Visualization, and Verification Frame
    glossary
    references
 
-.. only:: html
-
-   Indices and tables
-   ==================
-
-   * :ref:`genindex`
-   * :ref:`search`
-
