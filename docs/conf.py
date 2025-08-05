@@ -100,6 +100,7 @@ exclude_patterns = ['_build',
                     'Thumbs.db',
                     '.DS_Store',
                     'Flowchart',
+                    'Users_Guide/hpc-access',
                     'Users_Guide/use-cases',
                    ]
 

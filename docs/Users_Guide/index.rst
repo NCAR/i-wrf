@@ -38,9 +38,10 @@ Research Using an Integrated WRF Modeling, Visualization, and Verification Frame
 
    overview
    release-notes
+   hpc-access
    getting-started
    configuration
-   running-use-cases
+   use-cases
    customization
    glossary
    references

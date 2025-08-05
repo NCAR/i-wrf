@@ -24,6 +24,6 @@ To Run
 Instructions a provided for running the Hurricane Matthew use case on
 multiple platforms.
 
-.. include:: use-cases/matthew-jetstream.rst
-.. include:: use-cases/matthew-redcloud.rst
+.. include:: use-cases/matthew-jetstream2.rst
+.. include:: use-cases/matthew-red-cloud.rst
 .. include:: use-cases/matthew-windows.rst
