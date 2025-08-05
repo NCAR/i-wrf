@@ -114,6 +114,7 @@ suppress_warnings = ['ref.citation']
 #
 html_theme = 'sphinx_rtd_theme'
 html_theme_path = ["_themes", ]
+html_theme_options = { 'navigation_depth': 5 }
 html_js_files = ['pop_ver.js']
 html_css_files = ['theme_override.css']
 
