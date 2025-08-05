@@ -10,7 +10,11 @@ options described in :numref:`customization`.
 
 Note that this :ref:`use-case-template` should be used when developing new use cases.
 
-.. include:: use-cases/matthew.rst 
-.. include:: use-cases/lulc.rst 
-.. include:: use-cases/renewable.rst 
-.. include:: use-cases/air-quality.rst 
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   matthew
+   lulc
+   renewable
+   air-quality

@@ -18,8 +18,8 @@ Datasets
 
 Update section content to describe the datasets used to run WRF and METplus.
 
-To Run
-------
+Running This I-WRF Use Case
+---------------------------
 
 Running on SYSTEM NAME
 ^^^^^^^^^^^^^^^^^^^^^^

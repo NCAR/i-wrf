@@ -33,15 +33,15 @@ Research Using an Integrated WRF Modeling, Visualization, and Verification Frame
 
 .. toctree::
    :titlesonly:
-   :maxdepth: 1
+   :maxdepth: 2 
    :numbered: 4
 
    overview
    release-notes
-   hpc-access
+   compute-platform 
    getting-started
    configuration
-   use-cases
+   use-cases/index
    customization
    glossary
    references

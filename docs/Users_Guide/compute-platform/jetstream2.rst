@@ -1,4 +1,4 @@
-.. _hpc-access-jetstream2:
+.. _compute-platform-jetstream2:
 
 Jetstream2
 ----------
@@ -119,3 +119,36 @@ additional background information.
 
     Once you are logged in to the instance, your shell prompt will have the form ``exouser@instance-name:~$``,
     which indicates your username, the instance name, and your current working directory, followed by "$".
+    
+    If your shell ever becomes unresponsive or disconnected from the instance,
+    you can recover from that situation by opening a new Web Desktop (if available) or rebooting the instance.
+    In the Exosphere dashboard page for your instance, in the Actions menu, select "Reboot".
+    The process takes several minutes, after which the instance status will return to "Ready".
+
+  .. _manage-jetstream2-instance:
+
+  .. dropdown:: Managing a Jetstream2 Instance
+
+    In order to use cloud computing resources efficiently, you must know how to
+    `manage your Jetstream2 instances <https://cvw.cac.cornell.edu/jetstream/manage-instance/states-actions>`_.
+    Instances incur costs whenever they are running (on Jetstream2, this is when they are "Ready").
+    "Shelving" an instance stops it from using the cloud's CPUs and memory,
+    and therefore stops it from incurring any charges against your allocation.
+
+    When you are through working on an I-WRF exercise, you should shelve your instance.
+    Note that any programs that are running when you shelve the instance will be terminated,
+    but the contents of the disk are preserved when shelving.
+
+    To shelve, you need to be in the details page for your instance (with the "Actions" menu in the upper right).
+    If you are on the Instances page, click and instance's name to be taken to its details page.
+    From the Actions menu, select Shelve.
+    You will be prompted in that location to confirm the shelve action - click Yes to complete the action.
+    In the Instances page your instance will briefly be listed as "Shelving",
+    and then as "Shelved" when the operation is complete.
+
+    When you later return to the dashboard and want to use the instance again,
+    use the Action menu's "Unshelve" option to start the instance up again.
+    You can also use the "Resize" action to change the flavor (number of CPUs and amount of RAM) of the instance.
+    Increasing the number of CPUs can make your computations finish more quickly,
+    but doubling the number of CPUs doubles the cost per hour to run the instance,
+    so Shelving as soon as you are done becomes even more important!

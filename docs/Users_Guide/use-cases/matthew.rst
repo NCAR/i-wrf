@@ -18,12 +18,15 @@ Datasets
 
 Update section content to describe the datasets used to run WRF and METplus.
 
-To Run
-------
+Running This I-WRF Use Case
+---------------------------
 
-Instructions a provided for running the Hurricane Matthew use case on
-multiple platforms.
+With your instance created and running and you logged in to it, you can now
+install the necessary software and download the data to run the simulation.
 
-.. include:: use-cases/matthew-jetstream2.rst
-.. include:: use-cases/matthew-red-cloud.rst
-.. include:: use-cases/matthew-windows.rst
+Instructions a provided below for running the Hurricane Matthew use case for
+each :ref:`compute-platform` on which it has been tested.
+
+.. include:: matthew/jetstream2.rst
+.. include:: matthew/red-cloud.rst
+.. include:: matthew/windows.rst

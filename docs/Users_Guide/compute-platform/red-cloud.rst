@@ -1,4 +1,4 @@
-.. _hpc-access-red-cloud:
+.. _compute-platform-red-cloud:
 
 Red Cloud
 ---------
@@ -113,6 +113,8 @@ additional background information.
 
     You will know that your login has been successful when the prompt has the form ``ubuntu@instance-name:~$``,
     which indicates your username, the instance name, and your current working directory, followed by "$"
+
+  .. _manage-red-cloud-instance:
 
   .. dropdown:: Managing a Red Cloud Instance
 

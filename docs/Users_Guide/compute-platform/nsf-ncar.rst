@@ -1,4 +1,4 @@
-.. _hpc-access-nsf-ncar:
+.. _compute-platform-nsf-ncar:
 
 NSF NCAR
 --------

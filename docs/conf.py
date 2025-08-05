@@ -100,8 +100,8 @@ exclude_patterns = ['_build',
                     'Thumbs.db',
                     '.DS_Store',
                     'Flowchart',
-                    'Users_Guide/hpc-access',
-                    'Users_Guide/use-cases',
+                    'Users_Guide/compute-platform',
+                    'Users_Guide/use-cases/matthew',
                    ]
 
 # Suppress certain warning messages
