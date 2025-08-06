@@ -96,7 +96,14 @@ templates_path = ['_templates']
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'Flowchart' ]
+exclude_patterns = ['_build',
+                    'Thumbs.db',
+                    '.DS_Store',
+                    'Flowchart',
+                    'Users_Guide/compute-platform',
+                    'Users_Guide/use-cases/matthew',
+                    'Users_Guide/use-cases/lulc',
+                   ]
 
 # Suppress certain warning messages
 suppress_warnings = ['ref.citation']
@@ -108,6 +115,7 @@ suppress_warnings = ['ref.citation']
 #
 html_theme = 'sphinx_rtd_theme'
 html_theme_path = ["_themes", ]
+html_theme_options = { 'navigation_depth': 5 }
 html_js_files = ['pop_ver.js']
 html_css_files = ['theme_override.css']
 
