@@ -10,4 +10,5 @@ and analysis activities.
 
 .. dropdown:: Instructions
 
-  TODO: Add access instructions
+  Instructions for requesting access and getting started on NSF NCAR HPC can be found here: 
+  https://ncar-hpc-docs-arc-iframe.readthedocs.io/getting-started/
