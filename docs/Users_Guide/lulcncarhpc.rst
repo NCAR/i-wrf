@@ -174,7 +174,7 @@ This should show directories containing statistical output files in text format 
 
 Check that the METplotpy visualization plots were created locally::
 
-   ls ${LOCAL_OUTPUT_DIR}/met_plot/*/*.png -1
+   ls -1 ${LOCAL_OUTPUT_DIR}/met_plot/*/*.png
 
 This should display a list of PNG image files containing plots and graphics that visualize the verification results. These plots provide graphical representations of the statistical comparisons between the I-WRF LULC simulations and observational data.
 
