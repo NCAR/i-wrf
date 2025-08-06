@@ -151,7 +151,7 @@ Run the accumulated precipitation verification::
 
    apptainer exec ${IWRF_WORK_DIR}/iwrf-metplus.sif /metplus/METplus/ush/run_metplus.py /config/GridStat_apcp_lulc.conf
 
-This process compares simulated precipitation accumulation against observational data and generates statistical metrics. Progress information is displayed while the verification is performed.
+This process compares simulated precipitation accumulation against observational data and generates statistical metrics. While it may take up to 20 minutes to run, progress information is displayed while the verification is performed.
 
 Run the reflectivity verification::
 
