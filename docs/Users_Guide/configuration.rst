@@ -67,8 +67,4 @@ https://github.com/NCAR/i-wrf/blob/main/use_cases/Hurricane_Matthew/WRF/vars_io.
 METplus Config File
 ^^^^^^^^^^^^^^^^^^^
 For the METplus configuration file for the Hurricane Matthew case, please use this file on the Github repository:
-
-https://github.com/NCAR/i-wrf/blob/main/use_cases/Hurricane_Matthew/METplus/PointStat_matthew.conf.
-
-Customizing Datasets and Namelists
-==================================
+https://github.com/NCAR/i-wrf/blob/main/use_cases/Hurricane_Matthew/METplus/PointStat_matthew.conf
