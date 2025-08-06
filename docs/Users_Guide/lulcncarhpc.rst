@@ -157,7 +157,7 @@ Run the reflectivity verification::
 
    apptainer exec ${IWRF_WORK_DIR}/iwrf-metplus.sif /metplus/METplus/ush/run_metplus.py /config/GridStat_refc_lulc.conf
 
-This process evaluates the model's ability to simulate radar reflectivity patterns compared to observed radar data.
+This process evaluates the model's ability to simulate radar reflectivity patterns compared to observed radar data. This step may take up to 10 minutes to run.
 
 Both verification processes use GridStat, which computes grid-to-grid verification statistics. The tools generate comprehensive statistical output including bias, correlation, and skill scores that quantify the model's performance.
 
