@@ -181,4 +181,4 @@ This should display a list of PNG image files containing plots and graphics that
 Visualize the Results
 =====================
 
-In the near future, this exercise will be extended to include instructions to visualize the results.
+In the near future, this exercise will be extended to include instructions to visualize the model output directly.
