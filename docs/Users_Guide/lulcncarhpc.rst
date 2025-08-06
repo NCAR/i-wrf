@@ -168,7 +168,7 @@ After both METplus runs complete successfully, you can verify that the output fi
 
 Check that the GridStat verification output was generated::
 
-   ls ${LOCAL_OUTPUT_DIR}/grid_stat/* -1
+   ls -1 ${LOCAL_OUTPUT_DIR}/grid_stat/*
 
 This should show directories containing statistical output files in text format that can be viewed and analyzed.
 
