@@ -8,7 +8,13 @@ to secure access to and log in to NSF NCAR HPC.
 
 These instructions are currently limited to running the METplus verification
 software and assume that WRF output is already available in a local directory.
-  
+
+.. warning::
+
+  These instructions will not run to completion due to missing data.
+  They will eventually be updated to include steps for running WRF prior to
+  verifying its output with METplus.
+
 .. dropdown:: Instructions
   
   .. dropdown:: Load Required Modules
