@@ -133,7 +133,7 @@ legend_inset:
   y: -0.25
 legend_ncol: 3
 legend_size: 0.8
-line_type: None
+line_type: N/A
 list_stat_1:
 - FBIAS
 list_stat_2: []
@@ -326,15 +326,15 @@ log_filename: /data/output/met_plot/apcp/cts_fbias_line.log
 
 # To change the log level, specify a log level: debug, info, warning, error and uncomment the line below.
 #  Debug and info log level will produce more log output.
-log_level: INFO
+log_level: DEBUG
 show_legend:
-- 'True'
-- 'True'
-- 'True'
-- 'True'
-- 'True'
-- 'True'
-- 'True'
-- 'True'
-- 'True'
-- 'True'
+- 1
+- 1
+- 1
+- 1
+- 1
+- 1
+- 1
+- 1
+- 1
+- 1

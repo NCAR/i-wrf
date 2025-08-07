@@ -328,13 +328,13 @@ log_filename: /data/output/met_plot/apcp/cts_gss_line.log
 #  Debug and info log level will produce more log output.
 log_level: INFO
 show_legend:
-- 'True'
-- 'True'
-- 'True'
-- 'True'
-- 'True'
-- 'True'
-- 'True'
-- 'True'
-- 'True'
-- 'True'
+- 1
+- 1
+- 1
+- 1
+- 1
+- 1
+- 1
+- 1
+- 1
+- 1
