@@ -6,7 +6,7 @@ Land Use/Land Cover Change
 Scientific Objective
 --------------------
 
-Update section content to describe the scientific objective of this use case.
+The Land Use/Land Cover Change (LULC) use case examines how changes in land surface characteristics impact weather patterns and atmospheric dynamics through idealized modeling scenarios. METplus provides statistical analysis and evaluation tools to quantify these meteorological impacts, making this verification workflow valuable for studies in urban meteorology, land-atmosphere interactions, and climate change impact assessment.
 
 Version Added
 -------------
@@ -21,9 +21,7 @@ Update section content to describe the datasets used to run WRF and METplus.
 Running This I-WRF Use Case
 ---------------------------
 
-Running on SYSTEM NAME
-^^^^^^^^^^^^^^^^^^^^^^
+Instructions a provided below for running the Land Use/Land Cover Change
+use case for each :ref:`compute-platform` on which it has been tested.
 
-Update section with links to the documentation describing how to run on specific systems.
-
-See :ref:`use-case-template` for how to set up run documentation.
+.. include:: lulc/nsf-ncar.rst

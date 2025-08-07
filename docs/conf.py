@@ -102,6 +102,7 @@ exclude_patterns = ['_build',
                     'Flowchart',
                     'Users_Guide/compute-platform',
                     'Users_Guide/use-cases/matthew',
+                    'Users_Guide/use-cases/lulc',
                    ]
 
 # Suppress certain warning messages
