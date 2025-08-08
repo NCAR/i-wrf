@@ -17,56 +17,69 @@ additional background information.
 
   .. dropdown:: Prepare to Use Red Cloud
 
-    To `get started with Red Cloud <https://www.cac.cornell.edu/services/projects.aspx>`_,
+    To `get started with Red Cloud <https://portal.cac.cornell.edu/techdocs/redcloud/#getting-started-on-red-cloud>`_,
     you will need to:
+
+      * Go to the `CAC portal <https://portal.cac.cornell.edu/>`_ and log in.
+        The instructions to log in are on the
+        `CAC TechDocs page: Portal Login <https://portal.cac.cornell.edu/techdocs/general/CACportal/#portal-login>`_.
 
       * Get a CAC account by doing **one of** the following:
 
-        1. Start a new project by making a `project request <https://www.cac.cornell.edu/services/projects/project.aspx>`_ (Only available for Cornell Faculty and Staff).
-        2. Join an existing project by `request to be added to a project <https://www.cac.cornell.edu/services/external/RequestCACid.aspx>`_.
-        3. Request an exploratory account by `submitting a request <https://www.cac.cornell.edu/cu/explore.aspx>`_.
+        1. Start a new project (only available for Cornell Faculty and Staff).
+        2. Join an existing project.
+        3. Request an exploratory account.
 
       * Log in to Red Cloud's OpenStack interface.
 
    The sections below will guide you through this process.
-   For an overview of Red Cloud, read Cornell TechDocs `Red Cloud documentation <https://www.cac.cornell.edu/techdocs/redcloud/#red-cloud>`_.
+   For an overview of Red Cloud, read Cornell TechDocs `Red Cloud documentation <https://portal.cac.cornell.edu/techdocs/redcloud/>`_.
 
   .. dropdown:: Option 1: Start a Project
 
     One way to create a CAC account is to request a project.
     Note that you must be a Cornell faculty member or a staff member to view the pages below and start a project.
     You may submit a `project request <https://www.cac.cornell.edu/services/projects/project.aspx>`_ at the CAC website.
-    Thoroughly review the `rates <https://www.cac.cornell.edu/services/projects/rates.aspx>`_ page to understand the Red Cloud subscription service.
+    Thoroughly review the `rates <https://www.cac.cornell.edu/services/projects/rates.aspx>`_ page (login required) to
+    understand the Red Cloud subscription service.
 
-    Once your project is approved, you can `manage your project <https://www.cac.cornell.edu/services/projects/manage.aspx>`_, and
-    read `this page <https://www.cac.cornell.edu/services/projects/project.aspx>`_ to learn how to manage a project.
+    Once your project is approved, you can manage your project on the CAC portal.
+    Read the `Portal Overview <https://portal.cac.cornell.edu/techdocs/general/CACportal/#portal-overview>`_ to learn
+    how to manage a project.
+    Detailed instructions to start a project are available at the `CAC TechDocs page: As a Cornell Faculty or Staff, How Do I Start a New Project? <https://portal.cac.cornell.edu/techdocs/general/CACportal/#as-a-cornell-faculty-or-staff-how-do-i-start-a-new-project>`_
 
   .. dropdown:: Option 2: Join a Project
 
-    To join an existing project, submit a `join request <https://www.cac.cornell.edu/services/external/RequestCACid.aspx>`_.
+    To join an existing project, submit a request to join on the CAC portal.
     You should only do this if your PI has requested you to submit the request.
-    Once the PI of the project approves the request, an email is sent to you with the login information.
+    Once the PI of the project approves the request,
+    an email is sent to you with the login information.
+    For the full instructions, navigate to the
+    `CAC TechDocs page: How Do I Join an Existing Project? <https://portal.cac.cornell.edu/techdocs/general/CACportal/#how-do-i-join-an-existing-project>`_.
 
   .. dropdown:: Option 3: Open an Exploratory Account
 
     You may also request an exploratory account if you have not made one already.
-    This account has limited computing hours and storage but is sufficient for this exercise.
-    To request an exploratory account, submit a `request <https://www.cac.cornell.edu/cu/explore.aspx>`_.
+    This account has limited computing hours and storage. This is sufficient for the Hurricane Matthew exercise,
+    but does not have enough compute hours to complete the LULC exercise.
+    To request an exploratory account, follow the instructions on the
+    `CAC TechDocs page: How Do I Request an Exploratory Project? <https://portal.cac.cornell.edu/techdocs/general/CACportal/#how-do-i-request-an-exploratory-project>`_ .
     You are also given one hour of free consulting for any help you may need.
 
-  .. dropdown:: Log in to Red Cloud OpenStack Interface
+  .. dropdown:: Log in to Red Cloud Horizon Interface
 
     Once you are given a CAC account login information,
-    you can log into the `Red Cloud OpenStack web interface <https://redcloud.cac.cornell.edu/>`_.
+    you can log into the `Red Cloud Horizon web interface <https://redcloud2.cac.cornell.edu/>`_ .
     Note that you need to be on a project with a subscription to log in successfully.
 
   .. dropdown:: Create a Cloud Instance and Log In
 
-    After you have logged in to the Red Cloud OpenStack interface,
+    After you have logged in to the Red Cloud Horizon interface,
     you are ready to create the cloud instance where you will run the I-WRF simulation.
     If you are not familiar with the cloud computing terms "image" and "instance",
-    it is recommended that you read about them `here <https://www.cac.cornell.edu/techdocs/openstack/images/>`__
-    and `here <https://www.cac.cornell.edu/techdocs/redcloud/Red_Cloud_Linux_Instances/>`__ before proceeding.
+    it is recommended that you read about them here before proceeding:
+    `Red Cloud: Images <https://portal.cac.cornell.edu/techdocs/redcloud/compute/#images>`_
+    and `Red Cloud: Run Linux Instance <https://portal.cac.cornell.edu/techdocs/redcloud/run_linux_instances/>`_.
 
   .. dropdown:: Create an SSH Key
 
@@ -74,40 +87,78 @@ additional background information.
     Red Cloud injects the uploaded public key or generated public key into the instance's default user account,
     and you will need to provide the matching private SSH key to log in to the instance.
     If you are not familiar with "SSH key pairs", you should
-    `read about them <https://www.cac.cornell.edu/techdocs/openstack/keypairs/>`__ before continuing.
+    `read about them <https://portal.cac.cornell.edu/techdocs/redcloud/compute/#keypairs>`_ before continuing.
 
-      * First, `create a Red Cloud SSH Key on your computer <https://www.cac.cornell.edu/techdocs/openstack/keypairs/#creating-a-passphrase-protected-key-pair-recommended>`_ using the "ssh-keygen" command.  That command allows you to specify the name of the private key file it creates, with the default being "id_rsa".  The matching public key file is saved and named with ".pub" appended to the filename.
-      * Then, `import the public key to Red Cloud <https://www.cac.cornell.edu/techdocs/openstack/keypairs/#importing-a-key-pair>`_ through the Red Cloud web interface.
+      * It's highly recommended that you
+        `create a key pair on Red Cloud <https://portal.cac.cornell.edu/techdocs/redcloud/horizon_ssh_keys/#create-a-new-ssh-key-pair>`_.
+        Be sure to follow the steps and save the private key it generated with the
+        correct format and permission before proceeding.
+        This is the easiest way to generate a key pair for this exercise.
 
-    Alternatively, you can `create a key pair on Red Cloud <https://www.cac.cornell.edu/techdocs/openstack/keypairs/#creating-a-key-pair-without-a-passphrase>`_. Be sure to follow the steps and save the private key it generated with the correct format and permission before proceeding.
+      * Alternatively, `create an SSH Key on your computer <https://portal.cac.cornell.edu/techdocs/clusterinfo/linuxconnect/#public-key-authentication>`_
+        using the "ssh-keygen" command.
+        That command allows you to specify the name of the private key file it creates,
+        with the default being "id_rsa".
+        The matching public key file is saved and named with ".pub" appended to the filename.
+        Then, `import the public key to Red Cloud <https://portal.cac.cornell.edu/techdocs/redcloud/horizon_ssh_keys/#import-a-public-key>`_ through the Red Cloud web interface.
+
+  .. dropdown:: Create a Security Group
+
+    Security groups are firewalls that control inbound and outbound network traffic to your instances.
+    For an instance to be accessible, its security group must have port 22 (SSH) enabled.
+    You can read more about them at `Red Cloud: Security Groups <https://portal.cac.cornell.edu/techdocs/redcloud/network/#security>`__.
+
+    If you will access the instance from a Cornell Network (eduroam Wi-Fi, Ethernet, Cornell VPN, etc.),
+    it's sufficient to use the security group that already exists on your project: "campus-only-ssh".
+    This security group is already configured to enable SSH traffic from anywhere in the Cornell Network.
+
+    If you cannot use any of the options above,
+    you will need to create a security group and add an SSH rule for an IP address you frequently use.
+    Follow the steps below to create a security group:
+
+      * `Create a security group <https://portal.cac.cornell.edu/techdocs/redcloud/horizon_security_groups/#create-a-security-group>`__
+
+      * `Add an SSH rule to the security group to allow SSH <https://portal.cac.cornell.edu/techdocs/redcloud/horizon_security_groups/#manage-your-security-group>`__
+
+        * In the Rule dropdown, select "SSH"
+        * In the CIDR field, put your IP address followed by "/32", e.g., "128.84.0.0/32"
+
+    Note that once you put your IP address in the CIDR field, you may connect to the instance from that IP address.
+    If your IP address changes for any reason, you will need to remove and update the rule.
+
 
   .. dropdown:: Create an Instance
 
-    The Cornell TechDocs `Creating a New Linux Instance <https://www.cac.cornell.edu/techdocs/redcloud/Red_Cloud_Linux_Instances/#creating-a-new-linux-instance>`_
+    The Cornell TechDocs `Creating a New Linux Instance <https://portal.cac.cornell.edu/techdocs/redcloud/run_linux_instances/#creating-a-new-linux-instance>`_
     provides detailed information about creating a Linux instance on Red Cloud.
     While following those steps, be sure to make the following choices for this instance:
 
       * When choosing an image as the instance source:
   
         * Select Boot from Source is "Image"
-        * Volume Size (GB) is 100
+        * Volume Size (GB) is 1000
         * Delete Volume on Instance Delete is "Yes"
-        * Select the "ubuntu-22.04-LTS" image
+        * Select the "ubuntu-24.04-LTS" image
 
-     * In Flavor, choose the "Flavor" c4.m32 (4 Virtual CPUs) to provide a faster simulation run-time.
+     * In Flavor, choose the "Flavor" c64.m120 (64 Virtual CPUs) to provide a faster simulation run-time. Note that this will consume Red Cloud subscriptions very fast.
      * In Network, select "public".
-     * In Key Pair, select the SSH public key that you uploaded previously.
+     * In Security Groups, select "campus-only-ssh" or the security group you created.
+     * In Key Pair, select the SSH public key that you created or uploaded previously.
 
-    When all the required options are selected, click on the "Launch Instance" button, and wait for the instance to enter the "Active" state.
-    Note that the instance will not only be created, but will be running so that you can log in right away.
+    When all the required options are selected, click on the "Launch Instance" button,
+    and wait for the instance to enter the "Active" state.
+    Note that the instance will not only be created,
+    but will be running so that you can log in right away.
 
   .. dropdown:: Log in to the Instance
 
-    The instructions for `connecting to Red Cloud Linux instances using SSH <https://www.cac.cornell.edu/techdocs/redcloud/Red_Cloud_Linux_Instances/#accessing-instances>`_
-    can be executed in the Command Prompt on Windows (from the Start menu, type "cmd" and select Command Prompt)
+    The instructions for `connecting to Red Cloud Linux instances using SSH <https://portal.cac.cornell.edu/techdocs/redcloud/run_linux_instances/#accessing-instances>`_
+    can be executed in the Command Prompt on Windows
+    (from the Start menu, type "cmd" and select Command Prompt or search for PowerShell)
     or from the Terminal application on a Mac.
 
-    In either case, you will need to know the location and name of the private SSH key created on your computer (see above),
+    In either case, you will need to know the location and name of the private SSH key
+    created on your computer or downloaded from Red Cloud (see above),
     the IP address of your instance (found in the Red Cloud OpenStack interface)
     and the default username on your instance, which is "ubuntu".
 
@@ -119,7 +170,7 @@ additional background information.
   .. dropdown:: Managing a Red Cloud Instance
 
     In order to use cloud computing resources efficiently, you must know how to
-    `manage your Red Cloud instances <https://www.cac.cornell.edu/techdocs/openstack/#instance-states>`_.
+    `manage your Red Cloud instances <https://portal.cac.cornell.edu/techdocs/redcloud/compute/#instance-states>`_.
     Instances incur costs whenever they are running (on Red Cloud, this is when they are "Active").
     "Shelving" an instance stops it from using the cloud's CPUs and memory,
     and therefore stops it from incurring any charges against your project.
@@ -133,6 +184,8 @@ additional background information.
     but the contents of the disk are preserved when shelving.
 
     You may also want to try the "Resize" action to change the number of CPUs of the instance.
-    Increasing the number of CPUs (say, to flavor "c8.m64") can make your computations finish more quickly.
-    But of course, doubling the number of CPUs doubles the cost per hour to run the instance,
-    so Shelving as soon as you are done becomes even more important!
+    Decreasing the number of CPUs (say, to flavor "c8.m64") may slow down your computations,
+    but it will also reduce the cost per hour to run the instance.
+    Increasing the number of CPUs (say, to flavor c128.m240) can make your computations finish more quickly.
+    Doubling the number of CPUs doubles the cost per hour to run the instance.
+    Nonetheless, it's important to shelve the instance as soon as you are done.
