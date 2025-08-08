@@ -10,11 +10,9 @@ Written on: 13 May 2024
 import sys
 import argparse
 import pathlib
-import warnings
 import datetime as dt
 import numpy as np
 import pandas as pd
-import xarray as xr
 import netCDF4
 import wrf
 import matplotlib as mpl

@@ -33,24 +33,16 @@ Research Using an Integrated WRF Modeling, Visualization, and Verification Frame
 
 .. toctree::
    :titlesonly:
+   :maxdepth: 2 
    :numbered: 4
 
    overview
    release-notes
-   gettingstarted
+   compute-platform 
+   getting-started
    configuration
-   running
-   usecases
+   use-cases/index
    customization
    glossary
    references
 
-.. only:: html
-
-   Indices and tables
-   ==================
-
-   * :ref:`genindex`
-   * :ref:`search`
-
-      
