@@ -27,6 +27,7 @@ install the necessary software and download the data to run the simulation.
 Instructions a provided below for running the Hurricane Matthew use case for
 each :ref:`compute-platform` on which it has been tested.
 
+.. include:: matthew/nsf-ncar.rst
 .. include:: matthew/jetstream2.rst
 .. include:: matthew/red-cloud.rst
 .. include:: matthew/windows.rst
