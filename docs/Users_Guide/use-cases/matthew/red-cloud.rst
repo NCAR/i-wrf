@@ -56,44 +56,9 @@ and then pasted into your web shell by right-clicking.
         cp ${WRF_CONFIG_DIR}/vars_io.txt ${WRF_DIR}
         cp ${WRF_CONFIG_DIR}/run.sh ${WRF_DIR}
   
-  .. dropdown:: Install Docker
-  
-    As mentioned above, the WRF and METplus software are provided as Docker images that will run as a
-    `"container" <https://docs.docker.com/guides/docker-concepts/the-basics/what-is-a-container/>`_
-    on your cloud instance.
-    To run a Docker container, you must first install the Docker Engine on your instance.
-    You can then "pull" (download) the WRF and METplus images that will be run as containers.
-  
-    The `instructions for installing Docker Engine on Ubuntu <https://docs.docker.com/engine/install/ubuntu/>`_
-    are very thorough and make a good reference, but we only need to perform a subset of those steps.
-    These commands run a script that sets up the Docker software repository on your instance,
-    then installs Docker::
-  
-        curl --location https://bit.ly/3R3lqMU > install-docker.sh
-        source install-docker.sh
-        rm install-docker.sh
-  
-    If a text dialog is displayed asking which services should be restarted, type ``Enter``.
-    When the installation is complete, you can verify that the Docker command line tool works by asking for its version::
-  
-        docker --version
-  
-    The Docker daemon should start automatically, but it sometimes runs into issues.
-    First, check to see if the daemon started successfully::
-  
-        sudo systemctl --no-pager status docker
-  
-    If you see a message saying the daemon failed to start because a "Start request repeated too quickly",
-    wait a few minutes and issue this command to try again to start it::
-  
-        sudo systemctl start docker
-  
-    If the command seems to succeed, confirm that the daemon is running using the status command above.
-    Repeat these efforts as necessary until it is started.
-  
   .. dropdown:: Get the WRF and METplus Docker Images and the Observed Weather Data
   
-    Once Docker is running, you must pull the correct versions of the WRF and METplus images onto your instance::
+    Once you have confirmed Docker is installed, you must pull the correct versions of the WRF and METplus images onto your instance::
   
         sudo docker pull ${WRF_IMAGE}
         sudo docker pull ${METPLUS_IMAGE}

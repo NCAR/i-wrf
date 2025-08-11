@@ -186,7 +186,7 @@ and then pasted into your web shell by right-clicking.
   .. dropdown:: View the Plotted Simulation Results
   
     The METplus container also plots the results of the simulation, outputting them as PNG images.
-    To view these images::
+    To view these images:
   
     * Find the desktop shortcut "Files" on the left side of the desktop and click it to open a file browser.
     * Double-click on the following folders in order: metplus, wrf, 20161006_00, then plots.

@@ -80,60 +80,60 @@
 
   The latter half of the exercise involves running two WRF simulations to investigate the impact of land use and land cover (LULC) on simulated deep convection over different sizes of the Dallas-Fort Worth (DFW) area. The first simulation is a control simulation using data generated from the previous WPS steps. The second simulation is a perturbed simulation with modified data, where the DFW area is expanded to four times its original size.
 
-.. dropdown:: Control Simulation
+  .. dropdown:: Control Simulation
 
-  The control simulation runs WRF with the outputs generated from the previous WPS steps. Copy the relevant namelist, define environment variables, and link the ``met_em`` files from WPS::
+    The control simulation runs WRF with the outputs generated from the previous WPS steps. Copy the relevant namelist, define environment variables, and link the ``met_em`` files from WPS::
 
-      cd $WRF_DIR
-      ln -sf ${WRF_DIR}/run/* ${WRF_DIR}
-      cp ${CONFIGS}/WRF/namelist/namelist.input $WRF_DIR
-      cp ${CONFIGS}/WRF/ctl/wrfvar_lulc_*.txt $WRF_DIR
-      ln -sf ${WPS_DIR}/met_em* $WRF_DIR
+        cd $WRF_DIR
+        ln -sf ${WRF_DIR}/run/* ${WRF_DIR}
+        cp ${CONFIGS}/WRF/namelist/namelist.input $WRF_DIR
+        cp ${CONFIGS}/WRF/ctl/wrfvar_lulc_*.txt $WRF_DIR
+        ln -sf ${WPS_DIR}/met_em* $WRF_DIR
 
-  The WRF software is located at ``/home/wrfuser/WRF``, which contains two programs, ``real.exe`` and ``wrf.exe``. ``real.exe`` vertically interpolates the outputs of ``metgrid.exe`` and generates boundary and initial conditions: ``wrfbdy_d01``, ``wrfinput_d01``, ``wrfinput_d02``, and ``wrfinput_d03``::
+    The WRF software is located at ``/home/wrfuser/WRF``, which contains two programs, ``real.exe`` and ``wrf.exe``. ``real.exe`` vertically interpolates the outputs of ``metgrid.exe`` and generates boundary and initial conditions: ``wrfbdy_d01``, ``wrfinput_d01``, ``wrfinput_d02``, and ``wrfinput_d03``::
 
-      cd $WRF_DIR
-      ./main/real.exe
+        cd $WRF_DIR
+        ./main/real.exe
 
-  Create a directory named ``wrfdata`` in the WRF directory to store the output from WRF and run WRF simulation with 60 CPU cores. If you had used a different flavor on this instance, adjust the CPU core count to a suitable number::
-    
-      cd $WRF_DIR
-      mkdir -p ${WRF_DIR}/wrfdata
-      mpiexec -n 60 -ppn 60 ./main/wrf.exe
+    Create a directory named ``wrfdata`` in the WRF directory to store the output from WRF and run WRF simulation with 60 CPU cores. If you had used a different flavor on this instance, adjust the CPU core count to a suitable number::
+      
+        cd $WRF_DIR
+        mkdir -p ${WRF_DIR}/wrfdata
+        mpiexec -n 60 -ppn 60 ./main/wrf.exe
 
-  This step will take about 4 hours to run. When it is finished, move the outputs from ``wrfdata`` to the output directory::
+    This step will take about 4 hours to run. When it is finished, move the outputs from ``wrfdata`` to the output directory::
 
-      mv ${WRF_DIR}/wrfdata ${OUTPUT}/ctl
+        mv ${WRF_DIR}/wrfdata ${OUTPUT}/ctl
 
-.. dropdown:: DFW4X Simulation
+  .. dropdown:: DFW4X Simulation
 
-  The perturbed simulation will modify the inputs such that the DFW area is four times its original size. Instead of making modifications on our own, the modified data is provided.
+    The perturbed simulation will modify the inputs such that the DFW area is four times its original size. Instead of making modifications on our own, the modified data is provided.
 
-  First, remove the files used for the control simulation::
+    First, remove the files used for the control simulation::
 
-      cd $WRF_DIR
-      rm met_em*
-      rm wrfbdy_d01
-      rm wrfinput*
+        cd $WRF_DIR
+        rm met_em*
+        rm wrfbdy_d01
+        rm wrfinput*
 
-  Link the appropriate files for DFW4X simulation::
+    Link the appropriate files for DFW4X simulation::
 
-      ln -sf ${WRF_DIR}/run/* $WRF_DIR
-      ln -sf ${WRF_INPUT}/dfw4x/wrfbdy_d01 $WRF_DIR
-      ln -sf ${WRF_INPUT}/dfw4x/wrfinput* $WRF_DIR
-      ln -sf ${WRF_INPUT}/dfw4x/met_em* $WRF_DIR
+        ln -sf ${WRF_DIR}/run/* $WRF_DIR
+        ln -sf ${WRF_INPUT}/dfw4x/wrfbdy_d01 $WRF_DIR
+        ln -sf ${WRF_INPUT}/dfw4x/wrfinput* $WRF_DIR
+        ln -sf ${WRF_INPUT}/dfw4x/met_em* $WRF_DIR
 
-  Create a directory named ``wrfdata`` in the WRF directory to store the output from WRF and run WRF simulation with 60 CPU cores. This step will take slightly more than 4 hours to run. If you had used a different flavor on this instance, adjust the CPU core count to a suitable number::
-    
-      cd $WRF_DIR
-      mkdir -p ${WRF_DIR}/wrfdata
-      mpiexec -n 60 -ppn 60 ./main/wrf.exe
+    Create a directory named ``wrfdata`` in the WRF directory to store the output from WRF and run WRF simulation with 60 CPU cores. This step will take slightly more than 4 hours to run. If you had used a different flavor on this instance, adjust the CPU core count to a suitable number::
+      
+        cd $WRF_DIR
+        mkdir -p ${WRF_DIR}/wrfdata
+        mpiexec -n 60 -ppn 60 ./main/wrf.exe
 
-  When it is finished, move the outputs from ``wrfdata`` to the output directory::
+    When it is finished, move the outputs from ``wrfdata`` to the output directory::
 
-      mv ${WRF_DIR}/wrfdata ${OUTPUT}/dfw4x
+        mv ${WRF_DIR}/wrfdata ${OUTPUT}/dfw4x
 
-  After moving the outputs, you may exit the container by entering ``exit``.
+    After moving the outputs, you may exit the container by entering ``exit``.
 
 .. dropdown:: Start WPS and WRF with a Script (Full Simulation)
 

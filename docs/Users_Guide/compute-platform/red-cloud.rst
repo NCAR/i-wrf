@@ -30,18 +30,17 @@ additional background information.
         2. Join an existing project.
         3. Request an exploratory account.
 
-      * Log in to Red Cloud's OpenStack interface.
+      * Once you join a project with Red Cloud subscription, log in to `Red Cloud Horizon web interface <https://redcloud2.cac.cornell.edu/>`_.
 
    The sections below will guide you through this process.
    For an overview of Red Cloud, read Cornell TechDocs `Red Cloud documentation <https://portal.cac.cornell.edu/techdocs/redcloud/>`_.
 
   .. dropdown:: Option 1: Start a Project
 
-    One way to create a CAC account is to request a project.
-    Note that you must be a Cornell faculty member or a staff member to view the pages below and start a project.
-    You may submit a `project request <https://www.cac.cornell.edu/services/projects/project.aspx>`_ at the CAC website.
-    Thoroughly review the `rates <https://www.cac.cornell.edu/services/projects/rates.aspx>`_ page (login required) to
-    understand the Red Cloud subscription service.
+    One way to get a CAC account is to request a project. 
+    Note that you must be a Cornell faculty member or staff member to view the pages below and start a project. 
+    You may submit a project request at the CAC portal.
+    Thoroughly review the `rates <https://portal.cac.cornell.edu/rates>`_ (login required) page to understand the Red Cloud subscription service.
 
     Once your project is approved, you can manage your project on the CAC portal.
     Read the `Portal Overview <https://portal.cac.cornell.edu/techdocs/general/CACportal/#portal-overview>`_ to learn
@@ -68,9 +67,8 @@ additional background information.
 
   .. dropdown:: Log in to Red Cloud Horizon Interface
 
-    Once you are given a CAC account login information,
+    Once you join a project with Red Cloud subscription, 
     you can log into the `Red Cloud Horizon web interface <https://redcloud2.cac.cornell.edu/>`_ .
-    Note that you need to be on a project with a subscription to log in successfully.
 
   .. dropdown:: Create a Cloud Instance and Log In
 
@@ -133,17 +131,33 @@ additional background information.
     provides detailed information about creating a Linux instance on Red Cloud.
     While following those steps, be sure to make the following choices for this instance:
 
-      * When choosing an image as the instance source:
-  
-        * Select Boot from Source is "Image"
-        * Volume Size (GB) is 1000
-        * Delete Volume on Instance Delete is "Yes"
-        * Select the "ubuntu-24.04-LTS" image
+      .. dropdown:: Hurricane Matthew
+        
+        * When choosing an image as the instance source:
+            
+          * Select Boot from Source is "Image"
+          * Volume Size (GB) is 100
+          * Delete Volume on Instance Delete is "Yes"
+          * Select the "ubuntu-24.04-LTS" image
 
-     * In Flavor, choose the "Flavor" c64.m120 (64 Virtual CPUs) to provide a faster simulation run-time. Note that this will consume Red Cloud subscriptions very fast.
-     * In Network, select "public".
-     * In Security Groups, select "campus-only-ssh" or the security group you created.
-     * In Key Pair, select the SSH public key that you created or uploaded previously.
+        * In Flavor, choose the "Flavor" c4.m32 (4 Virtual CPUs) to provide a faster simulation run-time.
+        * In Network, select "public".
+        * In Security Groups, select "campus-only-ssh" or the security group you created.
+        * In Key Pair, select the SSH public key that you created or uploaded previously.
+          
+      .. dropdown:: Land Use/Land Cover Change
+
+        * When choosing an image as the instance source:
+      
+          * Select Boot from Source is "Image"
+          * Volume Size (GB) is 1000
+          * Delete Volume on Instance Delete is "Yes"
+          * Select the "ubuntu-24.04-LTS" image
+
+        * In Flavor, choose the "Flavor" c64.m120 (64 Virtual CPUs) to provide a faster simulation run-time. Note that this will consume Red Cloud subscriptions very fast.
+        * In Network, select "public".
+        * In Security Groups, select "campus-only-ssh" or the security group you created.
+        * In Key Pair, select the SSH public key that you created or uploaded previously.
 
     When all the required options are selected, click on the "Launch Instance" button,
     and wait for the instance to enter the "Active" state.
@@ -184,8 +198,9 @@ additional background information.
     but the contents of the disk are preserved when shelving.
 
     You may also want to try the "Resize" action to change the number of CPUs of the instance.
-    Decreasing the number of CPUs (say, to flavor "c8.m64") may slow down your computations,
+    Decreasing the number of CPUs may slow down your computations,
     but it will also reduce the cost per hour to run the instance.
-    Increasing the number of CPUs (say, to flavor c128.m240) can make your computations finish more quickly.
+    Increasing the number of CPUs can make your computations finish more quickly.
     Doubling the number of CPUs doubles the cost per hour to run the instance.
     Nonetheless, it's important to shelve the instance as soon as you are done.
+    

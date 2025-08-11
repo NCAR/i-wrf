@@ -10,7 +10,11 @@ Hurricane Matthew Test Case
 ^^^^^^^^^^^^
 WPS Namelist
 ^^^^^^^^^^^^
-Use this in the namelist.wps file when running WPS for the Hurricane Matthew case (TODO: Eventually replace this with a link to a file on Github). Note that you will need to update geog_data_path, opt_geogrid_tbl_path, and opt_metgrid_tbl_path for your machine/environment to point to locations of the WPS_GEOG dataset, GEOGRID.TBL, and METGRID.TBL files, respectively. WPS_GEOG is a large static dataset of geographic data that is required for geogrid.exe to run (see: https://www2.mmm.ucar.edu/wrf/OnLineTutorial/Basics/GEOGRID/ter_data.php). GEOGRID.TBL and METGRID.TBL are typically found in the geogrid/ and metgrid/ directories inside the WPS installation directory.::
+Use this in the namelist.wps file when running WPS for the Hurricane Matthew case, from the Github repository:
+
+https://github.com/NCAR/i-wrf/blob/main/use_cases/Hurricane_Matthew/WRF/namelist.wps
+
+Note that you will need to update geog_data_path, opt_geogrid_tbl_path, and opt_metgrid_tbl_path for your machine/environment to point to locations of the WPS_GEOG dataset, GEOGRID.TBL, and METGRID.TBL files, respectively. WPS_GEOG is a large static dataset of geographic data that is required for geogrid.exe to run (see: https://www2.mmm.ucar.edu/wrf/OnLineTutorial/Basics/GEOGRID/ter_data.php). GEOGRID.TBL and METGRID.TBL are typically found in the geogrid/ and metgrid/ directories inside the WPS installation directory.::
 
   &share
    wrf_core = 'ARW',
@@ -68,3 +72,12 @@ METplus Config File
 ^^^^^^^^^^^^^^^^^^^
 For the METplus configuration file for the Hurricane Matthew case, please use this file on the Github repository:
 https://github.com/NCAR/i-wrf/blob/main/use_cases/Hurricane_Matthew/METplus/PointStat_matthew.conf
+
+
+---------------------------------
+Land Usage/Land Cover Change Case
+---------------------------------
+
+The WPS namelist, WRF namelist, METplus configurations, and other configurations can all be found here:
+
+https://github.com/NCAR/i-wrf/tree/main/use_cases/Land_Use_Land_Cover

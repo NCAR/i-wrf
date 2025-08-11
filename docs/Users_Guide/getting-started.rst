@@ -48,34 +48,11 @@ on various supported environments.
   for additional details.
 
 .. dropdown:: Jetstream2 Instructions
-
-  If running on a `Jetstream2 <https://jetstream-cloud.org/index.html>`_ instance, Docker must be installed on the instance.
-
-  The `instructions for installing Docker Engine on Ubuntu <https://docs.docker.com/engine/install/ubuntu/>`_
-  are very thorough and serve as a good reference, but we only need to perform a subset of those steps.
-  These commands run a script that sets up the Docker software repository on your instance,
-  then installs Docker::
-
-      curl --location https://bit.ly/3R3lqMU > install-docker.sh
-      source install-docker.sh
-
-  If a text dialog is displayed asking which services should be restarted, type ``Enter``.
-  When the installation is complete, you can verify that the Docker command line tool works by asking for its version::
+    
+  If running on a `Jetstream2 <https://jetstream-cloud.org/index.html>`_ instance, Docker must be available on the instance. The Ubuntu instance you created already has the Docker Engine installed and running.
+  you can verify that the Docker command line tool works by asking for its version::
 
       docker --version
-
-  The Docker daemon should start automatically, but it sometimes runs into issues.
-  First, check to see if the daemon started successfully::
-
-      sudo systemctl --no-pager status docker
-
-  If you see a message saying the daemon failed to start because a "Start request repeated too quickly",
-  wait a few minutes and issue this command to try again to start it::
-
-      sudo systemctl start docker
-
-  If the command seems to succeed, confirm that the daemon is running using the status command above.
-  Repeat these efforts as necessary until it is started.
 
 .. dropdown:: Red Cloud Instructions
 

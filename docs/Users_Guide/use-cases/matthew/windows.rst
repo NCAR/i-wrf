@@ -6,7 +6,7 @@ On Windows (Intel CPU)
 Follow the compute platform instructions for :ref:`compute-platform-windows`
 to launch a "Command Prompt" and an administrator on your Windows workstation.
   
-The following sections instruct you to issue numerous Linux commands in your shell.
+The following sections instruct you to issue numerous Windows and Linux commands in your shell.
 If you are not familiar with Linux, you may want to want to refer to
 `An Introduction to Linux <https://cvw.cac.cornell.edu/Linux>`_ when working through these steps.
 The commands in each section can be copied using the button in the upper right corner
@@ -66,7 +66,7 @@ and then pasted into your web shell by right-clicking.
         copy /y %WRF_CONFIG_DIR%\vars_io.txt %WRF_DIR%
         copy /y %WRF_CONFIG_DIR%\run.sh %WRF_DIR%
 
-  .. dropdown:: Install Docker and Pull Docker Objects
+  .. dropdown:: Install Docker
 
     As mentioned above, the WRF and METplus software are provided as Docker images that will run as a
     `"container" <https://docs.docker.com/guides/docker-concepts/the-basics/what-is-a-container/>`_
@@ -74,27 +74,27 @@ and then pasted into your web shell by right-clicking.
     To run a Docker container, you must first install the Docker Engine on your instance.
     You can then "pull" (download) the WRF and METplus images that will be run as containers.
 
-  .. dropdown:: Install Docker Desktop
+    .. dropdown:: Install Docker Desktop
 
-    In order to install Docker on your Windows computer, one or more Windows services must be enabled
-    (these services allow virtualization and running of containers).
-    The `process for performing this setup and installation <https://learn.microsoft.com/en-us/virtualization/windowscontainers/quick-start/set-up-environment>`_
-    is outlined below.
-    During the setup process your computer may reboot one or more times,
-    so be sure to save all work and close your other applications before beginning the setup.
+      In order to install Docker on your Windows computer, one or more Windows services must be enabled
+      (these services allow virtualization and running of containers).
+      The `process for performing this setup and installation <https://learn.microsoft.com/en-us/virtualization/windowscontainers/quick-start/set-up-environment>`_
+      is outlined below.
+      During the setup process your computer may reboot one or more times,
+      so be sure to save all work and close your other applications before beginning the setup.
 
-    To install Docker and enable the required components on Windows 10/11,
-    you will install the Docker Desktop for Windows application by following these steps:
+      To install Docker and enable the required components on Windows 10/11,
+      you will install the Docker Desktop for Windows application by following these steps:
 
-    * In a web browser, visit `Install Docker Desktop on Windows <https://docs.docker.com/desktop/install/windows-install/>`_.
-    * Click on ``Docker Desktop for Windows - x86_64`` to download the installer.
-    * Run the installer file "Docker Desktop Installer.exe", which will require a system restart.
-    * Leave the "Use WSL 2 instead of Hyper-V" option checked in the dialog that appears.
-    * After the installation is complete, use the Start menu to find and run Docker Desktop, then agree to the terms and complete the other steps in the "first use" wizard.
+      * In a web browser, visit `Install Docker Desktop on Windows <https://docs.docker.com/desktop/install/windows-install/>`_.
+      * Click on ``Docker Desktop for Windows - x86_64`` to download the installer.
+      * Run the installer file "Docker Desktop Installer.exe", which will require a system restart.
+      * Leave the "Use WSL 2 instead of Hyper-V" option checked in the dialog that appears.
+      * After the installation is complete, use the Start menu to find and run Docker Desktop, then agree to the terms and complete the other steps in the "first use" wizard.
 
-    The Docker Desktop app should now show a green "Engine running" status in the lower left corner.
-    If your engine isn't running or you encounter any other issues,
-    visit the `Troubleshoot Docker Desktop page <https://docs.docker.com/desktop/troubleshoot/overview/>`_.
+      The Docker Desktop app should now show a green "Engine running" status in the lower left corner.
+      If your engine isn't running or you encounter any other issues,
+      visit the `Troubleshoot Docker Desktop page <https://docs.docker.com/desktop/troubleshoot/overview/>`_.
 
   .. dropdown:: Get the WRF and METplus Docker Images and the Observed Weather Data
 
@@ -132,15 +132,16 @@ and then pasted into your web shell by right-clicking.
 
     Begin by download all of the data sets in this table:
 
-    +"""""""""""""""""""+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""+"""""""""""""""+
+   
+    +-------------------+----------------------------------------------------------------------------+---------------+
     | Data Set          | URL                                                                        | Destination   |
-    +"""""""""""""""""""+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""+"""""""""""""""+
+    +===================+============================================================================+===============+
     | Terrain           | https://www2.mmm.ucar.edu/wrf/src/wps_files/geog_high_res_mandatory.tar.gz | %WORKING_DIR% |
-    +"""""""""""""""""""+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""+"""""""""""""""+
+    +-------------------+----------------------------------------------------------------------------+---------------+
     | Case study        | https://www2.mmm.ucar.edu/wrf/TUTORIAL_DATA/matthew_1deg.tar.gz            | %WRF_DIR%     |
-    +"""""""""""""""""""+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""+"""""""""""""""+
+    +-------------------+----------------------------------------------------------------------------+---------------+
     | Sea Surface Temps | https://www2.mmm.ucar.edu/wrf/TUTORIAL_DATA/matthew_sst.tar.gz             | %WRF_DIR%     |
-    +"""""""""""""""""""+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""+"""""""""""""""+
+    +-------------------+----------------------------------------------------------------------------+---------------+
 
     Now, in your command prompt window, change directory ("cd") to the folder where those files were downloaded.
     Then, copy/paste the commands below to unzip the data and delete the downloaded files::
