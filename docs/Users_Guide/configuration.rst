@@ -10,7 +10,7 @@ Hurricane Matthew Test Case
 ^^^^^^^^^^^^
 WPS Namelist
 ^^^^^^^^^^^^
-Use this in the namelist.wps file when running WPS for the Hurricane Matthew case, from the Github repository:
+Use this in the namelist.wps file when running WPS for the Hurricane Matthew case, from the GitHub repository:
 
 https://github.com/NCAR/i-wrf/blob/main/use_cases/Hurricane_Matthew/WRF/namelist.wps
 
@@ -57,20 +57,20 @@ Note that you will need to update geog_data_path, opt_geogrid_tbl_path, and opt_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 WRF Namelist and Other Config Files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Use this namelist.input file when running WRF for the Hurricane Matthew case, from the Github repository:
+Use this namelist.input file when running WRF for the Hurricane Matthew case, from the GitHub repository:
 
 https://github.com/NCAR/i-wrf/blob/main/use_cases/Hurricane_Matthew/WRF/namelist.input
 
 Note that the iofields_filename variable points to a file called vars_io.txt. This file adds or removes WRF variables from various output (history) streams (stream 0 is the default history stream). Note also that the auxhist22* and auxhist23* variables are specified for the height-level and pressure-level diagnostics, respectively. The levels at which to write out those height-level and pressure-level diagnostics are specified in the &diags namelist, and vars_io.txt also changes which variables are written to these files from the default settings for streams 22 and 23. METplus expects to find the wrfout_plev* files in order to do upper-air verification against radiosonde observations at mandatory pressure levels.
 
-Use this for the vars_io.txt file for the Hurricane Matthew case, from the Github repository:
+Use this for the vars_io.txt file for the Hurricane Matthew case, from the GitHub repository:
 
 https://github.com/NCAR/i-wrf/blob/main/use_cases/Hurricane_Matthew/WRF/vars_io.txt
 
 ^^^^^^^^^^^^^^^^^^^
 METplus Config File
 ^^^^^^^^^^^^^^^^^^^
-For the METplus configuration file for the Hurricane Matthew case, please use this file on the Github repository:
+For the METplus configuration file for the Hurricane Matthew case, please use this file on the GitHub repository:
 https://github.com/NCAR/i-wrf/blob/main/use_cases/Hurricane_Matthew/METplus/PointStat_matthew.conf
 
 
@@ -78,6 +78,6 @@ https://github.com/NCAR/i-wrf/blob/main/use_cases/Hurricane_Matthew/METplus/Poin
 Land Usage/Land Cover Change Case
 ---------------------------------
 
-The WPS namelist, WRF namelist, METplus configurations, and other configurations can all be found here:
+The WPS namelist, WRF namelist, METplus configurations, and other configurations can all be found in the GitHub repository:
 
 https://github.com/NCAR/i-wrf/tree/main/use_cases/Land_Use_Land_Cover

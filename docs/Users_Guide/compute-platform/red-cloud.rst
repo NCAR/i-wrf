@@ -24,11 +24,13 @@ additional background information.
         The instructions to log in are on the
         `CAC TechDocs page: Portal Login <https://portal.cac.cornell.edu/techdocs/general/CACportal/#portal-login>`_.
 
-      * Get a CAC account by doing **one of** the following:
+      * Get access to Red Cloud by doing one of the following options:
 
         1. Start a new project (only available for Cornell Faculty and Staff).
         2. Join an existing project.
         3. Request an exploratory account.
+
+      * For new projects and existing projects, make sure that the project has Red Cloud subscriptions. 
 
       * Once you join a project with Red Cloud subscription, log in to `Red Cloud Horizon web interface <https://redcloud2.cac.cornell.edu/>`_.
 
@@ -54,7 +56,7 @@ additional background information.
     Once the PI of the project approves the request,
     an email is sent to you with the login information.
     For the full instructions, navigate to the
-    `CAC TechDocs page: How Do I Join an Existing Project? <https://portal.cac.cornell.edu/techdocs/general/CACportal/#how-do-i-join-an-existing-project>`_.
+    `CAC TechDocs page: How Do I Join an Existing Project? <https://portal.cac.cornell.edu/techdocs/general/CACportal/#how-do-i-join-an-existing-project>`_
 
   .. dropdown:: Option 3: Open an Exploratory Account
 
@@ -62,13 +64,13 @@ additional background information.
     This account has limited computing hours and storage. This is sufficient for the Hurricane Matthew exercise,
     but does not have enough compute hours to complete the LULC exercise.
     To request an exploratory account, follow the instructions on the
-    `CAC TechDocs page: How Do I Request an Exploratory Project? <https://portal.cac.cornell.edu/techdocs/general/CACportal/#how-do-i-request-an-exploratory-project>`_ .
+    `CAC TechDocs page: How Do I Request an Exploratory Project? <https://portal.cac.cornell.edu/techdocs/general/CACportal/#how-do-i-request-an-exploratory-project>`_
     You are also given one hour of free consulting for any help you may need.
 
   .. dropdown:: Log in to Red Cloud Horizon Interface
 
     Once you join a project with Red Cloud subscription, 
-    you can log into the `Red Cloud Horizon web interface <https://redcloud2.cac.cornell.edu/>`_ .
+    you can log into the `Red Cloud Horizon web interface <https://redcloud2.cac.cornell.edu/>`_.
 
   .. dropdown:: Create a Cloud Instance and Log In
 
@@ -91,7 +93,7 @@ additional background information.
         `create a key pair on Red Cloud <https://portal.cac.cornell.edu/techdocs/redcloud/horizon_ssh_keys/#create-a-new-ssh-key-pair>`_.
         Be sure to follow the steps and save the private key it generated with the
         correct format and permission before proceeding.
-        This is the easiest way to generate a key pair for this exercise.
+        This is the easiest way to generate a key pair.
 
       * Alternatively, `create an SSH Key on your computer <https://portal.cac.cornell.edu/techdocs/clusterinfo/linuxconnect/#public-key-authentication>`_
         using the "ssh-keygen" command.
@@ -138,7 +140,7 @@ additional background information.
           * Select Boot from Source is "Image"
           * Volume Size (GB) is 100
           * Delete Volume on Instance Delete is "Yes"
-          * Select the "ubuntu-24.04-LTS" image
+          * Select the "ubuntu-22.04-LTS" image
 
         * In Flavor, choose the "Flavor" c4.m32 (4 Virtual CPUs) to provide a faster simulation run-time.
         * In Network, select "public".
@@ -173,7 +175,7 @@ additional background information.
 
     In either case, you will need to know the location and name of the private SSH key
     created on your computer or downloaded from Red Cloud (see above),
-    the IP address of your instance (found in the Red Cloud OpenStack interface)
+    the IP address of your instance (found in the Red Cloud Horizon Web Interface)
     and the default username on your instance, which is "ubuntu".
 
     You will know that your login has been successful when the prompt has the form ``ubuntu@instance-name:~$``,

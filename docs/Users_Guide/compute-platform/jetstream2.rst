@@ -112,7 +112,7 @@ additional background information.
     and the "Web Desktop" button will open a view of the instance's graphical desktop (if enabled).
     Both views open in a new browser tab, and Exosphere automatically logs you in to the instance.
     For this tutorial you should open a Web Desktop so that you will be able to view
-    the plots that are generated from the simulation output.
+    the plots (if any) that are generated from the simulation output.
 
     If you wish to log in to the instance from a shell on your computer,
     you can do so following the information in this optional content:
