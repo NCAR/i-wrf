@@ -1,0 +1,35 @@
+&share
+ wrf_core          = 'ARW',
+ max_dom           = 1,
+ start_date        = '2016-10-06_00:00:00',
+ end_date          = '2016-10-08_00:00:00',
+ interval_seconds  = 21600
+/
+
+&geogrid
+ parent_id         = 1,
+ parent_grid_ratio = 1,
+ i_parent_start    = 1,
+ j_parent_start    = 1,  25,
+ e_we              = 91,
+ e_sn              = 100,
+ geog_data_res     = 'default',
+ dx                = 27000,
+ dy                = 27000,
+ map_proj          = 'mercator',
+ ref_lat           = 28.00,
+ ref_lon           = -75.00,
+ truelat1          = 30.0,
+ truelat2          = 60.0,
+ stand_lon         = -75.0,
+ geog_data_path    = '/home/wrfuser/terrestrial_data/WPS_GEOG'
+/
+
+&ungrib
+ out_format        = 'WPS',
+ prefix            = 'FILE',
+/
+
+&metgrid
+ fg_name           = 'FILE'
+/

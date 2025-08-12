@@ -1,0 +1,7 @@
+FROM debian:12-slim
+
+RUN mkdir -p /data/input/obs
+
+COPY stage/obs /data/input/obs
+
+VOLUME /data/input/obs
