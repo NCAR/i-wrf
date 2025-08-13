@@ -4,7 +4,7 @@ Windows (Intel CPU)
 -------------------
 
 Simulations like WRF often require significant computing resources,
-so it is recommended that the computer you use have at least four cores, 32 GB of RAM, and 50 Gb of available disk space.
+so it is recommended that the computer you use have at least four cores, 32 GB of RAM, and 50 GB of available disk space.
 This exercise runs the I-WRF programs as Docker "containers",
 which simplifies the set-up work needed to run the simulation and verification.
 However, the code used to build those Docker containers was compiled expressly for use on

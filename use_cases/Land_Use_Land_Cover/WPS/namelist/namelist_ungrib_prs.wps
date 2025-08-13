@@ -1,0 +1,13 @@
+&share
+ wrf_core = 'ARW',
+ max_dom = 3,
+ start_date = '2017-07-03_12:00:00','2017-07-03_12:00:00','2017-07-03_12:00:00',
+ end_date   = '2017-07-03_15:00:00','2017-07-03_15:00:00','2017-07-03_15:00:00',
+ interval_seconds = 3600
+ io_form_geogrid = 2,
+/
+
+&ungrib
+ out_format = 'WPS',
+ prefix = 'HRRR_PRS',
+/

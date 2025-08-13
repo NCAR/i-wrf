@@ -82,14 +82,18 @@ additional background information.
 
     The Cornell Virtual Workshop topic `Creating an Instance <https://cvw.cac.cornell.edu/jetstream/create-instance>`_
     provides detailed information about creating a Jetstream2 instance.
-    While following those steps for this tutorial, be sure to make the following choices for this instance:
+    While following those steps for this tutorial, be sure to make the configuration choices specific to the I-WRF use case. For beginners, we recommend the Hurricane Matthew use case (Note: a new window will open).
 
-      * When choosing an image as the instance source, if viewing "By Type", select the "Ubuntu 22.04" image.  If viewing "By Image", choose the "Featured-Ubuntu22" image.
-      * Choose the "Flavor" m3.quad (4 CPUs) to provide a faster simulation run-time.
-      * Select a custom disk size of 100 GB, which is large enough to hold this exercise's data and results.
-      * For "Enable web desktop?", select Yes.
-      * For "Choose an SSH public key", select None unless you want to use your own SSH key that you uploaded previously.
-      * You do not need to set any of the Advanced Options.
+      * |Hurricane Matthew Use Case JS2|
+      * |Land Use Land Cover Change Use Case JS2|
+
+    .. |Hurricane Matthew Use Case JS2| raw:: html
+
+      <a href="https://i-wrf.readthedocs.io/en/latest/Users_Guide/use-cases/matthew.html#jetstream2_instance_configuration" target="_blank"> Hurricane Matthew Use Case </a>
+
+    .. |Land Use Land Cover Change Use Case JS2| raw:: html
+
+      <a href="https://i-wrf.readthedocs.io/en/latest/Users_Guide/use-cases/lulc.html#jetstream2_instance_configuration" target="_blank"> Land Use Land Cover Change Use Case </a>
 
     After clicking the "Create" button, wait for the instance to enter the "Ready" state (it takes several minutes).
     Note that the instance will not only be created, but will be running so that you can log in right away.
@@ -101,7 +105,7 @@ additional background information.
     and the "Web Desktop" button will open a view of the instance's graphical desktop (if enabled).
     Both views open in a new browser tab, and Exosphere automatically logs you in to the instance.
     For this tutorial you should open a Web Desktop so that you will be able to view
-    the plots that are generated from the simulation output.
+    the plots (if any) that are generated from the simulation output.
 
     If you wish to log in to the instance from a shell on your computer,
     you can do so following the information in this optional content:

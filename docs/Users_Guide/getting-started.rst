@@ -15,9 +15,11 @@ METplus output to visualize the results.
 Container Software
 ==================
 
+The examples in this guide are run using
+`containers <https://docs.docker.com/guides/docker-concepts/the-basics/what-is-a-container/>`_.
 The `Docker <https://www.docker.com/>`_ or `Apptainer <https://apptainer.org>`_
-containerization software is required to run I-WRF. Check if either of these
-options is already installed on your system.
+containerization software is required to run I-WRF.
+Check if either of these options is already installed on your system.
 
 .. dropdown:: Instructions
 
@@ -46,16 +48,25 @@ on various supported environments.
   for additional details.
 
 .. dropdown:: Jetstream2 Instructions
+    
+  If running on a `Jetstream2 <https://jetstream-cloud.org/index.html>`_ instance, Docker must be available on the instance. The Ubuntu instance you created already has the Docker Engine installed and running.
+  you can verify that the Docker command line tool works by asking for its version::
 
-  If running on a `Jetstream2 <https://jetstream-cloud.org/index.html>`_ instance, Docker must be installed on the instance.
+      docker --version
+
+.. dropdown:: Red Cloud Instructions
+
+  If running on a `Red Cloud <https://www.cac.cornell.edu/services/cloudservices.aspx/>`_ instance,
+  the Docker Engine must be installed on the instance.
 
   The `instructions for installing Docker Engine on Ubuntu <https://docs.docker.com/engine/install/ubuntu/>`_
-  are very thorough and serve as a good reference, but we only need to perform a subset of those steps.
+  are very thorough and make a good reference, but we only need to perform a subset of those steps.
   These commands run a script that sets up the Docker software repository on your instance,
   then installs Docker::
 
       curl --location https://bit.ly/3R3lqMU > install-docker.sh
       source install-docker.sh
+      rm install-docker.sh
 
   If a text dialog is displayed asking which services should be restarted, type ``Enter``.
   When the installation is complete, you can verify that the Docker command line tool works by asking for its version::
@@ -74,6 +85,7 @@ on various supported environments.
 
   If the command seems to succeed, confirm that the daemon is running using the status command above.
   Repeat these efforts as necessary until it is started.
+
 
 .. dropdown:: User Workstation Instructions
 

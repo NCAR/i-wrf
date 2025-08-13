@@ -14,6 +14,19 @@ and then pasted into your web shell by right-clicking.
 
 .. dropdown:: Instructions
   
+  .. dropdown:: Instance Configuration
+    
+    .. _jetstream2_instance_configuration:
+
+    Make the following choices when creating your instance:
+      
+      * When choosing an image as the instance source, if viewing "By Type", select the "Ubuntu 22.04" image.  If viewing "By Image", choose the "Featured-Ubuntu22" image.
+      * Choose the "Flavor" m3.quad (4 CPUs) to provide a faster simulation run-time.
+      * Select a custom disk size of 100 GB, which is large enough to hold this exercise's data and results.
+      * For "Enable web desktop?", select Yes.
+      * For "Choose an SSH public key", select None unless you want to use your own SSH key that you uploaded previously.
+      * You do not need to set any of the Advanced Options.
+
   .. dropdown:: Define Environment Variables
   
     We will be using some environment variables throughout this exercise to
@@ -186,7 +199,7 @@ and then pasted into your web shell by right-clicking.
   .. dropdown:: View the Plotted Simulation Results
   
     The METplus container also plots the results of the simulation, outputting them as PNG images.
-    To view these images::
+    To view these images:
   
     * Find the desktop shortcut "Files" on the left side of the desktop and click it to open a file browser.
     * Double-click on the following folders in order: metplus, wrf, 20161006_00, then plots.
