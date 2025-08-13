@@ -14,6 +14,24 @@ and then pasted into your web shell by right-clicking.
 
 .. dropdown:: Instructions
 
+  .. dropdown:: Instance Configuration
+    
+    .. _redcloud_instance_configuration:
+
+    Make the following choices when creating your instance:
+
+      * When choosing an image as the instance source
+              
+        * Select Boot from Source is "Image"
+        * Volume Size (GB) is 100
+        * Delete Volume on Instance Delete is "Yes"
+        * Select the "ubuntu-22.04-LTS" image
+
+      * In Flavor, choose the "Flavor" c4.m32 (4 Virtual CPUs) to provide a faster simulation run-time.
+      * In Network, select "public".
+      * In Security Groups, select "campus-only-ssh" or the security group you created.
+      * In Key Pair, select the SSH public key that you created or uploaded previously.
+
   .. dropdown:: Define Environment Variables
   
     We will be using some environment variables throughout this exercise to

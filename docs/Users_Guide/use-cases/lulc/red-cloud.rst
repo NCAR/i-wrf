@@ -8,6 +8,24 @@ to secure access to and log in to Red Cloud.
 
 .. dropdown:: Instructions
 
+  .. dropdown:: Instance Configuration
+    
+    .. _redcloud_instance_configuration:
+
+    Make the following choices when creating your instance:
+
+      * When choosing an image as the instance source:
+      
+        * Select Boot from Source is "Image"
+        * Volume Size (GB) is 1000
+        * Delete Volume on Instance Delete is "Yes"
+        * Select the "ubuntu-24.04-LTS" image
+
+      * In Flavor, choose the "Flavor" c64.m120 (64 Virtual CPUs) to provide a faster simulation run-time. Note that this will consume Red Cloud subscriptions very fast.
+      * In Network, select "public".
+      * In Security Groups, select "campus-only-ssh" or the security group you created.
+      * In Key Pair, select the SSH public key that you created or uploaded previously.
+
   .. include:: lulc/common/preparingenvironment.rst
 
   .. include:: lulc/common/getdockerimage.rst

@@ -131,35 +131,18 @@ additional background information.
 
     The Cornell TechDocs `Creating a New Linux Instance <https://portal.cac.cornell.edu/techdocs/redcloud/run_linux_instances/#creating-a-new-linux-instance>`_
     provides detailed information about creating a Linux instance on Red Cloud.
-    While following those steps, be sure to make the following choices for this instance:
+    While following those steps for this tutorial, be sure to make the configuration choices specific to the I-WRF use case. For beginners, we recommend the Hurricane Matthew use case (Note: a new window will open).
 
-      .. dropdown:: Hurricane Matthew
-        
-        * When choosing an image as the instance source:
-            
-          * Select Boot from Source is "Image"
-          * Volume Size (GB) is 100
-          * Delete Volume on Instance Delete is "Yes"
-          * Select the "ubuntu-22.04-LTS" image
+      * |Hurricane Matthew Use Case RC|
+      * |Land Use Land Cover Change Use Case RC|
 
-        * In Flavor, choose the "Flavor" c4.m32 (4 Virtual CPUs) to provide a faster simulation run-time.
-        * In Network, select "public".
-        * In Security Groups, select "campus-only-ssh" or the security group you created.
-        * In Key Pair, select the SSH public key that you created or uploaded previously.
-          
-      .. dropdown:: Land Use/Land Cover Change
+    .. |Hurricane Matthew Use Case RC| raw:: html
 
-        * When choosing an image as the instance source:
-      
-          * Select Boot from Source is "Image"
-          * Volume Size (GB) is 1000
-          * Delete Volume on Instance Delete is "Yes"
-          * Select the "ubuntu-24.04-LTS" image
+      <a href="https://i-wrf.readthedocs.io/en/latest/Users_Guide/use-cases/matthew.html#redcloud_instance_configuration" target="_blank"> Hurricane Matthew Use Case </a>
 
-        * In Flavor, choose the "Flavor" c64.m120 (64 Virtual CPUs) to provide a faster simulation run-time. Note that this will consume Red Cloud subscriptions very fast.
-        * In Network, select "public".
-        * In Security Groups, select "campus-only-ssh" or the security group you created.
-        * In Key Pair, select the SSH public key that you created or uploaded previously.
+    .. |Land Use Land Cover Change Use Case RC| raw:: html
+
+      <a href="https://i-wrf.readthedocs.io/en/latest/Users_Guide/use-cases/lulc.html#redcloud_instance_configuration" target="_blank"> Land Use Land Cover Change Use Case </a>
 
     When all the required options are selected, click on the "Launch Instance" button,
     and wait for the instance to enter the "Active" state.

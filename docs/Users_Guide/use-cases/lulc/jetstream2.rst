@@ -8,6 +8,19 @@ to secure access to and log in to Jetstream2.
 
 .. dropdown:: Instructions
 
+  .. dropdown:: Instance Configuration
+
+    .. _jetstream2_instance_configuration:
+
+    Make the following choices when creating your instance:
+    
+      * When choosing an image as the instance source, if viewing "By Type", select the "Ubuntu 24.04" image.  If viewing "By Image", choose the "Featured-Ubuntu24" image.
+      * Choose the "Flavor" m3.2xl (64 CPUs) to provide a faster simulation run-time.
+      * Select a custom disk size of 1000 GB, which is large enough to hold this exercise's data and results.
+      * For "Enable web desktop?", select Yes.
+      * For "Choose an SSH public key", select None unless you want to use your own SSH key that you uploaded previously.
+      * You do not need to set any of the Advanced Options.
+
   .. include:: lulc/common/preparingenvironment.rst
 
   .. dropdown:: Recovering Unresponsive Instance
