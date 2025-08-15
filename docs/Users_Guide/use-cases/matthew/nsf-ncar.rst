@@ -1,5 +1,5 @@
 .. _matthew-nsf-ncar:
-  
+
 On NSF NCAR HPC 
 ^^^^^^^^^^^^^^^
   
@@ -11,18 +11,76 @@ software and assume that WRF output is already available in a local directory.
 
 .. dropdown:: Instructions
 
-  .. dropdown:: Pull The Docker Image As A Singularity Image File (.sif)
+  .. dropdown:: Load Required Modules
 
-    Derecho uses the ``modules`` command to make it easy to load various software libraries.  We
-    need to load a few modules to make basic commands available to the environment and then
-    the container image can be pulled from Docker Hub::
+    NCAR HPC systems use environment modules to manage software.
+    Load the Apptainer module which provides the containerization software needed to run WRF and METplus::
 
         module load charliecloud apptainer gcc cuda ncarcompilers
-        mkdir ${HOME}/iwrf ; cd ${HOME}/iwrf
-        apptainer pull docker://ncar/iwrf:latest
 
-    Check that there is a file named ``iwrf_latest.sif`` if the current directory to confirm
-    that the image was pulled successfully.
+  .. dropdown:: Define Working Directory
+
+    Set an environment variable called **WORKING_DIR** to a directory to
+    store all of the input and output files for the use case::
+
+      WORKING_DIR=${SCRATCH}/iwrf_work
+
+  .. include:: matthew/common/set-env-vars.rst
+
+  .. dropdown:: Set Apptainer Temp Directory
+
+    Set the **$APPTAINER_TMPDIR** environment variable to **$TMPDIR** to ensure
+    that the correct temp directory is used by Apptainer. **$TMPDIR** is set
+    automatically upon log in to the NCAR HPC::
+
+        export APPTAINER_TMPDIR=${TMPDIR}
+
+  .. dropdown:: Create Working Directories
+
+    The METplus verification process requires specific directory structures to organize input data, configuration files, and output results.
+    Create the main working directory in your scratch space::
+
+        mkdir -p ${WORKING_DIR}
+
+    Create a directory to store the METplus verification output::
+
+        mkdir -p ${METPLUS_DIR}
+
+    Create a directory for temporary Apptainer files.
+    The $TMPDIR variable is automatically set on NCAR HPC systems to an appropriate temporary storage location::
+
+        mkdir -p ${APPTAINER_TMPDIR}
+
+  .. include:: matthew/common/download-config-files.rst
+
+  .. dropdown:: Pull The Docker Image As A Singularity Image Files (.sif)
+
+    Pull the WRF software, METplus software image and
+    observation data from the container registry to your HPC system's storage.
+    This will create a files ending in :code:`.sif` in the **${WORKING_DIR}** directory::
+
+       apptainer pull ${WORKING_DIR}/iwrf_latest.sif docker://${WRF_IMAGE}
+       apptainer pull ${WORKING_DIR}/iwrf-metplus.sif docker://${METPLUS_IMAGE}
+       apptainer pull ${WORKING_DIR}/data-matthew-input-obs.sif oras://registry-1.docker.io/ncar/iwrf-data:${OBS_DATA_VOL}.apptainer
+
+    .. note::
+
+      If an error is displayed when attempting to pull the images,
+      creating a DockerHub account and authenticating through apptainer may be
+      necessary::
+
+          apptainer remote login --username {USERNAME} docker://docker.io
+
+      where **{USERNAME}** is your DockerHub username.
+
+    Check that there are files named ``iwrf_latest.sif``, ``iwrf-metplus.sif``,
+    and ``data-matthew-input-obs.sif`` in the **${WORKING_DIR}** directory
+    to confirm that the images were pulled successfully::
+
+        ls ${WORKING_DIR}
+
+
+  .. include:: matthew/common/download-wrf-data.rst
 
   .. dropdown:: Gain Interactive Access To A Compute Node
 
@@ -36,92 +94,60 @@ software and assume that WRF output is already available in a local directory.
     The number of processors needed can also be specified here.  The full documentation for the `qsub`
     command can be found on `Adaptive Computing's <http://docs.adaptivecomputing.com/torque/4-0-2/Content/topics/commands/qsub.htm>`_ website.
 
+  .. dropdown:: Configure Container Data Bindings for WRF
+
+    Set environment variable to bind directories to the containers
+    (note: this can also be accomplished by passing the value on the command line
+    using the --bind argument)
+
+    * Terrestrial Data:
+
+      Data required by Geogrid
+
+      * Local: ${WORKING_DIR}
+      * Container: /home/wrfuser/terrestrial_data
+
+    * WRF:
+
+      WRF configuration files and run script
+
+      * Local: ${WRF_DIR}
+      * Container: /tmp/hurricane_matthew
+
+    * Job Queue Information:
+
+      Make the job queue information available to the container, which provides
+      the available hosts and number of compute cores.
+      This information is required by the ``mpirun`` command in the script.
+
+      * Local: /var/spool/pbs
+      * Container: /var/spool/pbs
+
+    * Apptainer temp directory
+
+      * Local: ${APPTAINER_TMPDIR}
+      * Container: ${APPTAINER_TMPDIR}
+
+   ::
+
+       export APPTAINER_BIND="${WORKING_DIR}:/home/wrfuser/terrestrial_data,${WRF_DIR}:/tmp/hurricane_matthew,/var/spool/pbs:/var/spool/pbs,${APPTAINER_TMPDIR}:${APPTAINER_TMPDIR}"
+
+
   .. dropdown:: Running WRF In The Container
 
-    Once the interactive job has started, the container can be started and WRF can run.
-
-    To simplify the WRF execution process, there is a script that will download case study data for Hurricane Matthew (2016),
-    run Ungrib, Geogrid, Metgrid, REAL, and WRF processes.  Use the following command to download the script.::
-
-        wget https://raw.githubusercontent.com/NCAR/i-wrf/refs/heads/main/use_cases/Hurricane_Matthew/WRF/run.sh
-
-    Now the apptainer container can be started.::
+    Once the interactive job has started,
+    the run script can be called inside the container to run WRF::
 
         module load charliecloud apptainer gcc cuda ncarcompilers
-        apptainer run --bind /glade/work/wrfhelp/WPS_GEOG:/terrestrial_data --bind /var/spool/pbs:/var/spool/pbs iwrf_latest.sif /bin/bash
+        apptainer exec ${WORKING_DIR}/iwrf_latest.sif /tmp/hurricane_matthew/run.sh
 
-    The ``--bind /glade/work/wrfhelp/WPS_GEOG:/terrestrial_data`` option will make the terrestrial data available to the container,
-    which is pre-installed on Derecho.  This data set is required by the Geogrid step that will be running.
-    The ``--bind /var/spool/pbs:/var/spool/pbs`` option will make the job queue information available to the container, which provides
-    the available hosts and number of compute cores.  This information is required by the ``mpirun`` command in the script.
 
-    Now that we are running inside the container, we can execute the ``run.sh`` script to run the model.::
-
-        bash ./run.sh
-
-    After the script finishes running the WRF output data will be in ``/tmp/hurricane_matthew/wrfout_d01*``.  If these files exist,
-    it indicates that the WRF run was successful.  If these files do not appear, you can check ``/tmp/hurricane_matthew/rsl.error.*``
+    After the script finishes running the WRF output data will be in ``${WRF_DIR}/wrfout_d01*``.
+    If these files exist, it indicates that the WRF run was successful.
+    If these files do not appear, you can check the ``${WRF_DIR}/rsl.error.*``
     files for errors.
 
-
-  .. dropdown:: Load Required Modules
-
-    NCAR HPC systems use environment modules to manage software. Load the Apptainer module which provides the containerization software needed to run METplus::
-
-        module load apptainer
-
-  .. dropdown:: Define Environment Variables
-
-    We will be using environment variables throughout this exercise to ensure consistent file paths and resource names. Copy and paste the definitions below into your shell before proceeding::
-
-        IWRF_WORK_DIR=${SCRATCH}/iwrf_work
-        LOCAL_OUTPUT_DIR=${IWRF_WORK_DIR}/metplus_out
-        export APPTAINER_TMPDIR=${TMPDIR}
-
-    Any time you open a new shell session on the HPC system, you will need to reload the apptainer module, switch shells, if needed, and redefine these variables before executing the commands that follow.
-
-  .. dropdown:: Create Working Directories
-
-    The METplus verification process requires specific directory structures to organize input data, configuration files, and output results. Create the main working directory in your scratch space::
-
-        mkdir -p ${IWRF_WORK_DIR}
-
-    Create a directory to store the METplus verification output::
-
-        mkdir -p ${LOCAL_OUTPUT_DIR}
-
-    Create a directory for temporary Apptainer files. The $TMPDIR variable is automatically set on NCAR HPC systems to an appropriate temporary storage location::
-
-        mkdir -p ${APPTAINER_TMPDIR}
-  
-  .. dropdown:: Download Configuration Files
-  
-    METplus requires configuration files to direct its verification behavior. These are available in the I-WRF GitHub repository. Clone the repository to access the Hurricane Matthew use case configuration::
-
-        git clone https://github.com/NCAR/i-wrf ${IWRF_WORK_DIR}/i-wrf
-
-    This creates a local copy of all I-WRF configuration files, including the METplus settings needed for the Hurricane Matthew verification workflow.
-  
-  .. dropdown:: Get the METplus and Data Container Images
-
-    Change to the working directory and pull the METplus software image and
-    observation data from the container registry to your HPC system's storage.
-    This will create a files ending in :code:`.sif` in the current directory::
-
-       apptainer pull ${IWRF_WORK_DIR}/iwrf-metplus.sif docker://ncar/iwrf-metplus:latest
-       apptainer pull ${IWRF_WORK_DIR}/data-matthew-input-obs.sif oras://registry-1.docker.io/ncar/iwrf-data:matthew-input-obs.apptainer
-
-    .. note::
-
-      If an error is displayed when attempting to pull the METplus image,
-      creating a DockerHub account and authenticating through apptainer may be
-      necessary::
-
-          apptainer remote login --username {USERNAME} docker://docker.io
-
-      where **{USERNAME}** is your DockerHub username.
-
-  .. dropdown:: Configure Container Data Bindings
+  .. dropdown:: Configure Container Data Bindings for METplus
 
     Set environment variable to bind directories to the containers
     (note: this can also be accomplished by passing the value on the command line
@@ -131,7 +157,7 @@ software and assume that WRF output is already available in a local directory.
 
       * WRF:
 
-        * Local: /glade/derecho/scratch/jaredlee/nsf_i-wrf/matthew
+        * Local: ${WRF_TOP_DIR}
         * Container: /data/input/wrf
 
       * RAOB:
@@ -146,17 +172,17 @@ software and assume that WRF output is already available in a local directory.
 
       * Config directory containing METplus use case configuration file
 
-        * Local: ${IWRF_WORK_DIR}/i-wrf/use_cases/Hurricane_Matthew/METplus
+        * Local: ${METPLUS_CONFIG_DIR}
         * Container: /config
 
       * Plot script directory containing WRF plotting scripts
 
-        * Local: ${IWRF_WORK_DIR}/i-wrf/use_cases/Hurricane_Matthew/Visualization
+        * Local: ${PLOT_SCRIPT_DIR}
         * Container: /plot_scripts
 
       * Output directory to write output
 
-        * Local: ${IWRF_WORK_DIR}/metplus_out
+        * Local: ${WORKING_DIR}/metplus_out
 
       * Container: /data/output
 
@@ -167,18 +193,14 @@ software and assume that WRF output is already available in a local directory.
 
    ::
 
-       LOCAL_METPLUS_CONFIG_DIR=${IWRF_WORK_DIR}/i-wrf/use_cases/Hurricane_Matthew/METplus
-       LOCAL_PLOT_SCRIPT_DIR=${IWRF_WORK_DIR}/i-wrf/use_cases/Hurricane_Matthew/Visualization
-       LOCAL_FCST_INPUT_DIR=/glade/derecho/scratch/jaredlee/nsf_i-wrf/matthew
-
-       export APPTAINER_BIND="${IWRF_WORK_DIR}/data-matthew-input-obs.sif:/data/input/obs:image-src=/,${LOCAL_METPLUS_CONFIG_DIR}:/config,${LOCAL_FCST_INPUT_DIR}:/data/input/wrf,${LOCAL_OUTPUT_DIR}:/data/output,${LOCAL_PLOT_SCRIPT_DIR}:/plot_scripts,${APPTAINER_TMPDIR}:${APPTAINER_TMPDIR}"
+       export APPTAINER_BIND="${WORKING_DIR}/data-matthew-input-obs.sif:/data/input/obs:image-src=/,${METPLUS_CONFIG_DIR}:/config,${WRF_TOP_DIR}:/data/input/wrf,${METPLUS_DIR}:/data/output,${PLOT_SCRIPT_DIR}:/plot_scripts,${APPTAINER_TMPDIR}:${APPTAINER_TMPDIR}"
 
   .. dropdown:: Run METplus
 
     Execute the run_metplus.py command inside the container to run the use case::
 
-        apptainer exec ${IWRF_WORK_DIR}/iwrf-metplus.sif /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
+        apptainer exec ${WORKING_DIR}/iwrf-metplus.sif /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
 
     Check that the output data was created locally::
 
-        ls -1  ${IWRF_WORK_DIR}/metplus_out/point_stat
+        ls -1  ${WORKING_DIR}/metplus_out/point_stat
