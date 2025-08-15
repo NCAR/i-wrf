@@ -43,7 +43,7 @@ software and assume that WRF output is already available in a local directory.
     To simplify the WRF execution process, there is a script that will download case study data for Hurricane Matthew (2016),
     run Ungrib, Geogrid, Metgrid, REAL, and WRF processes.  Use the following command to download the script.::
 
-        wget https://raw.githubusercontent.com/NCAR/i-wrf/feature/hurricane-matthew-script/run_hurricane_matthew_case.sh
+        wget https://raw.githubusercontent.com/NCAR/i-wrf/refs/heads/main/use_cases/Hurricane_Matthew/WRF/run.sh
 
     Now the apptainer container can be started.::
 
@@ -55,9 +55,9 @@ software and assume that WRF output is already available in a local directory.
     The ``--bind /var/spool/pbs:/var/spool/pbs`` option will make the job queue information available to the container, which provides
     the available hosts and number of compute cores.  This information is required by the ``mpirun`` command in the script.
 
-    Now that we are running inside the container, we can execute the ``run_hurricane_matthew_case.sh`` script to run the model.::
+    Now that we are running inside the container, we can execute the ``run.sh`` script to run the model.::
 
-        bash ./run_hurricane_matthew_case.sh
+        bash ./run.sh
 
     After the script finishes running the WRF output data will be in ``/tmp/hurricane_matthew/wrfout_d01*``.  If these files exist,
     it indicates that the WRF run was successful.  If these files do not appear, you can check ``/tmp/hurricane_matthew/rsl.error.*``
