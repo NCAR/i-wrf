@@ -179,6 +179,10 @@ software and assume that WRF output is already available in a local directory.
     If these files exist, it indicates that the WRF run was successful.
     If these files do not appear, you can check the ``${WRF_DATE_DIR}/rsl.error.*``
     files for errors.
+    ::
+
+        ls ${WRF_DATE_DIR}/wrfout_d01*
+
 
   .. dropdown:: Configure Container Data Bindings for METplus
 
@@ -225,7 +229,7 @@ software and assume that WRF output is already available in a local directory.
 
    ::
 
-       export APPTAINER_BIND="${WORKING_DIR}/data-matthew-input-obs.sif:/data/input/obs:image-src=/,${METPLUS_CONFIG_DIR}:/config,${WRF_TOP_DIR}:/data/input/wrf,${METPLUS_DIR}:/data/output,${PLOT_SCRIPT_DIR}:/plot_scripts,${APPTAINER_TMPDIR}:${APPTAINER_TMPDIR}"
+       export APPTAINER_BIND="${WORKING_DIR}/data-${OBS_DATA_VOL}.sif:/data/input/obs:image-src=/,${METPLUS_CONFIG_DIR}:/config,${WRF_TOP_DIR}:/data/input/wrf,${METPLUS_DIR}:/data/output,${PLOT_SCRIPT_DIR}:/plot_scripts,${APPTAINER_TMPDIR}:${APPTAINER_TMPDIR}"
 
   .. dropdown:: Run METplus
 
@@ -237,3 +241,9 @@ software and assume that WRF output is already available in a local directory.
 
         ls -1  ${WORKING_DIR}/metplus_out/point_stat
 
+
+  .. dropdown:: Exit the Interactive Compute Node
+
+    Be sure to run ``exit`` when you are done to stop the compute node::
+
+        exit
