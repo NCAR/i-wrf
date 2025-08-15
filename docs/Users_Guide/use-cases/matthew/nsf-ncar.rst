@@ -19,7 +19,7 @@ software and assume that WRF output is already available in a local directory.
 
         module load charliecloud apptainer gcc cuda ncarcompilers
         mkdir ${HOME}/iwrf ; cd ${HOME}/iwrf
-        singularity pull docker://ncar/iwrf:latest
+        apptainer pull docker://ncar/iwrf:latest
 
     Check that there is a file named ``iwrf_latest.sif`` if the current directory to confirm
     that the image was pulled successfully.
@@ -45,10 +45,10 @@ software and assume that WRF output is already available in a local directory.
 
         wget https://raw.githubusercontent.com/NCAR/i-wrf/feature/hurricane-matthew-script/run_hurricane_matthew_case.sh
 
-    Now the singularity container can be started.::
+    Now the apptainer container can be started.::
 
         module load charliecloud apptainer gcc cuda ncarcompilers
-        singularity run --bind /glade/work/wrfhelp/WPS_GEOG:/terrestrial_data --bind /var/spool/pbs:/var/spool/pbs iwrf_latest.sif /bin/bash
+        apptainer run --bind /glade/work/wrfhelp/WPS_GEOG:/terrestrial_data --bind /var/spool/pbs:/var/spool/pbs iwrf_latest.sif /bin/bash
 
     The ``--bind /glade/work/wrfhelp/WPS_GEOG:/terrestrial_data`` option will make the terrestrial data available to the container,
     which is pre-installed on Derecho.  This data set is required by the Geogrid step that will be running.
