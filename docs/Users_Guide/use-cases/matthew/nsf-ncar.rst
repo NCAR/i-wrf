@@ -204,3 +204,4 @@ software and assume that WRF output is already available in a local directory.
     Check that the output data was created locally::
 
         ls -1  ${WORKING_DIR}/metplus_out/point_stat
+
