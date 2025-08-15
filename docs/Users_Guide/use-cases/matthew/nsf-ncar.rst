@@ -10,7 +10,60 @@ These instructions are currently limited to running the METplus verification
 software and assume that WRF output is already available in a local directory.
 
 .. dropdown:: Instructions
-  
+
+  .. dropdown:: Pull The Docker Image As A Singularity Image File (.sif)
+
+    Derecho uses the ``modules`` command to make it easy to load various software libraries.  We
+    need to load a few modules to make basic commands available to the environment and then
+    the container image can be pulled from Docker Hub::
+
+        module load charliecloud apptainer gcc cuda ncarcompilers
+        mkdir ${HOME}/iwrf ; cd ${HOME}/iwrf
+        singularity pull docker://ncar/iwrf:latest
+
+    Check that there is a file named ``iwrf_latest.sif`` if the current directory to confirm
+    that the image was pulled successfully.
+
+  .. dropdown:: Gain Interactive Access To A Compute Node
+
+    Tasks that are resource intensive should not be run on the login nodes, so a compute node
+    should be accessed through Derecho's job queue before starting the container.  The following
+    command will submit an interactive job in the `develop` queue.::
+
+        qsub -l select=1:ncpus=8:mpiprocs=8 -A <account_id> -l walltime=01:00:00 -I -q develop
+
+    The above command should be modified with your specific account ID for charging computing time.
+    The number of processors needed can also be specified here.  The full documentation for the `qsub`
+    command can be found on `Adaptive Computing's <http://docs.adaptivecomputing.com/torque/4-0-2/Content/topics/commands/qsub.htm>`_ website.
+
+  .. dropdown:: Running WRF In The Container
+
+    Once the interactive job has started, the container can be started and WRF can run.
+
+    To simplify the WRF execution process, there is a script that will download case study data for Hurricane Matthew (2016),
+    run Ungrib, Geogrid, Metgrid, REAL, and WRF processes.  Use the following command to download the script.::
+
+        wget https://raw.githubusercontent.com/NCAR/i-wrf/feature/hurricane-matthew-script/run_hurricane_matthew_case.sh
+
+    Now the singularity container can be started.::
+
+        module load charliecloud apptainer gcc cuda ncarcompilers
+        singularity run --bind /glade/work/wrfhelp/WPS_GEOG:/terrestrial_data --bind /var/spool/pbs:/var/spool/pbs iwrf_latest.sif /bin/bash
+
+    The ``--bind /glade/work/wrfhelp/WPS_GEOG:/terrestrial_data`` option will make the terrestrial data available to the container,
+    which is pre-installed on Derecho.  This data set is required by the Geogrid step that will be running.
+    The ``--bind /var/spool/pbs:/var/spool/pbs`` option will make the job queue information available to the container, which provides
+    the available hosts and number of compute cores.  This information is required by the ``mpirun`` command in the script.
+
+    Now that we are running inside the container, we can execute the ``run_hurricane_matthew_case.sh`` script to run the model.::
+
+        bash ./run_hurricane_matthew_case.sh
+
+    After the script finishes running the WRF output data will be in ``/tmp/hurricane_matthew/wrfout_d01*``.  If these files exist,
+    it indicates that the WRF run was successful.  If these files do not appear, you can check ``/tmp/hurricane_matthew/rsl.error.*``
+    files for errors.
+
+
   .. dropdown:: Load Required Modules
 
     NCAR HPC systems use environment modules to manage software. Load the Apptainer module which provides the containerization software needed to run METplus::
