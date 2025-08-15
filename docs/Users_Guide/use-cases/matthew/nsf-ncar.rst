@@ -118,7 +118,7 @@ software and assume that WRF output is already available in a local directory.
     The number of processors needed can also be specified here. The full documentation for the `qsub`
     command can be found on `Adaptive Computing's <http://docs.adaptivecomputing.com/torque/4-0-2/Content/topics/commands/qsub.htm>`_ website.
 
-    This will take a few minutes. When it completes, the terminal prompt will change to something like user@
+    This will take a few minutes. When it completes, the terminal prompt will change to something like user@decNNNN.
 
   .. dropdown:: Source Environment File
 
