@@ -1,5 +1,5 @@
 .. _matthew-red-cloud:
-  
+
 On Red Cloud
 ^^^^^^^^^^^^
   
@@ -32,48 +32,28 @@ and then pasted into your web shell by right-clicking.
       * In Security Groups, select "campus-only-ssh" or the security group you created.
       * In Key Pair, select the SSH public key that you created or uploaded previously.
 
-  .. dropdown:: Define Environment Variables
-  
-    We will be using some environment variables throughout this exercise to
-    make sure that we refer to the same resource names and file paths wherever they are used.
-    Copy and paste the definitions below into your shell to define the variables before proceeding::
-  
-        WRF_IMAGE=ncar/iwrf:latest
-        METPLUS_IMAGE=ncar/iwrf-metplus:latest
-        WORKING_DIR=/home/ubuntu
-        WRF_DIR=${WORKING_DIR}/wrf/20161006_00
-        METPLUS_DIR=${WORKING_DIR}/metplus
-        WRF_CONFIG_DIR=${WORKING_DIR}/i-wrf/use_cases/Hurricane_Matthew/WRF
-        METPLUS_CONFIG_DIR=${WORKING_DIR}/i-wrf/use_cases/Hurricane_Matthew/METplus
-        PLOT_SCRIPT_DIR=${WORKING_DIR}/i-wrf/use_cases/Hurricane_Matthew/Visualization
-        OBS_DATA_VOL=matthew-input-obs
-  
-    Any time you open a new shell on your instance, you will need to perform this action
-    to redefine the variables before executing the commands that follow.
-  
+  .. dropdown:: Define Working Directory
+
+    Set an environment variable called **WORKING_DIR** to a directory to
+    store all of the input and output files for the use case::
+
+      WORKING_DIR=/home/ubuntu
+
+  .. include:: matthew/common/set-env-vars.rst
+
   .. dropdown:: Create the WRF and METplus Run Folders
   
     The simulation is performed using a script that expects to run in a folder where it can create result files.
     The first command below creates a folder (named "wrf") under the user's home directory,
     and a sub-folder within "wrf" to hold the output of this simulation.
     The subfolder is named "20161006_00", which is the beginning date and time of the simulation.
-    Similarly, a run folder named "metplus" must be created for the METplus process to use::
+    Similarly, a run folder named "metplus_out" must be created for the METplus process to use::
   
-        mkdir -p ${WRF_DIR}
+        mkdir -p ${WRF_DATE_DIR}
         mkdir -p ${METPLUS_DIR}
-  
-  .. dropdown:: Download Configuration Files
-  
-    Both WRF and METplus require some configuration files to direct their behavior,
-    and those are downloaded from the I-WRF GitHub repository.
-    Some of those configuration files are then copied into the run folders.
-    These commands perform the necessary operations::
-  
-        git clone https://github.com/NCAR/i-wrf ${WORKING_DIR}/i-wrf
-        cp ${WRF_CONFIG_DIR}/namelist.* ${WRF_DIR}
-        cp ${WRF_CONFIG_DIR}/vars_io.txt ${WRF_DIR}
-        cp ${WRF_CONFIG_DIR}/run.sh ${WRF_DIR}
-  
+
+  .. include:: matthew/common/download-config-files.rst
+
   .. dropdown:: Get the WRF and METplus Docker Images and the Observed Weather Data
   
     Once you have confirmed Docker is installed, you must pull the correct versions of the WRF and METplus images onto your instance::
@@ -90,36 +70,7 @@ and then pasted into your web shell by right-clicking.
         sudo docker pull ncar/iwrf-data:${OBS_DATA_VOL}.docker
         sudo docker create --name ${OBS_DATA_VOL} ncar/iwrf-data:${OBS_DATA_VOL}.docker
   
-  .. dropdown:: Download Data for WRF
-  
-    To run WRF on the Hurricane Matthew data set, you need to have
-    several data sets to support the computation.
-    The commands in these sections download archive files containing that data,
-    then uncompress the archives into folders.
-    The geographic data is large and takes several minutes to acquire,
-    while the other two data sets are smaller and are downloaded directly into the WRF run folder,
-    rather than the user's home directory.
-  
-    Get the geographic data representing the terrain in the area of the simulation::
-  
-        cd ${WORKING_DIR}
-        wget https://www2.mmm.ucar.edu/wrf/src/wps_files/geog_high_res_mandatory.tar.gz
-        tar -xzf geog_high_res_mandatory.tar.gz
-        rm geog_high_res_mandatory.tar.gz
-  
-    Get the case study data (GRIB2 files)::
-  
-        cd ${WRF_DIR}
-        wget https://www2.mmm.ucar.edu/wrf/TUTORIAL_DATA/matthew_1deg.tar.gz
-        tar -xvzf matthew_1deg.tar.gz
-        rm -f matthew_1deg.tar.gz
-  
-    Get the SST (Sea Surface Temperature) data::
-  
-        cd ${WRF_DIR}
-        wget https://www2.mmm.ucar.edu/wrf/TUTORIAL_DATA/matthew_sst.tar.gz
-        tar -xzvf matthew_sst.tar.gz
-        rm -f matthew_sst.tar.gz
+  .. include:: matthew/common/download-wrf-data.rst
   
   .. dropdown:: Run WRF
   
@@ -130,7 +81,7 @@ and then pasted into your web shell by right-clicking.
   
         sudo docker run --shm-size 14G -it \
           -v ${WORKING_DIR}:/home/wrfuser/terrestrial_data \
-          -v ${WRF_DIR}:/tmp/hurricane_matthew \
+          -v ${WRF_DATE_DIR}:/tmp/hurricane_matthew \
           ${WRF_IMAGE} /tmp/hurricane_matthew/run.sh
   
     The command has numerous arguments and options, which do the following:
@@ -145,7 +96,7 @@ and then pasted into your web shell by right-clicking.
     The provided configuration simulates 48 hours of weather and takes about 26 minutes to finish on a c4.m32 Red Cloud instance.
     Once completed, you can view the end of an output file to confirm that it succeeded::
   
-        tail ${WRF_DIR}/rsl.out.0000
+        tail ${WRF_DATE_DIR}/rsl.out.0000
   
     The output should look something like this::
   
@@ -176,7 +127,7 @@ and then pasted into your web shell by right-clicking.
           --volumes-from ${OBS_DATA_VOL} \
           -v ${METPLUS_CONFIG_DIR}:/config \
           -v ${PLOT_SCRIPT_DIR}:/plot_scripts \
-          -v ${WORKING_DIR}/wrf:/data/input/wrf \
+          -v ${WRF_TOP_DIR}:/data/input/wrf \
           -v ${METPLUS_DIR}:/data/output ${METPLUS_IMAGE} \
           /metplus/METplus/ush/run_metplus.py /config/PointStat_matthew.conf
   
@@ -188,7 +139,7 @@ and then pasted into your web shell by right-clicking.
     RAOB observations to "upper air" fields.
     METplus will print its completion status when the processing finishes.
   
-    The results of the METplus verification can be found in ``${WORKING_DIR}/metplus/point_stat``.
+    The results of the METplus verification can be found in ``${WORKING_DIR}/metplus_out/point_stat``.
     These files contain tabular output that can be viewed in a text editor. Turn off word wrapping for better viewing.
     Refer to the MET User's Guide for more information about the
     `Point-Stat output <https://met.readthedocs.io/en/latest/Users_Guide/point-stat.html#point-stat-output>`_.
