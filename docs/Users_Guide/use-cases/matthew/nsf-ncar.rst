@@ -21,7 +21,8 @@ software and assume that WRF output is already available in a local directory.
   .. dropdown:: Define Working Directory
 
     Set an environment variable called **WORKING_DIR** to a directory to
-    store all of the input and output files for the use case::
+    store all of the input and output files for the use case.
+    Change this path to your preference::
 
       WORKING_DIR=${SCRATCH}/iwrf_work
 
@@ -35,6 +36,23 @@ software and assume that WRF output is already available in a local directory.
 
         export APPTAINER_TMPDIR=${TMPDIR}
 
+  .. dropdown:: Create Environment File
+
+    The environment variables set in the above instructions will not be
+    available inside the compute node, so create an environment file that can
+    be sourced.
+    ::
+
+        echo export WORKING_DIR=${WORKING_DIR} > ${WORKING_DIR}/env_matthew.sh
+        echo export WRF_TOP_DIR=${WRF_TOP_DIR} >> ${WORKING_DIR}/env_matthew.sh
+        echo export WRF_DATE_DIR=${WRF_DATE_DIR} >> ${WORKING_DIR}/env_matthew.sh
+        echo export METPLUS_CONFIG_DIR=${METPLUS_CONFIG_DIR} >> ${WORKING_DIR}/env_matthew.sh
+        echo export PLOT_SCRIPT_DIR=${PLOT_SCRIPT_DIR} >> ${WORKING_DIR}/env_matthew.sh
+        echo export METPLUS_DIR=${METPLUS_DIR} >> ${WORKING_DIR}/env_matthew.sh
+        echo export OBS_DATA_VOL=${OBS_DATA_VOL} >> ${WORKING_DIR}/env_matthew.sh
+        echo export APPTAINER_TMPDIR=${APPTAINER_TMPDIR} >> ${WORKING_DIR}/env_matthew.sh
+
+
   .. dropdown:: Create Working Directories
 
     The METplus verification process requires specific directory structures to organize input data, configuration files, and output results.
@@ -45,6 +63,10 @@ software and assume that WRF output is already available in a local directory.
     Create a directory to store the METplus verification output::
 
         mkdir -p ${METPLUS_DIR}
+
+    Create a directory to store the WRF inputs and outputs::
+
+        mkdir -p ${WRF_DATE_DIR}
 
     Create a directory for temporary Apptainer files.
     The $TMPDIR variable is automatically set on NCAR HPC systems to an appropriate temporary storage location::
@@ -61,7 +83,7 @@ software and assume that WRF output is already available in a local directory.
 
        apptainer pull ${WORKING_DIR}/iwrf_latest.sif docker://${WRF_IMAGE}
        apptainer pull ${WORKING_DIR}/iwrf-metplus.sif docker://${METPLUS_IMAGE}
-       apptainer pull ${WORKING_DIR}/data-matthew-input-obs.sif oras://registry-1.docker.io/ncar/iwrf-data:${OBS_DATA_VOL}.apptainer
+       apptainer pull ${WORKING_DIR}/data-${OBS_DATA_VOL}.sif oras://registry-1.docker.io/ncar/iwrf-data:${OBS_DATA_VOL}.apptainer
 
     .. note::
 
@@ -85,14 +107,25 @@ software and assume that WRF output is already available in a local directory.
   .. dropdown:: Gain Interactive Access To A Compute Node
 
     Tasks that are resource intensive should not be run on the login nodes, so a compute node
-    should be accessed through Derecho's job queue before starting the container.  The following
-    command will submit an interactive job in the `develop` queue.::
+    should be accessed through Derecho's job queue before starting the container.
+    Change directory to the $WORKING_DIR, then
+    run the following command to submit an interactive job in the `develop` queue.::
 
+        cd ${WORKING_DIR}
         qsub -l select=1:ncpus=8:mpiprocs=8 -A <account_id> -l walltime=01:00:00 -I -q develop
 
     The above command should be modified with your specific account ID for charging computing time.
-    The number of processors needed can also be specified here.  The full documentation for the `qsub`
+    The number of processors needed can also be specified here. The full documentation for the `qsub`
     command can be found on `Adaptive Computing's <http://docs.adaptivecomputing.com/torque/4-0-2/Content/topics/commands/qsub.htm>`_ website.
+
+    This will take a few minutes. When it completes, the terminal prompt will change to something like user@
+
+  .. dropdown:: Source Environment File
+
+    Source the environment file that was created earlier::
+
+        source env_matthew.sh
+
 
   .. dropdown:: Configure Container Data Bindings for WRF
 
@@ -111,7 +144,7 @@ software and assume that WRF output is already available in a local directory.
 
       WRF configuration files and run script
 
-      * Local: ${WRF_DIR}
+      * Local: ${WRF_DATE_DIR}
       * Container: /tmp/hurricane_matthew
 
     * Job Queue Information:
@@ -130,7 +163,7 @@ software and assume that WRF output is already available in a local directory.
 
    ::
 
-       export APPTAINER_BIND="${WORKING_DIR}:/home/wrfuser/terrestrial_data,${WRF_DIR}:/tmp/hurricane_matthew,/var/spool/pbs:/var/spool/pbs,${APPTAINER_TMPDIR}:${APPTAINER_TMPDIR}"
+       export APPTAINER_BIND="${WORKING_DIR}:/home/wrfuser/terrestrial_data,${WRF_DATE_DIR}:/tmp/hurricane_matthew,/var/spool/pbs:/var/spool/pbs,${APPTAINER_TMPDIR}:${APPTAINER_TMPDIR}"
 
 
   .. dropdown:: Running WRF In The Container
@@ -142,9 +175,9 @@ software and assume that WRF output is already available in a local directory.
         apptainer exec ${WORKING_DIR}/iwrf_latest.sif /tmp/hurricane_matthew/run.sh
 
 
-    After the script finishes running the WRF output data will be in ``${WRF_DIR}/wrfout_d01*``.
+    After the script finishes running the WRF output data will be in ``${WRF_DATE_DIR}/wrfout_d01*``.
     If these files exist, it indicates that the WRF run was successful.
-    If these files do not appear, you can check the ``${WRF_DIR}/rsl.error.*``
+    If these files do not appear, you can check the ``${WRF_DATE_DIR}/rsl.error.*``
     files for errors.
 
   .. dropdown:: Configure Container Data Bindings for METplus
@@ -182,9 +215,8 @@ software and assume that WRF output is already available in a local directory.
 
       * Output directory to write output
 
-        * Local: ${WORKING_DIR}/metplus_out
-
-      * Container: /data/output
+        * Local: ${METPLUS_DIR}
+        * Container: /data/output
 
     * Apptainer temp directory
 

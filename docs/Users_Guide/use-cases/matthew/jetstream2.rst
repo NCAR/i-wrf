@@ -30,7 +30,8 @@ and then pasted into your web shell by right-clicking.
   .. dropdown:: Define Working Directory
 
     Set an environment variable called **WORKING_DIR** to a directory to
-    store all of the input and output files for the use case::
+    store all of the input and output files for the use case.
+    Change this path to your preference::
 
       WORKING_DIR=/home/exouser
 

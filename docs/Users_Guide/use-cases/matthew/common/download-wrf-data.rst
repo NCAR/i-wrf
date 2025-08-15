@@ -10,21 +10,18 @@
 
   Get the geographic data representing the terrain in the area of the simulation::
 
-      cd ${WORKING_DIR}
-      wget https://www2.mmm.ucar.edu/wrf/src/wps_files/geog_high_res_mandatory.tar.gz
-      tar -xzf geog_high_res_mandatory.tar.gz
-      rm geog_high_res_mandatory.tar.gz
+      wget https://www2.mmm.ucar.edu/wrf/src/wps_files/geog_high_res_mandatory.tar.gz -O ${WORKING_DIR}/geog_high_res_mandatory.tar.gz
+      tar -xvzf ${WORKING_DIR}/geog_high_res_mandatory.tar.gz -C ${WORKING_DIR}
+      rm -f ${WORKING_DIR}/geog_high_res_mandatory.tar.gz
 
   Get the case study data (GRIB2 files)::
 
-      cd ${WRF_DIR}
-      wget https://www2.mmm.ucar.edu/wrf/TUTORIAL_DATA/matthew_1deg.tar.gz
-      tar -xvzf matthew_1deg.tar.gz
-      rm -f matthew_1deg.tar.gz
+      wget https://www2.mmm.ucar.edu/wrf/TUTORIAL_DATA/matthew_1deg.tar.gz -O ${WRF_DATE_DIR}/matthew_1deg.tar.gz
+      tar -xvzf ${WRF_DATE_DIR}/matthew_1deg.tar.gz -C ${WRF_DATE_DIR}
+      rm -f ${WRF_DATE_DIR}/matthew_1deg.tar.gz
 
   Get the SST (Sea Surface Temperature) data::
 
-      cd ${WRF_DIR}
-      wget https://www2.mmm.ucar.edu/wrf/TUTORIAL_DATA/matthew_sst.tar.gz
-      tar -xzvf matthew_sst.tar.gz
-      rm -f matthew_sst.tar.gz
+      wget https://www2.mmm.ucar.edu/wrf/TUTORIAL_DATA/matthew_sst.tar.gz -O ${WRF_DATE_DIR}/matthew_sst.tar.gz
+      tar -xzvf ${WRF_DATE_DIR}/matthew_sst.tar.gz -C ${WRF_DATE_DIR}
+      rm -f ${WRF_DATE_DIR}/matthew_sst.tar.gz
