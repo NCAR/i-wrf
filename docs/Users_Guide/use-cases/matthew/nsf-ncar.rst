@@ -11,6 +11,12 @@ software and assume that WRF output is already available in a local directory.
 
 .. dropdown:: Instructions
 
+  .. dropdown:: Log into Derecho
+
+    From a terminal window, log into Derecho HPC using your login credentials::
+
+        ssh {username}@derecho.hpc.ucar.edu
+
   .. dropdown:: Load Required Modules
 
     NCAR HPC systems use environment modules to manage software.
