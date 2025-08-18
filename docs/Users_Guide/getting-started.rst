@@ -18,7 +18,19 @@ Container Software
 The examples in this guide are run using
 `containers <https://docs.docker.com/guides/docker-concepts/the-basics/what-is-a-container/>`_.
 The `Docker <https://www.docker.com/>`_ or `Apptainer <https://apptainer.org>`_
-containerization software is required to run I-WRF.
+(formerly Singularity) containerization software is required to run I-WRF.
+
+Both Docker and Apptainer serve the same fundamental purpose of running containerized applications,
+but they differ in their design and typical use cases. Docker is widely available and can be
+installed on most computing platforms, making it ideal for personal workstations and cloud
+instances where users have administrative privileges. Apptainer was
+specifically designed for high-performance computing (HPC) environments and scientific computing,
+with a key advantage being that it does not require root privileges to run containers. On NCAR
+HPCs like Casper and Derecho, only Apptainer is available as a module, while platforms like
+Jetstream2 and Red Cloud allow users to install Docker. Your choice between the two will
+typically be determined by what's available on your computing platform rather than personal
+preference.
+
 Check if either of these options is already installed on your system.
 
 .. dropdown:: Instructions
