@@ -124,7 +124,10 @@ software and assume that WRF output is already available in a local directory.
     The number of processors needed can also be specified here. The full documentation for the `qsub`
     command can be found on `Adaptive Computing's <http://docs.adaptivecomputing.com/torque/4-0-2/Content/topics/commands/qsub.htm>`_ website.
 
-    This will take a few minutes. When it completes, the terminal prompt will change to something like user@decNNNN.
+    This may take a few minutes.
+    When it completes, the terminal prompt will change to something like user@decNNNN.
+    Once you see this new prompt, your interactive job is active and you can
+    move on to the next step in the instructions.
 
   .. dropdown:: Source Environment File
 
@@ -181,6 +184,8 @@ software and assume that WRF output is already available in a local directory.
         apptainer exec ${WORKING_DIR}/iwrf_latest.sif /tmp/hurricane_matthew/run.sh
 
 
+    Once WRF begins to execute, there will not be any log updates for a few
+    minutes until WRF completes and a new terminal prompt appears.
     After the script finishes running the WRF output data will be in ``${WRF_DATE_DIR}/wrfout_d01*``.
     If these files exist, it indicates that the WRF run was successful.
     If these files do not appear, you can check the ``${WRF_DATE_DIR}/rsl.error.*``
