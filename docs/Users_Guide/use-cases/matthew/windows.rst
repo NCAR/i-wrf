@@ -30,7 +30,7 @@ and then pasted into your web shell by right-clicking.
         set WRF_IMAGE=ncar/iwrf:latest
         set METPLUS_IMAGE=ncar/iwrf-metplus:latest
         set WRF_DIR=%WORKING_DIR%\wrf\20161006_00
-        set METPLUS_DIR=%WORKING_DIR%\metplus
+        set METPLUS_DIR=%WORKING_DIR%\metplus_out
         set WRF_CONFIG_DIR=%WORKING_DIR%\i-wrf-main\use_cases\Hurricane_Matthew\WRF
         set METPLUS_CONFIG_DIR=%WORKING_DIR%\i-wrf-main\use_cases\Hurricane_Matthew\METplus
         set PLOT_SCRIPT_DIR=%WORKING_DIR%\i-wrf-main\use_cases\Hurricane_Matthew\Visualization
@@ -45,7 +45,7 @@ and then pasted into your web shell by right-clicking.
     The first command below creates a folder (named "wrf") under the user's home directory,
     and a sub-folder within "wrf" to hold the output of this simulation.
     The subfolder is named "20161006_00", which is the beginning date and time of the simulation.
-    Similarly, a run folder named "metplus" must be created for the METplus process to use::
+    Similarly, a run folder named "metplus_out" must be created for the METplus process to use::
 
         mkdir %WRF_DIR%
         mkdir %METPLUS_DIR%
@@ -223,7 +223,7 @@ and then pasted into your web shell by right-clicking.
     RAOB observations to "upper air" fields.
     METplus will print its completion status when the processing finishes.
 
-    The results of the METplus verification can be found in ``%WORKING_DIR%\metplus\point_stat``.
+    The results of the METplus verification can be found in ``%WORKING_DIR%\metplus_out\point_stat``.
     These files contain tabular output that can be viewed in a text editor. Turn off word wrapping for better viewing.
     Refer to the MET User's Guide for more information about the
     `Point-Stat output <https://met.readthedocs.io/en/latest/Users_Guide/point-stat.html#point-stat-output>`_.

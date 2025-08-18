@@ -6,12 +6,14 @@ Hurricane Matthew
 Scientific Objective
 --------------------
 
-Update section content to describe the scientific objective of this use case.
+In October 2016, Hurricane Matthew made landfall in Haiti, Cuba, and then the Bahamas before
+paralleling the eastern U.S. coast, causing widespread damage.
+For more information, see `NHC Report - Hurricane Matthew <https://www.nhc.noaa.gov/data/tcr/AL142016_Matthew.pdf>`_.
 
 Version Added
 -------------
 
-Update section with the version of i-wrf this use case was added to.
+0.1
 
 Datasets
 --------
