@@ -1,7 +1,7 @@
-.. _use-case-renewable:
+.. _use-case-climate:
 
-Renewable Energy Droughts
-=========================
+Regional Climate Simulations
+============================
 
 Scientific Objective
 --------------------

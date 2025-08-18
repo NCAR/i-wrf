@@ -16,5 +16,5 @@ Note that this :ref:`use-case-template` should be used when developing new use c
 
    matthew
    lulc
-   renewable
+   climate
    air-quality
