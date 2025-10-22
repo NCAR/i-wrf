@@ -1,8 +1,6 @@
 Integrated End-To-End WRF (I-WRF) Containerized Framework
 =========================================================
 
-**NOTE: THIS REPOSITORY IS UNDER DEVELOPMENT AND SHOULD NOT BE USED PRIOR TO THE FIRST RELEASE.**
-
 This repository contains the source code for the Integrated End-To-End WRF (I-WRF) Containerized Framework.
 The [Weather Research and Forecasting (WRF)](https://www.mmm.ucar.edu/models/wrf) model is a state of the art mesoscale numerical weather prediction system.
 
