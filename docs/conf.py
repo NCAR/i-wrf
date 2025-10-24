@@ -129,7 +129,7 @@ html_static_path = ['_static']
 html_logo = os.path.join('_static','I-WRF_logo_5000.png')
 
 # -- Intersphinx control -----------------------------------------------------
-intersphinx_mapping = {'numpy':("https://docs.scipy.org/doc/numpy/", None)}
+intersphinx_mapping = {'numpy':("https://numpy.org/doc/stable/", None)}
 
 numfig = True
 
