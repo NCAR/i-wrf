@@ -40,7 +40,7 @@ authors:
 - family-names: "Wang"
   given-names: "Zilu"
   orcid: "https://orcid.org/0000-0000-0000-0000"
-title: "Integrate WRF (I-WRF) Software"
+title: "Integrated WRF Framework (I-WRF)"
 version: 0.3
 doi: 10.5281/zenodo.17834009
 date-released: 2025-12-05 
