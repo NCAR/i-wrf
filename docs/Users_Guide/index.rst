@@ -24,7 +24,10 @@ governing permissions and limitations under the License.
 
 **Citations**
 
-The citation for this User's Guide should be:
+Instructions for citing the use of this software can be found at
+
+https://zenodo.org/records/17834009
+
 
 **Acknowledgments**
 
