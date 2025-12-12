@@ -1,4 +1,9 @@
 cff-version: 1.2.0
+title: "Integrated WRF Framework (I-WRF)"
+version: 0.3
+date-released: 2025-12-05
+doi: 10.5281/zenodo.17834009
+url: "https://github.com/NCAR/I-WRF"
 message: "If you use this software, please cite it as below."
 authors:
 - family-names: "Lee"
@@ -12,10 +17,9 @@ authors:
   orcid: "https://orcid.org/0000-0001-6266-9090"
 - family-names: "Hahn"
   given-names: "David"
-  orcid: "https://orcid.org/0000-0000-0000-0000"
 - family-names: "Trumbore"
   given-names: "Ben"
-  orcid: "https://orcid.org/0000-0000-0000-0000"
+  orcid: "https://orcid.org/0000-0002-8260-5577"
 - family-names: "Halley Gotway"
   given-names: "John"
   orcid: "https://orcid.org/0000-0002-7761-4962"
@@ -24,13 +28,13 @@ authors:
   orcid: "https://orcid.org/0009-0005-8482-2718"
 - family-names: "Wang"
   given-names: "Zilu"
-  orcid: "https://orcid.org/0000-0000-0000-0000"
+  orcid: "https://orcid.org/0009-0008-5611-0213"
 - family-names: "Weeks"
   given-names: "Victor"
   orcid: "https://orcid.org/0009-0004-9935-1042"
 - family-names: "Nelson"
   given-names: "Brianne"
-  orcid: "https://orcid.org/0000-0000-0000-0000"
+  orcid: "https://orcid.org/0000-0001-5457-2424"
 - family-names: "Islas"
   given-names: "Anthony"
   orcid: "https://orcid.org/0009-0000-4821-601X"
@@ -45,9 +49,4 @@ authors:
   orcid: "https://orcid.org/0000-0003-4847-3440"
 - family-names: "Bukovsky"
   given-names: "Melissa"
-  orcid: "https://orcid.org/0000-0000-0000-0000"
-title: "Integrated WRF Framework (I-WRF)"
-version: 0.3
-doi: 10.5281/zenodo.17834009
-date-released: 2025-12-05 
-url: "https://github.com/NCAR/I-WRF"
+  orcid: "https://orcid.org/0000-0001-6415-965X"
