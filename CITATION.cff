@@ -1,8 +1,11 @@
 cff-version: 1.2.0
 title: "Integrated WRF Framework (I-WRF)"
-doi: 10.5281/zenodo.17834009
-url: "https://github.com/NCAR/I-WRF"
+license: "Apache-2.0"
+type: software
+abstract: "End-to-end containerized framework for the Weather Research and Forecasting (WRF) numerical weather prediction model"
 message: "If you use this software, please cite it as below."
+url: "https://github.com/NCAR/I-WRF"
+doi: 10.5281/zenodo.17834009
 authors:
 - family-names: "Lee"
   given-names: "Jared"
