@@ -1,0 +1,74 @@
+name: Repository Metrics Collection
+
+on:
+  schedule:
+    # Run weekly on Sunday at 23:45 UTC
+    # This timing ensures we capture traffic data before the 14-day window expires
+    - cron: '45 23 * * 0'
+  workflow_dispatch:
+    # Allow manual triggers for testing or recovery
+
+permissions:
+  contents: write  # Required to commit metrics data
+
+jobs:
+  collect-metrics:
+    name: Collect Repository Metrics
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout main branch to get the Python script
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main
+
+      # Step 2: Try to checkout existing metrics branch
+      - name: Checkout metrics branch
+        id: checkout-metrics
+        uses: actions/checkout@v4
+        with:
+          ref: metrics
+          path: metrics
+        continue-on-error: true
+
+      # Step 3: Initialize metrics branch if it doesn't exist
+      - name: Initialize metrics branch if needed
+        if: steps.checkout-metrics.outcome == 'failure'
+        env:
+          GITHUB_TOKEN: ${{ secrets.METRICS_PAT }}
+        run: |
+          mkdir -p metrics
+          cd metrics
+          git init
+          git checkout -b metrics
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Collect metrics
+        env:
+          GH_TOKEN: ${{ secrets.METRICS_PAT }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          METRICS_DIR: ${{ github.workspace }}/metrics
+        run: python main/.github/scripts/collect_metrics.py
+
+      - name: Commit and push metrics
+        env:
+          GITHUB_TOKEN: ${{ secrets.METRICS_PAT }}
+        run: |
+          cd metrics
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: update repository metrics"
+            git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" metrics
+          fi
