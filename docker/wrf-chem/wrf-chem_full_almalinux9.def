@@ -1,0 +1,610 @@
+Bootstrap: docker
+From: almalinux:9
+
+# Combined single-layer WRF-Chem container definition
+# Equivalent to the 3-layer build:
+#   Layer 1: wrf-chem_deps_almalinux9.def    (OS base + HDF5/NetCDF)
+#   Layer 2: wrf-chem_preproc_almalinux9.def  (WRF-Chem preprocessing tools)
+#   Layer 3: wrf-chem_almalinux9.def          (WRF-Chem 4.7.1 + WPS 4.6.0)
+#
+# Build:
+#   apptainer build --fakeroot wrf-chem_full_almalinux9.sif wrf-chem_full_almalinux9.def
+
+%labels
+    Author V. Weeks
+    Version 1.0
+    Description WRF-Chem 4.7.1 with WPS 4.6.0, preprocessing tools, on AlmaLinux 9
+
+%post
+    # ============================================================================
+    # LAYER 1: System Prep + WRF Dependencies
+    # Installs OS packages, then builds HDF5 1.14.5, NetCDF-C 4.9.3,
+    # NetCDF-Fortran 4.6.2 from source into /opt/wrf-deps
+    # ============================================================================
+
+    # Full system update
+    dnf -y update
+    dnf -y clean all
+
+    # Enable EPEL and CRB (CodeReady Builder) repositories
+    dnf -y install epel-release
+    dnf config-manager --set-enabled crb
+
+    # Install Development Tools group
+    dnf -y groupinstall "Development Tools"
+
+    # Install compilers
+    dnf -y install \
+        gcc \
+        gcc-gfortran \
+        gcc-c++
+
+    # Install build tools (--allowerasing replaces curl-minimal with full curl)
+    dnf -y install --allowerasing \
+        make \
+        cmake \
+        m4 \
+        perl \
+        csh tcsh \
+        git \
+        wget \
+        curl \
+        libcurl \
+        libcurl-devel \
+        time \
+        file \
+        which \
+        hostname
+
+    # Install development libraries
+    dnf -y install \
+        openmpi \
+        openmpi-devel \
+        jasper \
+        jasper-libs \
+        jasper-devel \
+        libpng \
+        libpng-devel \
+        zlib \
+        zlib-devel \
+        zlib-static \
+        libxml2 \
+        libxml2-devel \
+        flex \
+        libfl-static \
+        bison \
+        bison-devel \
+        bison-runtime \
+        byacc
+
+    # Install Python 3 with pip and scientific packages
+    dnf -y install python3 python3-pip python3-devel
+    pip3 install --upgrade pip
+    pip3 install numpy pyyaml
+
+    # Install additional packages
+    dnf -y install rsync
+
+    # Clean up
+    dnf clean all
+    rm -rf /var/cache/dnf/*
+
+    # ----------------------------------------
+    # Build HDF5 and NetCDF from source
+    # ----------------------------------------
+
+    set -e
+
+    # Versions
+    HDF5_VERSION=1.14.5
+    NETCDF_C_VERSION=4.9.3
+    NETCDF_FORTRAN_VERSION=4.6.2
+
+    # Installation prefix
+    PREFIX=/opt/wrf-deps
+
+    # Build directory
+    BUILD_DIR=/tmp/build
+    mkdir -p $BUILD_DIR $PREFIX
+
+    # Setup environment for build
+    export PATH=/usr/lib64/openmpi/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/lib64/openmpi/lib:$LD_LIBRARY_PATH
+    export CC=gcc
+    export FC=gfortran
+    export F77=gfortran
+    export CXX=g++
+
+    # ---- Build HDF5 1.14.5 ----
+    echo "=========================================="
+    echo "Building HDF5 ${HDF5_VERSION}"
+    echo "=========================================="
+
+    cd $BUILD_DIR
+    wget -q https://github.com/HDFGroup/hdf5/releases/download/hdf5_${HDF5_VERSION}/hdf5-${HDF5_VERSION}.tar.gz
+    tar xzf hdf5-${HDF5_VERSION}.tar.gz
+    cd hdf5-${HDF5_VERSION}
+
+    ./configure \
+        --prefix=$PREFIX \
+        --enable-fortran \
+        --enable-shared \
+        --enable-static \
+        --enable-hl \
+        --with-zlib
+
+    make -j$(nproc)
+    make install
+
+    # Update environment for NetCDF build
+    export PATH=$PREFIX/bin:$PATH
+    export LD_LIBRARY_PATH=$PREFIX/lib:$LD_LIBRARY_PATH
+    export CPPFLAGS="-I$PREFIX/include"
+    export LDFLAGS="-L$PREFIX/lib"
+
+    # ---- Build NetCDF-C 4.9.3 ----
+    echo "=========================================="
+    echo "Building NetCDF-C ${NETCDF_C_VERSION}"
+    echo "=========================================="
+
+    cd $BUILD_DIR
+    wget -q https://downloads.unidata.ucar.edu/netcdf-c/${NETCDF_C_VERSION}/netcdf-c-${NETCDF_C_VERSION}.tar.gz
+    tar xzf netcdf-c-${NETCDF_C_VERSION}.tar.gz
+    cd netcdf-c-${NETCDF_C_VERSION}
+
+    ./configure \
+        --prefix=$PREFIX \
+        --enable-shared \
+        --enable-static \
+        --enable-netcdf-4 \
+        --disable-dap
+
+    make -j$(nproc)
+    make install
+
+    # ---- Build NetCDF-Fortran 4.6.2 ----
+    echo "=========================================="
+    echo "Building NetCDF-Fortran ${NETCDF_FORTRAN_VERSION}"
+    echo "=========================================="
+
+    cd $BUILD_DIR
+    wget -q https://downloads.unidata.ucar.edu/netcdf-fortran/${NETCDF_FORTRAN_VERSION}/netcdf-fortran-${NETCDF_FORTRAN_VERSION}.tar.gz
+    tar xzf netcdf-fortran-${NETCDF_FORTRAN_VERSION}.tar.gz
+    cd netcdf-fortran-${NETCDF_FORTRAN_VERSION}
+
+    ./configure \
+        --prefix=$PREFIX \
+        --enable-shared \
+        --enable-static
+
+    make -j$(nproc)
+    make install
+
+    # Cleanup deps build artifacts
+    rm -rf $BUILD_DIR
+    cd /
+
+    # Verify deps installation
+    echo "=========================================="
+    echo "Verifying HDF5/NetCDF installation"
+    echo "=========================================="
+    ls -la $PREFIX/lib/libhdf5* || echo "WARNING: HDF5 libraries not found"
+    ls -la $PREFIX/lib/libnetcdf* || echo "WARNING: NetCDF libraries not found"
+    $PREFIX/bin/nc-config --all || echo "WARNING: nc-config failed"
+    $PREFIX/bin/nf-config --all || echo "WARNING: nf-config failed"
+
+    # ============================================================================
+    # Bridge: set variables that the layered build inherited via %environment
+    # In the multi-layer build, these were set in the deps layer's %environment
+    # and automatically available to subsequent layers' %post sections.
+    # ============================================================================
+    export WRF_DEPS=/opt/wrf-deps
+    export NETCDF=$WRF_DEPS
+    export NETCDF_DIR=$WRF_DEPS
+    export HDF5=$WRF_DEPS
+    export HDF5_DIR=$WRF_DEPS
+    export MPI_ROOT=/usr/lib64/openmpi
+    export JASPERLIB=/usr/lib64
+    export JASPERINC=/usr/include/jasper
+    export YACC='yacc -d'
+    export FLEX_LIB_DIR=/usr/lib64
+
+    # ============================================================================
+    # LAYER 2: WRF-Chem Preprocessing Tools
+    # Clones and builds mozbc, anthro_emis, fire_emis, megan_bio_emiss,
+    # wesely, exo_coldens from NCAR/WRF-Chem-Preprocessing-Tools
+    # ============================================================================
+
+    # Installation paths
+    WRF_CHEM_PREPROC=/opt/WRF-Chem-Preprocessing-Tools
+    PREPROC_BIN=$WRF_CHEM_PREPROC/bin
+
+    # WRF-Chem specific flags
+    export WRF_CHEM=1
+    export WRF_KPP=1
+    export EM_CORE=1
+    export WRF_EM_CORE=1
+    export WRF_NMM_CORE=0
+    export WRFIO_NCD_LARGE_FILE_SUPPORT=1
+
+    # GCC 10+ Fortran compatibility
+    export FCFLAGS="-fallow-argument-mismatch"
+    export FFLAGS="-fallow-argument-mismatch"
+    export F90FLAGS="-fallow-argument-mismatch"
+
+    # Compilers
+    export CC=gcc
+    export FC=gfortran
+    export F77=gfortran
+    export F90=gfortran
+    export CXX=g++
+    export MPICC=mpicc
+    export MPIF90=mpif90
+
+    # ---- Clone WRF-Chem Preprocessing Tools ----
+    echo "=========================================="
+    echo "Cloning WRF-Chem Preprocessing Tools"
+    echo "=========================================="
+
+    cd /opt
+    git clone https://github.com/NCAR/WRF-Chem-Preprocessing-Tools.git $WRF_CHEM_PREPROC
+
+    mkdir -p $PREPROC_BIN
+
+    # GCC 10+ flag for legacy Fortran code
+    GCC10_FLAG="-fallow-argument-mismatch"
+
+    # ---- Patch all Makefiles for GCC 10+ compatibility ----
+    echo "Patching Makefiles for GCC 10+ compatibility..."
+
+    find "$WRF_CHEM_PREPROC" -name "Makefile" -type f | while read makefile; do
+        sed -i "s/-ffree-line-length-none/-ffree-line-length-none $GCC10_FLAG/g" "$makefile" 2>/dev/null || true
+        sed -i "s/FFLAGS = -g/FFLAGS = -g $GCC10_FLAG/g" "$makefile" 2>/dev/null || true
+        sed -i "s/FFLAGS= -g/FFLAGS= -g $GCC10_FLAG/g" "$makefile" 2>/dev/null || true
+        sed -i "s/F90FLAGS = /F90FLAGS = $GCC10_FLAG /g" "$makefile" 2>/dev/null || true
+    done
+
+    find "$WRF_CHEM_PREPROC" -name "make_*" -type f | while read makescript; do
+        sed -i "s/-ffree-line-length-none/-ffree-line-length-none $GCC10_FLAG/g" "$makescript" 2>/dev/null || true
+        sed -i "s/gfortran -g/gfortran -g $GCC10_FLAG/g" "$makescript" 2>/dev/null || true
+        sed -i "s/gfortran -c/gfortran $GCC10_FLAG -c/g" "$makescript" 2>/dev/null || true
+    done
+
+    echo "Patching complete."
+
+    # ---- Build mozbc ----
+    echo "Building mozbc..."
+    cd $WRF_CHEM_PREPROC/mozbc
+    rm -f *.o mozbc 2>/dev/null || true
+    if [ -f make_mozbc ]; then
+        csh ./make_mozbc || echo "WARNING: mozbc build may have issues"
+        if [ -f mozbc ]; then
+            cp mozbc $PREPROC_BIN/
+            echo "SUCCESS: mozbc built and installed"
+        fi
+    fi
+
+    # ---- Build anthro_emis ----
+    echo "Building anthro_emis..."
+    cd $WRF_CHEM_PREPROC/anthro_emiss/src
+    rm -f *.o anthro_emis 2>/dev/null || true
+    if [ -f make_anthro ]; then
+        csh ./make_anthro || echo "WARNING: anthro_emis build may have issues"
+        if [ -f anthro_emis ]; then
+            cp anthro_emis $PREPROC_BIN/
+            echo "SUCCESS: anthro_emis built and installed"
+        fi
+    fi
+
+    # ---- Build fire_emis ----
+    echo "Building fire_emis..."
+    cd $WRF_CHEM_PREPROC/fire_emiss/src
+    rm -f *.o fire_emis 2>/dev/null || true
+    if [ -f make_fire_emis ]; then
+        csh ./make_fire_emis || echo "WARNING: fire_emis build may have issues"
+        if [ -f fire_emis ]; then
+            cp fire_emis $PREPROC_BIN/
+            echo "SUCCESS: fire_emis built and installed"
+        fi
+    fi
+
+    # ---- Build megan_bio_emiss ----
+    echo "Building megan_bio_emiss..."
+    cd $WRF_CHEM_PREPROC/megan_bio_emiss
+    rm -f *.o megan_bio_emiss 2>/dev/null || true
+    if [ -f make_util ]; then
+        csh ./make_util megan_bio_emiss || echo "WARNING: megan_bio_emiss build may have issues"
+        if [ -f megan_bio_emiss ]; then
+            cp megan_bio_emiss $PREPROC_BIN/
+            echo "SUCCESS: megan_bio_emiss built and installed"
+        fi
+    fi
+
+    # ---- Build wesely ----
+    echo "Building wesely..."
+    cd $WRF_CHEM_PREPROC/wes_coldens
+    rm -f *.o wesely 2>/dev/null || true
+    if [ -f make_util ]; then
+        csh ./make_util wesely || echo "WARNING: wesely build may have issues"
+        if [ -f wesely ]; then
+            cp wesely $PREPROC_BIN/
+            echo "SUCCESS: wesely built and installed"
+        fi
+    fi
+
+    # ---- Build exo_coldens ----
+    echo "Building exo_coldens..."
+    cd $WRF_CHEM_PREPROC/wes_coldens
+    rm -f *.o exo_coldens 2>/dev/null || true
+    if [ -f make_util ]; then
+        csh ./make_util exo_coldens || echo "WARNING: exo_coldens build may have issues"
+        if [ -f exo_coldens ]; then
+            cp exo_coldens $PREPROC_BIN/
+            echo "SUCCESS: exo_coldens built and installed"
+        fi
+    fi
+
+    # Verify preprocessing tools
+    echo "=========================================="
+    echo "Verifying Preprocessing Tools"
+    echo "=========================================="
+    ls -la $PREPROC_BIN/mozbc $PREPROC_BIN/anthro_emis $PREPROC_BIN/fire_emis $PREPROC_BIN/megan_bio_emiss $PREPROC_BIN/wesely $PREPROC_BIN/exo_coldens 2>/dev/null || echo "WARNING: Some preprocessing tools missing"
+
+    # ============================================================================
+    # LAYER 3: WRF-Chem 4.7.1 + WPS 4.6.0
+    # ============================================================================
+
+    # Versions
+    WRF_VERSION=4.7.1
+    WPS_VERSION=4.6.0
+
+    # Installation paths
+    WRF_DIR=/opt/WRF
+    WPS_DIR=/opt/WPS
+    BIN_DIR=/wrf/bin
+
+    # Create directories
+    mkdir -p $WRF_DIR $WPS_DIR $BIN_DIR /tmp/build
+    echo "WRF_VERSION=$WRF_VERSION" > $WRF_DIR/.version
+    echo "WPS_VERSION=$WPS_VERSION" > $WPS_DIR/.version
+
+    # ---- Download WRF 4.7.1 ----
+    # IMPORTANT: Use release tarball, not "Source Code" (missing NoahMP submodule)
+    # The tarball extracts to directory named "WRFV4.7.1"
+    echo "=========================================="
+    echo "Downloading WRF ${WRF_VERSION}"
+    echo "=========================================="
+
+    cd /tmp/build
+    wget -q https://github.com/wrf-model/WRF/releases/download/v${WRF_VERSION}/v${WRF_VERSION}.tar.gz
+    tar xzf v${WRF_VERSION}.tar.gz
+
+    ln -s WRFV${WRF_VERSION} WRF
+    cd WRF
+
+    # ---- Configure and Build WRF-Chem ----
+    # Note: KPP is built automatically by WRF when WRF_KPP=1 is set
+    # IMPORTANT: Must use J=1 (serial) to avoid race conditions
+    echo "=========================================="
+    echo "Configuring WRF-Chem ${WRF_VERSION}"
+    echo "=========================================="
+
+    # Clean any previous configuration
+    ./clean -a 2>/dev/null || true
+
+    # Configure WRF
+    var1=34    # option 34 = GNU dmpar for Linux x86_64
+    var2=1     # option 1 for nesting (basic)
+
+    echo -e "$var1\n$var2" | ./configure 2>&1 | tee $WRF_DIR/configure_wrf.log
+
+    # Patch configure.wrf for GCC 10+ compatibility
+    sed -i 's/FCOPTIM.*=.*/& -fallow-argument-mismatch/' configure.wrf
+    sed -i 's/FCBASEOPTS_NO_G.*=.*/& -fallow-argument-mismatch/' configure.wrf
+
+    # Fix WRF 4.7.1 KPP tuv_kpp bugs
+    # Bug 1: compile_wkc FIRST call uses wrong relative path ../../inc/ (relative to chem/KPP)
+    #        but is called from chem/KPP/mechanisms/$model, so needs ../../../../inc/
+    # Bug 2: tuv_kpp.c has buffer overflow: char openMode[1] = "a" needs 2 bytes for null terminator
+    sed -i 's|tuv_kpp FIRST ../../inc/|tuv_kpp FIRST ../../../../inc/|g' chem/KPP/compile_wkc
+    sed -i 's|char openMode\[1\] = "a"|char openMode[2] = "a"|' chem/KPP/util/wkc/tuv_kpp.c
+
+    echo "=========================================="
+    echo "Compiling WRF-Chem (this takes a while...)"
+    echo "=========================================="
+
+    # Compile WRF-Chem with em_real core (J=1 or omit J for serial - REQUIRED for chem)
+    ./compile em_real 2>&1 | tee $WRF_DIR/compile_wrf.log
+
+    # Verify WRF build
+    if [ ! -f main/wrf.exe ] || [ ! -f main/real.exe ]; then
+        echo "ERROR: WRF-Chem build failed!"
+        echo "Check compile_wrf.log for details"
+        exit 1
+    fi
+
+    # Copy executables to bin directory
+    cp main/*.exe $BIN_DIR/
+
+    # Copy runtime files to WRF directory
+    cp configure.wrf $WRF_DIR
+    cp README* $WRF_DIR
+    cp LICENSE.txt $WRF_DIR
+    rsync -avL run $WRF_DIR --exclude "*.exe"
+    rsync -av doc $WRF_DIR
+    rsync -av Registry $WRF_DIR
+
+    echo "WRF-Chem built successfully"
+    ls -la $BIN_DIR/
+
+    # ---- Download and Build WPS 4.6.0 ----
+    echo "=========================================="
+    echo "Downloading WPS ${WPS_VERSION}"
+    echo "=========================================="
+
+    cd /tmp/build
+    wget -q https://github.com/wrf-model/WPS/archive/refs/tags/v${WPS_VERSION}.tar.gz -O wps-v${WPS_VERSION}.tar.gz
+    tar xzf wps-v${WPS_VERSION}.tar.gz
+
+    cd WPS-${WPS_VERSION}
+
+    echo "=========================================="
+    echo "Configuring and Building WPS"
+    echo "=========================================="
+
+    # Configure WPS
+    var1=3    # option 3 = GNU dmpar
+    echo "$var1" | ./configure 2>&1 | tee $WPS_DIR/configure_wps.log
+
+    # Patch for GCC 10+ compatibility
+    sed -i 's/FFLAGS.*=.*/& -fallow-argument-mismatch/' configure.wps
+
+    # Compile WPS
+    ./compile 2>&1 | tee compile_wps.log
+
+    # Verify WPS build
+    if [ ! -f geogrid/src/geogrid.exe ] || [ ! -f ungrib/src/ungrib.exe ] || [ ! -f metgrid/src/metgrid.exe ]; then
+        echo "ERROR: WPS build failed!"
+        echo "Check compile_wps.log for details"
+        exit 1
+    fi
+
+    # Copy WPS executables to bin directory
+    cp geogrid/src/geogrid.exe $BIN_DIR/
+    cp ungrib/src/ungrib.exe $BIN_DIR/
+    cp metgrid/src/metgrid.exe $BIN_DIR/
+    cp link_grib.csh $BIN_DIR/
+    rsync -avL util $BIN_DIR/ --exclude "src" --exclude "CMakeLists.txt" --exclude "Makefile" --exclude ".gitignore"
+
+    # Copy runtime files to WPS directory
+    cp configure.wps $WPS_DIR
+    cp namelist* $WPS_DIR
+    cp README $WPS_DIR
+    rsync -av geogrid $WPS_DIR --exclude "*.exe" --exclude "src" --exclude "util" --exclude "CMakeLists.txt" --exclude "Makefile"
+    rsync -av metgrid $WPS_DIR --exclude "*.exe" --exclude "src" --exclude "CMakeLists.txt" --exclude "Makefile"
+    rsync -av ungrib  $WPS_DIR --exclude "*.exe" --exclude "src" --exclude "CMakeLists.txt" --exclude "Makefile" --exclude ".gitignore"
+
+    echo "WPS built successfully"
+
+    # ============================================================================
+    # Final Cleanup
+    # ============================================================================
+    cd /
+    rm -rf /tmp/build
+
+    # ============================================================================
+    # Final Verification
+    # ============================================================================
+    echo "=========================================="
+    echo "Final Verification"
+    echo "=========================================="
+    echo ""
+    echo "WRF Executables:"
+    ls -la $BIN_DIR/wrf.exe $BIN_DIR/real.exe $BIN_DIR/ndown.exe 2>/dev/null || echo "WARNING: Some WRF executables missing"
+    echo ""
+    echo "WPS Executables:"
+    ls -la $BIN_DIR/geogrid.exe $BIN_DIR/ungrib.exe $BIN_DIR/metgrid.exe 2>/dev/null || echo "WARNING: Some WPS executables missing"
+    echo ""
+    echo "Preprocessing Tools:"
+    ls -la $PREPROC_BIN/mozbc $PREPROC_BIN/anthro_emis $PREPROC_BIN/fire_emis $PREPROC_BIN/megan_bio_emiss $PREPROC_BIN/wesely $PREPROC_BIN/exo_coldens 2>/dev/null || echo "WARNING: Some preprocessing tools missing"
+    echo ""
+    echo "All installed executables in $BIN_DIR:"
+    ls -la $BIN_DIR/
+
+%environment
+    export LC_ALL=C
+    export LANG=C
+
+    # WRF Dependencies paths
+    export WRF_DEPS=/opt/wrf-deps
+    export PATH=$WRF_DEPS/bin:$PATH
+    export LD_LIBRARY_PATH=$WRF_DEPS/lib:$LD_LIBRARY_PATH
+
+    # HDF5
+    export HDF5=$WRF_DEPS
+    export HDF5_DIR=$WRF_DEPS
+
+    # NetCDF (combined C and Fortran)
+    export NETCDF=$WRF_DEPS
+    export NETCDF_DIR=$WRF_DEPS
+
+    # OpenMPI paths
+    export PATH=/usr/lib64/openmpi/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/lib64/openmpi/lib:$LD_LIBRARY_PATH
+    export MPI_ROOT=/usr/lib64/openmpi
+
+    # JasPer for GRIB2
+    export JASPERLIB=/usr/lib64
+    export JASPERINC=/usr/include/jasper
+
+    # YACC and flex (required for KPP)
+    export YACC='yacc -d'
+    export FLEX_LIB_DIR=/usr/lib64
+
+    # WRF paths
+    export WRF_DIR=/opt/WRF
+    export WPS_DIR=/opt/WPS
+
+    # WRF-Chem Preprocessing Tools
+    export WRF_CHEM_PREPROC=/opt/WRF-Chem-Preprocessing-Tools
+
+    # WRF-Chem flags (for any recompilation)
+    export WRF_CHEM=1
+    export WRF_KPP=1
+    export EM_CORE=1
+    export WRFIO_NCD_LARGE_FILE_SUPPORT=1
+
+    # Executables PATH
+    export PATH=/wrf/bin:$WRF_CHEM_PREPROC/bin:$PATH
+
+%runscript
+    echo "========================================"
+    echo "WRF-Chem Container - AlmaLinux 9"
+    echo "========================================"
+    echo ""
+    echo "Versions:"
+    echo "  WRF-Chem: 4.7.1"
+    echo "  WPS: 4.6.0"
+    echo "  HDF5: 1.14.5"
+    echo "  NetCDF-C: 4.9.3"
+    echo "  NetCDF-Fortran: 4.6.2"
+    echo ""
+    echo "WRF Executables: wrf.exe, real.exe, ndown.exe, tc.exe"
+    echo "WPS Executables: geogrid.exe, ungrib.exe, metgrid.exe"
+    echo "Preprocessing: mozbc, anthro_emis, fire_emis, megan_bio_emiss, wesely, exo_coldens"
+    echo ""
+    echo "Key directories:"
+    echo "  WRF: $WRF_DIR"
+    echo "  WPS: $WPS_DIR"
+    echo "  Preprocessing: $WRF_CHEM_PREPROC"
+    echo "  Executables: /wrf/bin"
+    echo ""
+    exec /bin/bash "$@"
+
+%help
+    WRF-Chem Container built on AlmaLinux 9 (single-layer build)
+
+    This container includes:
+    - WRF-Chem 4.7.1 (compiled with KPP support)
+    - WPS 4.6.0
+    - HDF5 1.14.5
+    - NetCDF-C 4.9.3
+    - NetCDF-Fortran 4.6.2
+    - OpenMPI (system package)
+
+    WRF-Chem Preprocessing Tools (from https://github.com/NCAR/WRF-Chem-Preprocessing-Tools):
+    - mozbc: Boundary/initial conditions from global models
+    - anthro_emis: Anthropogenic emissions processing
+    - fire_emis: Fire emissions (FINN) processing
+    - megan_bio_emiss: Biogenic emissions (MEGAN) processing
+    - wesely: Dry deposition calculations
+    - exo_coldens: Photolysis column densities
+
+    Build:
+        apptainer build --fakeroot wrf-chem_full_almalinux9.sif wrf-chem_full_almalinux9.def
+
+    Run interactively:
+        apptainer shell wrf-chem_full_almalinux9.sif
+
+    Run WRF:
+        apptainer exec wrf-chem_full_almalinux9.sif mpirun -np 4 wrf.exe
