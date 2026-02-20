@@ -262,7 +262,7 @@ LABEL version="1.0"
 RUN dnf -y update && \
     dnf -y install epel-release && \
     dnf config-manager --set-enabled crb && \
-    dnf -y install \
+    dnf -y install --allowerasing \
         openmpi openmpi-devel \
         jasper-libs \
         libpng \
