@@ -60,6 +60,11 @@ jobs:
           METRICS_DIR: ${{ github.workspace }}/metrics
         run: python main/.github/scripts/collect_metrics_github.py
 
+      - name: Collect metrics from DockerHub
+        env:
+          METRICS_DIR: ${{ github.workspace }}/metrics
+        run: python main/.github/scripts/collect_metrics_dockerhub.py
+
       - name: Commit and push metrics
         env:
           GITHUB_TOKEN: ${{ secrets.METRICS_PAT }}
