@@ -47,16 +47,18 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
-          python-version: '3.11'
+          python-version: '3.13'
+          cache: 'pip'
+      - run: pip install requests
 
-      - name: Collect metrics
+      - name: Collect metrics from GitHub
         env:
           GH_TOKEN: ${{ secrets.METRICS_PAT }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           METRICS_DIR: ${{ github.workspace }}/metrics
-        run: python main/.github/scripts/collect_metrics.py
+        run: python main/.github/scripts/collect_metrics_github.py
 
       - name: Commit and push metrics
         env:
