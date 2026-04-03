@@ -19,7 +19,7 @@ jobs:
     steps:
       # Step 1: Checkout main branch to get the Python script
       - name: Checkout main branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: main
           path: main
@@ -27,7 +27,7 @@ jobs:
       # Step 2: Try to checkout existing metrics branch
       - name: Checkout metrics branch
         id: checkout-metrics
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: metrics
           path: metrics
