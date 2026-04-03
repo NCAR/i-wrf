@@ -23,6 +23,9 @@ jobs:
         with:
           ref: main
           path: main
+          sparse-checkout: |
+            .github/scripts/collect_metrics_github.py
+            .github/scripts/collect_metrics_dockerhub.py
 
       # Step 2: Try to checkout existing metrics branch
       - name: Checkout metrics branch
