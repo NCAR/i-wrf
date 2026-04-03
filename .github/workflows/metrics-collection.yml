@@ -21,7 +21,7 @@ jobs:
       - name: Checkout main branch
         uses: actions/checkout@v6
         with:
-          ref: main
+          ref: feature_94_dockerhub_metrics
           path: main
           sparse-checkout: |
             .github/scripts/collect_metrics_github.py
