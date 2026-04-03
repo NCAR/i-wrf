@@ -3,8 +3,8 @@
 Air Quality Change
 ==================
 
-Scientific Objective
---------------------
+Objective
+---------
 
 Update section content to describe the scientific objective of this use case.
 
