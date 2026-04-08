@@ -8,6 +8,8 @@ to secure access to and log in to NSF NCAR HPC.
 
 These instructions are currently limited to running the METplus verification
 software and assume that WRF output is already available in a local directory.
+The commands in each section can be copied using the button in the upper 
+right corner and then pasted into your web shell by right-clicking.
 
 .. dropdown:: Instructions
 

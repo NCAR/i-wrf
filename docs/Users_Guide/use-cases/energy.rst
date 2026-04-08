@@ -1,10 +1,10 @@
-.. _use-case-climate:
+.. _use-case-energy:
 
-Regional Climate Simulations
+Renewable Energy Forecasting
 ============================
 
-Scientific Objective
---------------------
+Objective
+---------
 
 Update section content to describe the scientific objective of this use case.
 

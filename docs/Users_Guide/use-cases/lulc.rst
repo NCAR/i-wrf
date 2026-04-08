@@ -3,8 +3,8 @@
 Land Use/Land Cover Change
 ==========================
 
-Scientific Objective
---------------------
+Objective
+---------
 
 The Land Use/Land Cover Change (LULC) use case examines how changes in
 land surface characteristics impact weather patterns and atmospheric dynamics

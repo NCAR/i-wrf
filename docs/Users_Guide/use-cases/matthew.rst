@@ -3,9 +3,14 @@
 Hurricane Matthew
 =================
 
-Scientific Objective
---------------------
+Objective
+---------
 
+This case was chosen as the introductory case for I-WRF containers because it is also the first
+case in the `WRF Online Tutorial, <https://www2.mmm.ucar.edu/wrf/OnLineTutorial/CASES/SingleDomain/index.php>`_ 
+allowing leverage of potential familiarity with users who may already have or will go through both
+the WRF and I-WRF tutorials. Furthermore, WRF completes this use case quickly due to its small domain,
+enabling a fast initial demonstration for I-WRF users to gain familiarity with I-WRF containers.
 In October 2016, Hurricane Matthew made landfall in Haiti, Cuba, and then the Bahamas before
 paralleling the eastern U.S. coast, causing widespread damage.
 For more information, see `NHC Report - Hurricane Matthew <https://www.nhc.noaa.gov/data/tcr/AL142016_Matthew.pdf>`_.
