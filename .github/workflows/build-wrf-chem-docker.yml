@@ -21,7 +21,9 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE: ghcr.io/${{ github.repository }}/wrf-chem  # ghcr.io/ncar/i-wrf/wrf-chem
+  # IMAGE is derived (lowercased) in the "Resolve image name" step below,
+  # because OCI registries reject uppercase characters in repository paths.
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
 
 jobs:
   build:
@@ -52,6 +54,12 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Resolve image name (lowercase)
+        env:
+          REPO: ${{ github.repository }}
+        run: |
+          echo "IMAGE=ghcr.io/${REPO,,}/wrf-chem" >> "$GITHUB_ENV"
 
       - name: Log in to GHCR
         if: github.event_name != 'pull_request'
