@@ -21,77 +21,129 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}/wrf-chem  # ghcr.io/ncar/i-wrf/wrf-chem
+  IMAGE: ghcr.io/${{ github.repository }}/wrf-chem  # ghcr.io/ncar/i-wrf/wrf-chem
 
 jobs:
   build:
     name: Build and push WRF-Chem image
     runs-on: ubuntu-latest
-    timeout-minutes: 350  # Just under the 6-hour hard limit
+    timeout-minutes: 350
 
     permissions:
       contents: read
-      packages: write  # Needed to push to GHCR
+      packages: write
 
     steps:
-      # WRF-Chem builds routinely exceed the ~14 GB free on a default runner.
-      # This reclaims ~25 GB by removing preinstalled toolchains we don't use.
       - name: Free up disk space
-        uses: jlumbroso/free-disk-space@main
-        with:
-          tool-cache: true
-          android: true
-          dotnet: true
-          haskell: true
-          large-packages: false
-          swap-storage: false
+        # WRF-Chem builds exceed the ~14 GB free on a default runner. Reclaim
+        # ~30 GB by removing preinstalled toolchains we don't use.
+        run: |
+          set -euxo pipefail
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo rm -rf /usr/local/share/boost
+          sudo rm -rf /usr/local/share/powershell
+          sudo rm -rf /usr/local/graalvm
+          sudo rm -rf /usr/local/.ghcup
+          sudo docker image prune --all --force || true
+          df -h /
 
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Log in to GHCR
         if: github.event_name != 'pull_request'
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GHCR_USER: ${{ github.actor }}
+        run: |
+          echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
 
-      - name: Derive image tags and labels
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=match,pattern=wrf-chem-v(.*),group=1
-            type=sha,prefix=sha-
-            type=raw,value=latest,enable={{is_default_branch}}
+      - name: Derive image tags
+        id: tags
+        env:
+          IMAGE: ${{ env.IMAGE }}
+          EVENT_NAME: ${{ github.event_name }}
+          REF_TYPE: ${{ github.ref_type }}
+          REF_NAME: ${{ github.ref_name }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          SHORT_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          short_sha="${SHORT_SHA:0:7}"
+          tags=()
+          case "$EVENT_NAME" in
+            pull_request)
+              tags+=("${IMAGE}:pr-${PR_NUMBER}")
+              ;;
+            push)
+              if [[ "$REF_TYPE" == "tag" && "$REF_NAME" == wrf-chem-v* ]]; then
+                version="${REF_NAME#wrf-chem-v}"
+                tags+=("${IMAGE}:${version}" "${IMAGE}:latest")
+              elif [[ "$REF_NAME" == "$DEFAULT_BRANCH" ]]; then
+                tags+=("${IMAGE}:main" "${IMAGE}:latest")
+              else
+                tags+=("${IMAGE}:${REF_NAME//\//-}")
+              fi
+              tags+=("${IMAGE}:sha-${short_sha}")
+              ;;
+            workflow_dispatch)
+              tags+=("${IMAGE}:manual-${short_sha}")
+              ;;
+          esac
+          # Emit as --tag arguments, one per line, for xargs-style consumption.
+          {
+            echo 'tag_args<<EOF'
+            for t in "${tags[@]}"; do echo "--tag $t"; done
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+          {
+            echo 'tags<<EOF'
+            for t in "${tags[@]}"; do echo "$t"; done
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
 
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          context: ./docker/wrf-chem
-          file: ./docker/wrf-chem/Dockerfile
-          platforms: linux/amd64
-          push: ${{ github.event_name != 'pull_request' && (github.event_name != 'workflow_dispatch' || inputs.push_image) }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha,scope=wrf-chem
-          cache-to: type=gha,scope=wrf-chem,mode=max
+      - name: Build (and optionally push) image
+        env:
+          IMAGE: ${{ env.IMAGE }}
+          TAG_ARGS: ${{ steps.tags.outputs.tag_args }}
+          DO_PUSH: ${{ github.event_name != 'pull_request' && (github.event_name != 'workflow_dispatch' || inputs.push_image) }}
+        run: |
+          set -euxo pipefail
+          # Registry-backed layer cache lives as a sibling tag in GHCR.
+          # mode=max caches all stages, including the expensive WRF/WPS build.
+          cache_ref="${IMAGE}:buildcache"
+          cache_from="--cache-from=type=registry,ref=${cache_ref}"
+          cache_to=""
+          push_flag=""
+          if [[ "$DO_PUSH" == "true" ]]; then
+            push_flag="--push"
+            cache_to="--cache-to=type=registry,ref=${cache_ref},mode=max"
+          fi
+          # Ensure a buildx builder exists (default on ubuntu-latest is docker,
+          # which doesn't support advanced cache backends).
+          docker buildx create --name wrf-builder --use --bootstrap || docker buildx use wrf-builder
+          # shellcheck disable=SC2086
+          docker buildx build \
+            --platform linux/amd64 \
+            $push_flag \
+            $cache_from \
+            $cache_to \
+            $TAG_ARGS \
+            --file docker/wrf-chem/Dockerfile \
+            docker/wrf-chem
 
-      - name: Image summary
+      - name: Build summary
         if: always()
         env:
-          IMAGE_TAGS: ${{ steps.meta.outputs.tags }}
+          TAGS: ${{ steps.tags.outputs.tags }}
         run: |
           {
             echo "### WRF-Chem image build"
             echo '```'
-            echo "$IMAGE_TAGS"
+            echo "$TAGS"
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
