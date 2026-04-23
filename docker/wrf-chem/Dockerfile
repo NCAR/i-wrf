@@ -180,22 +180,27 @@ RUN cd /opt && \
     if [ -f make_util ]; then csh ./make_util exo_coldens && cp exo_coldens ${PREPROC_BIN}/; fi
 
 # ---------- Build WRF-Chem 4.7.1 ----------
+# Build directly in /opt/WRF so the full build tree (including
+# external/io_netcdf/libwrfio_nf.a etc.) is available at WRF_DIR
+# for the WPS configure/link step.
 ARG WRF_VERSION=4.7.1
 ARG WRF_DIR=/opt/WRF
 ARG WPS_DIR=/opt/WPS
 ARG BIN_DIR=/wrf/bin
 
-RUN mkdir -p ${WRF_DIR} ${WPS_DIR} ${BIN_DIR} /tmp/build && \
-    echo "WRF_VERSION=${WRF_VERSION}" > ${WRF_DIR}/.version && \
+RUN mkdir -p ${WPS_DIR} ${BIN_DIR} /tmp/build && \
     cd /tmp/build && \
     # IMPORTANT: Use release tarball, not "Source Code" (missing NoahMP submodule)
     wget -q https://github.com/wrf-model/WRF/releases/download/v${WRF_VERSION}/v${WRF_VERSION}.tar.gz && \
     tar xzf v${WRF_VERSION}.tar.gz && \
-    ln -s WRFV${WRF_VERSION} WRF && \
-    cd WRF && \
+    # Move the extracted source directly to /opt/WRF
+    mv WRFV${WRF_VERSION} ${WRF_DIR} && \
+    rm -f v${WRF_VERSION}.tar.gz && \
+    cd ${WRF_DIR} && \
+    echo "WRF_VERSION=${WRF_VERSION}" > .version && \
     ./clean -a 2>/dev/null || true && \
     # Configure WRF: option 34 = GNU dmpar, option 1 = basic nesting
-    echo -e "34\n1" | ./configure 2>&1 | tee ${WRF_DIR}/configure_wrf.log && \
+    echo -e "34\n1" | ./configure 2>&1 | tee configure_wrf.log && \
     # Patch configure.wrf for GCC 10+
     sed -i 's/FCOPTIM.*=.*/& -fallow-argument-mismatch/' configure.wrf && \
     sed -i 's/FCBASEOPTS_NO_G.*=.*/& -fallow-argument-mismatch/' configure.wrf && \
@@ -203,18 +208,11 @@ RUN mkdir -p ${WRF_DIR} ${WPS_DIR} ${BIN_DIR} /tmp/build && \
     sed -i 's|tuv_kpp FIRST ../../inc/|tuv_kpp FIRST ../../../../inc/|g' chem/KPP/compile_wkc && \
     sed -i 's|char openMode\[1\] = "a"|char openMode[2] = "a"|' chem/KPP/util/wkc/tuv_kpp.c && \
     # Compile WRF-Chem (J=1 or omit J for serial - REQUIRED for chem)
-    ./compile em_real 2>&1 | tee ${WRF_DIR}/compile_wrf.log && \
+    ./compile em_real 2>&1 | tee compile_wrf.log && \
     # Verify
     test -f main/wrf.exe && test -f main/real.exe && \
-    # Install executables
-    cp main/*.exe ${BIN_DIR}/ && \
-    # Copy runtime files
-    cp configure.wrf ${WRF_DIR} && \
-    cp README* ${WRF_DIR} && \
-    cp LICENSE.txt ${WRF_DIR} && \
-    rsync -avL run ${WRF_DIR} --exclude "*.exe" && \
-    rsync -av doc ${WRF_DIR} && \
-    rsync -av Registry ${WRF_DIR}
+    # Install executables to shared bin directory
+    cp main/*.exe ${BIN_DIR}/
 
 # ---------- Build WPS 4.6.0 ----------
 ARG WPS_VERSION=4.6.0
@@ -225,6 +223,8 @@ RUN cd /tmp/build && \
     tar xzf wps-v${WPS_VERSION}.tar.gz && \
     cd WPS-${WPS_VERSION} && \
     # Configure WPS: option 3 = GNU dmpar
+    # WRF_DIR is set via ARG and visible here, so configure will find
+    # WRF build artifacts (external/io_netcdf/libwrfio_nf.a etc.) in /opt/WRF
     echo "3" | ./configure 2>&1 | tee ${WPS_DIR}/configure_wps.log && \
     sed -i 's/FFLAGS.*=.*/& -fallow-argument-mismatch/' configure.wps && \
     ./compile 2>&1 | tee compile_wps.log && \
