@@ -1,0 +1,232 @@
+Bootstrap: localimage
+From: wrf-chem_deps_almalinux9.sif
+
+%labels
+    Author V. Weeks
+    Version 1.0
+    Description WRF-Chem preprocessing tools on AlmaLinux 9
+
+%post
+    # ============================================================================
+    # WRF-Chem Preprocessing Utils Container Layer
+    # Builds WRF-Chem Preprocessing Utils
+    # ============================================================================
+
+    # Installation paths
+    WRF_CHEM_PREPROC=/opt/WRF-Chem-Preprocessing-Tools
+    BIN_DIR=$WRF_CHEM_PREPROC/bin
+    
+    # ============================================================================
+    # Environment Setup
+    # ============================================================================
+
+    # these are already set in bootstrap container
+    # export WRF_DEPS=/opt/wrf-deps
+    # export PATH=$WRF_DEPS/bin:/usr/lib64/openmpi/bin:$PATH
+    # export LD_LIBRARY_PATH=$WRF_DEPS/lib:/usr/lib64/openmpi/lib:$LD_LIBRARY_PATH
+
+    ## NetCDF and HDF5
+    # export NETCDF=$WRF_DEPS
+    # export NETCDF_DIR=$WRF_DEPS
+    # export HDF5=$WRF_DEPS
+
+    ## JasPer for GRIB2
+    # export JASPERLIB=/usr/lib64
+    # export JASPERINC=/usr/include/jasper
+
+    # WRF-Chem specific flags
+    export WRF_CHEM=1
+    export WRF_KPP=1
+    export EM_CORE=1
+    export WRF_EM_CORE=1
+    export WRF_NMM_CORE=0
+    export WRFIO_NCD_LARGE_FILE_SUPPORT=1
+
+    # GCC 10+ Fortran compatibility
+    export FCFLAGS="-fallow-argument-mismatch"
+    export FFLAGS="-fallow-argument-mismatch"
+    export F90FLAGS="-fallow-argument-mismatch"
+
+    # Compilers
+    export CC=gcc
+    export FC=gfortran
+    export F77=gfortran
+    export F90=gfortran
+    export CXX=g++
+    export MPICC=mpicc
+    export MPIF90=mpif90
+
+    set -e
+
+    # ============================================================================
+    # Clone and Build WRF-Chem Preprocessing Tools
+    # ============================================================================
+    echo "=========================================="
+    echo "Cloning WRF-Chem Preprocessing Tools"
+    echo "=========================================="
+
+    cd /opt
+    git clone https://github.com/NCAR/WRF-Chem-Preprocessing-Tools.git $WRF_CHEM_PREPROC
+
+    # Create directories for preprocessing tools
+    mkdir -p $BIN_DIR
+
+    # GCC 10+ flag for legacy Fortran code
+    GCC10_FLAG="-fallow-argument-mismatch"
+
+    # ============================================================================
+    # Patch all Makefiles for GCC 10+ compatibility
+    # ============================================================================
+    echo "Patching Makefiles for GCC 10+ compatibility..."
+
+    find "$WRF_CHEM_PREPROC" -name "Makefile" -type f | while read makefile; do
+        sed -i "s/-ffree-line-length-none/-ffree-line-length-none $GCC10_FLAG/g" "$makefile" 2>/dev/null || true
+        sed -i "s/FFLAGS = -g/FFLAGS = -g $GCC10_FLAG/g" "$makefile" 2>/dev/null || true
+        sed -i "s/FFLAGS= -g/FFLAGS= -g $GCC10_FLAG/g" "$makefile" 2>/dev/null || true
+        sed -i "s/F90FLAGS = /F90FLAGS = $GCC10_FLAG /g" "$makefile" 2>/dev/null || true
+    done
+
+    find "$WRF_CHEM_PREPROC" -name "make_*" -type f | while read makescript; do
+        sed -i "s/-ffree-line-length-none/-ffree-line-length-none $GCC10_FLAG/g" "$makescript" 2>/dev/null || true
+        sed -i "s/gfortran -g/gfortran -g $GCC10_FLAG/g" "$makescript" 2>/dev/null || true
+        sed -i "s/gfortran -c/gfortran $GCC10_FLAG -c/g" "$makescript" 2>/dev/null || true
+    done
+
+    echo "Patching complete."
+
+    # ============================================================================
+    # Build MOZBC
+    # ============================================================================
+    echo "Building mozbc..."
+    cd $WRF_CHEM_PREPROC/mozbc
+    rm -f *.o mozbc 2>/dev/null || true
+    if [ -f make_mozbc ]; then
+        csh ./make_mozbc || echo "WARNING: mozbc build may have issues"
+        if [ -f mozbc ]; then
+            cp mozbc $WRF_CHEM_PREPROC/bin/
+            echo "SUCCESS: mozbc built and installed"
+        fi
+    fi
+
+    # ============================================================================
+    # Build anthro_emis
+    # ============================================================================
+    echo "Building anthro_emis..."
+    cd $WRF_CHEM_PREPROC/anthro_emiss/src
+    rm -f *.o anthro_emis 2>/dev/null || true
+    if [ -f make_anthro ]; then
+        csh ./make_anthro || echo "WARNING: anthro_emis build may have issues"
+        if [ -f anthro_emis ]; then
+            cp anthro_emis $WRF_CHEM_PREPROC/bin/
+            echo "SUCCESS: anthro_emis built and installed"
+        fi
+    fi
+
+    # ============================================================================
+    # Build fire_emis
+    # ============================================================================
+    echo "Building fire_emis..."
+    cd $WRF_CHEM_PREPROC/fire_emiss/src
+    rm -f *.o fire_emis 2>/dev/null || true
+    if [ -f make_fire_emis ]; then
+        csh ./make_fire_emis || echo "WARNING: fire_emis build may have issues"
+        if [ -f fire_emis ]; then
+            cp fire_emis $WRF_CHEM_PREPROC/bin/
+            echo "SUCCESS: fire_emis built and installed"
+        fi
+    fi
+
+    # ============================================================================
+    # Build megan_bio_emiss
+    # ============================================================================
+    echo "Building megan_bio_emiss..."
+    cd $WRF_CHEM_PREPROC/megan_bio_emiss
+    rm -f *.o megan_bio_emiss 2>/dev/null || true
+    if [ -f make_util ]; then
+        csh ./make_util megan_bio_emiss || echo "WARNING: megan_bio_emiss build may have issues"
+        if [ -f megan_bio_emiss ]; then
+            cp megan_bio_emiss $WRF_CHEM_PREPROC/bin/
+            echo "SUCCESS: megan_bio_emiss built and installed"
+        fi
+    fi
+
+    # ============================================================================
+    # Build wesely
+    # ============================================================================
+    echo "Building wesely..."
+    cd $WRF_CHEM_PREPROC/wes_coldens
+    rm -f *.o wesely 2>/dev/null || true
+    if [ -f make_util ]; then
+        csh ./make_util wesely || echo "WARNING: wesely build may have issues"
+        if [ -f wesely ]; then
+            cp wesely $WRF_CHEM_PREPROC/bin/
+            echo "SUCCESS: wesely built and installed"
+        fi
+    fi
+
+    # ============================================================================
+    # Build exo_coldens
+    # ============================================================================
+    echo "Building exo_coldens..."
+    cd $WRF_CHEM_PREPROC/wes_coldens
+    rm -f *.o exo_coldens 2>/dev/null || true
+    if [ -f make_util ]; then
+        csh ./make_util exo_coldens || echo "WARNING: exo_coldens build may have issues"
+        if [ -f exo_coldens ]; then
+            cp exo_coldens $WRF_CHEM_PREPROC/bin/
+            echo "SUCCESS: exo_coldens built and installed"
+        fi
+    fi
+
+    # ============================================================================
+    # Final Verification
+    # ============================================================================
+    echo "=========================================="
+    echo "Final Verification"
+    echo "=========================================="
+    echo ""
+    echo "Preprocessing Tools:"
+    ls -la $BIN_DIR/mozbc $BIN_DIR/anthro_emis $BIN_DIR/fire_emis $BIN_DIR/megan_bio_emiss $BIN_DIR/wesely $BIN_DIR/exo_coldens 2>/dev/null || echo "WARNING: Some preprocessing tools missing"
+    echo ""
+    echo "All installed executables in $BIN_DIR:"
+    ls -la $BIN_DIR/
+
+%environment
+    export LC_ALL=C
+    export LANG=C
+
+    # WRF-Chem Preprocessing Tools
+    export WRF_CHEM_PREPROC=/opt/WRF-Chem-Preprocessing-Tools
+
+    # Executables PATH
+    export PATH=$WRF_CHEM_PREPROC/bin:$PATH
+
+%runscript
+    echo "========================================"
+    echo "WRF-Chem Preprocessing Utils Container - AlmaLinux 9"
+    echo "========================================"
+    echo ""
+    echo "Preprocessing Utils: mozbc, anthro_emis, fire_emis, megan_bio_emiss, wesely, exo_coldens"
+    echo ""
+    echo "Key directories:"
+    echo "  Preprocessing: $WRF_CHEM_PREPROC/bin"
+    echo ""
+    exec /bin/bash "$@"
+
+%help
+    WRF-Chem Preprocessing Utils Container built on AlmaLinux 9
+
+    This container includes the WRF-Chem Preprocessing Tools (from https://github.com/NCAR/WRF-Chem-Preprocessing-Tools):
+    - mozbc: Boundary/initial conditions from global models
+    - anthro_emis: Anthropogenic emissions processing
+    - fire_emis: Fire emissions (FINN) processing
+    - megan_bio_emiss: Biogenic emissions (MEGAN) processing
+    - wesely: Dry deposition calculations
+    - exo_coldens: Photolysis column densities
+
+    Build sequence:
+        # Layer 1 (base dependencies) - must exist
+        apptainer build --fakeroot wrf-chem_deps_almalinux9.sif wrf-chem_deps_almalinux9.def
+
+        # Layer 2 (WRF-Chem Preprocessing Utils) - this container
+        apptainer build --fakeroot wrf-chem_preproc_almalinux9.sif wrf-chem_preproc_almalinux9.def

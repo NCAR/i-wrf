@@ -1,0 +1,274 @@
+Bootstrap: localimage
+From: wrf-chem_preproc_almalinux9.sif
+
+%labels
+    Author V. Weeks
+    Version 1.0
+    Description WRF-Chem 4.7.1 with WPS 4.6.0 on AlmaLinux 9
+
+%post
+    # ============================================================================
+    # WRF-Chem Container Layer
+    # Builds WRF-Chem 4.7.1, WPS 4.6.0
+    # ============================================================================
+
+    set -e
+
+    # Versions
+    WRF_VERSION=4.7.1
+    WPS_VERSION=4.6.0
+
+    # Installation paths
+    WRF_DIR=/opt/WRF
+    WPS_DIR=/opt/WPS
+    BIN_DIR=/wrf/bin
+    
+    # Create directories
+    mkdir -p $WRF_DIR $WPS_DIR $BIN_DIR /tmp/build
+    echo "WRF_VERSION=$WRF_VERSION" > $WRF_DIR/.version
+    echo "WPS_VERSION=$WPS_VERSION" > $WPS_DIR/.version
+
+    # ============================================================================
+    # Environment Setup
+    # ============================================================================
+
+    # WRF-Chem specific flags
+    export WRF_CHEM=1
+    export WRF_KPP=1
+    export EM_CORE=1
+    export WRF_EM_CORE=1
+    export WRF_NMM_CORE=0
+    export WRFIO_NCD_LARGE_FILE_SUPPORT=1
+
+    # GCC 10+ Fortran compatibility
+    export FCFLAGS="-fallow-argument-mismatch"
+    export FFLAGS="-fallow-argument-mismatch"
+    export F90FLAGS="-fallow-argument-mismatch"
+
+    # Compilers
+    export CC=gcc
+    export FC=gfortran
+    export F77=gfortran
+    export CXX=g++
+    export MPICC=mpicc
+    export MPIF90=mpif90
+
+    # JasPer for GRIB2 support (set explicitly for %post)
+    export JASPERLIB=/usr/lib64
+    export JASPERINC=/usr/include/jasper
+
+    # ============================================================================
+    # Download WRF 4.7.1
+    # IMPORTANT: Use release tarball, not "Source Code" (missing NoahMP submodule)
+    # The tarball extracts to directory named "WRFV4.7.1"
+    # ============================================================================
+    echo "=========================================="
+    echo "Downloading WRF ${WRF_VERSION}"
+    echo "=========================================="
+
+    cd /tmp/build
+    wget -q https://github.com/wrf-model/WRF/releases/download/v${WRF_VERSION}/v${WRF_VERSION}.tar.gz
+    tar xzf v${WRF_VERSION}.tar.gz
+
+    ln -s WRFV${WRF_VERSION} WRF
+    cd WRF
+
+    # ============================================================================
+    # Configure and Build WRF-Chem
+    # Note: KPP is built automatically by WRF when WRF_KPP=1 is set
+    # IMPORTANT: Must use J=1 (serial) to avoid race conditions
+    # ============================================================================
+    echo "=========================================="
+    echo "Configuring WRF-Chem ${WRF_VERSION}"
+    echo "=========================================="
+
+    # Clean any previous configuration
+    ./clean -a 2>/dev/null || true
+
+    # Configure WRF
+    var1=34    # option 34 = GNU dmpar for Linux x86_64
+    var2=1     # option 1 for nesting (basic)
+
+    echo -e "$var1\n$var2" | ./configure 2>&1 | tee $WRF_DIR/configure_wrf.log
+    
+    # Patch configure.wrf for GCC 10+ compatibility
+    sed -i 's/FCOPTIM.*=.*/& -fallow-argument-mismatch/' configure.wrf
+    sed -i 's/FCBASEOPTS_NO_G.*=.*/& -fallow-argument-mismatch/' configure.wrf
+
+    # Fix WRF 4.7.1 KPP tuv_kpp bugs
+    # Bug 1: compile_wkc FIRST call uses wrong relative path ../../inc/ (relative to chem/KPP)
+    #        but is called from chem/KPP/mechanisms/$model, so needs ../../../../inc/
+    # Bug 2: tuv_kpp.c has buffer overflow: char openMode[1] = "a" needs 2 bytes for null terminator
+    sed -i 's|tuv_kpp FIRST ../../inc/|tuv_kpp FIRST ../../../../inc/|g' chem/KPP/compile_wkc
+    sed -i 's|char openMode\[1\] = "a"|char openMode[2] = "a"|' chem/KPP/util/wkc/tuv_kpp.c
+
+    echo "=========================================="
+    echo "Compiling WRF-Chem (this takes a while...)"
+    echo "=========================================="
+
+    # Compile WRF-Chem with em_real core (J=1 or omit J for serial - REQUIRED for chem)
+    ./compile em_real 2>&1 | tee $WRF_DIR/compile_wrf.log
+
+    # Verify WRF build
+    if [ ! -f main/wrf.exe ] || [ ! -f main/real.exe ]; then
+        echo "ERROR: WRF-Chem build failed!"
+        echo "Check compile_wrf.log for details"
+        exit 1
+    fi
+
+    # Copy executables to bin directory
+    cp main/*.exe $BIN_DIR/
+
+    # Copy runtime files to WRF directory
+    cp configure.wrf $WRF_DIR
+    cp README* $WRF_DIR
+    cp LICENSE.txt $WRF_DIR
+    rsync -avL run $WRF_DIR --exclude "*.exe"
+    rsync -av doc $WRF_DIR
+    rsync -av Registry $WRF_DIR
+
+    echo "WRF-Chem built successfully"
+    ls -la $BIN_DIR/
+
+    # ============================================================================
+    # Download and Build WPS 4.6.0
+    # ============================================================================
+    echo "=========================================="
+    echo "Downloading WPS ${WPS_VERSION}"
+    echo "=========================================="
+
+    cd /tmp/build
+    wget -q https://github.com/wrf-model/WPS/archive/refs/tags/v${WPS_VERSION}.tar.gz -O wps-v${WPS_VERSION}.tar.gz
+    tar xzf wps-v${WPS_VERSION}.tar.gz
+    
+    cd WPS-${WPS_VERSION}
+
+    echo "=========================================="
+    echo "Configuring and Building WPS"
+    echo "=========================================="
+
+    # Configure WPS
+    var1=3    # option 3 = GNU dmpar
+    echo "$var1" | ./configure 2>&1 | tee $WPS_DIR/configure_wps.log
+
+    # Patch for GCC 10+ compatibility
+    sed -i 's/FFLAGS.*=.*/& -fallow-argument-mismatch/' configure.wps
+
+    # Compile WPS
+    ./compile 2>&1 | tee compile_wps.log
+
+    # Verify WPS build
+    if [ ! -f geogrid/src/geogrid.exe ] || [ ! -f ungrib/src/ungrib.exe ] || [ ! -f metgrid/src/metgrid.exe ]; then
+        echo "ERROR: WPS build failed!"
+        echo "Check compile_wps.log for details"
+        exit 1
+    fi
+
+    # Copy WPS executables to bin directory
+    cp geogrid/src/geogrid.exe $BIN_DIR/
+    cp ungrib/src/ungrib.exe $BIN_DIR/
+    cp metgrid/src/metgrid.exe $BIN_DIR/
+    cp link_grib.csh $BIN_DIR/
+    rsync -avL util $BIN_DIR/ --exclude "src" --exclude "CMakeLists.txt" --exclude "Makefile" --exclude ".gitignore"
+
+    # Copy runtime files to WPS directory
+    cp configure.wps $WPS_DIR
+    cp namelist* $WPS_DIR
+    cp README $WPS_DIR
+    rsync -av geogrid $WPS_DIR --exclude "*.exe" --exclude "src" --exclude "util" --exclude "CMakeLists.txt" --exclude "Makefile"
+    rsync -av metgrid $WPS_DIR --exclude "*.exe" --exclude "src" --exclude "CMakeLists.txt" --exclude "Makefile"
+    rsync -av ungrib  $WPS_DIR --exclude "*.exe" --exclude "src" --exclude "CMakeLists.txt" --exclude "Makefile" --exclude ".gitignore"
+    
+    echo "WPS built successfully"
+
+    # ============================================================================
+    # Cleanup
+    # ============================================================================
+    cd /
+    rm -rf /tmp/build
+
+    # ============================================================================
+    # Final Verification
+    # ============================================================================
+    echo "=========================================="
+    echo "Final Verification"
+    echo "=========================================="
+    echo ""
+    echo "WRF Executables:"
+    ls -la $BIN_DIR/wrf.exe $BIN_DIR/real.exe $BIN_DIR/ndown.exe 2>/dev/null || echo "WARNING: Some WRF executables missing"
+    echo ""
+    echo "WPS Executables:"
+    ls -la $BIN_DIR/geogrid.exe $BIN_DIR/ungrib.exe $BIN_DIR/metgrid.exe 2>/dev/null || echo "WARNING: Some WPS executables missing"
+    echo ""
+    echo "All installed executables in $BIN_DIR:"
+    ls -la $BIN_DIR/
+
+%environment
+    export LC_ALL=C
+    export LANG=C
+
+    # WRF paths
+    export WRF_DIR=/opt/WRF
+    export WPS_DIR=/opt/WPS
+
+    # Executables PATH
+    export PATH=/wrf/bin:$PATH
+
+%runscript
+    echo "========================================"
+    echo "WRF-Chem Container - AlmaLinux 9"
+    echo "========================================"
+    echo ""
+    echo "Versions:"
+    echo "  WRF-Chem: 4.7.1"
+    echo "  WPS: 4.6.0"
+    echo "  HDF5: 1.14.5"
+    echo "  NetCDF-C: 4.9.3"
+    echo "  NetCDF-Fortran: 4.6.2"
+    echo ""
+    echo "WRF Executables: wrf.exe, real.exe, ndown.exe, tc.exe"
+    echo "WPS Executables: geogrid.exe, ungrib.exe, metgrid.exe"
+    echo "Preprocessing: mozbc, anthro_emis, fire_emis, megan_bio_emiss, wesely, exo_coldens"
+    echo ""
+    echo "Key directories:"
+    echo "  WRF: $WRF_DIR"
+    echo "  WPS: $WPS_DIR"
+    echo "  Preprocessing: $WRF_CHEM_PREPROC"
+    echo "  Executables: /wrf/bin"
+    echo ""
+    exec /bin/bash "$@"
+
+%help
+    WRF-Chem Container built on AlmaLinux 9
+
+    This container includes:
+    - WRF-Chem 4.7.1 (compiled with KPP support)
+    - WPS 4.6.0
+    - HDF5 1.14.5
+    - NetCDF-C 4.9.3
+    - NetCDF-Fortran 4.6.2
+    - OpenMPI (system package)
+
+    WRF-Chem Preprocessing Tools (from https://github.com/NCAR/WRF-Chem-Preprocessing-Tools):
+    - mozbc: Boundary/initial conditions from global models
+    - anthro_emis: Anthropogenic emissions processing
+    - fire_emis: Fire emissions (FINN) processing
+    - megan_bio_emiss: Biogenic emissions (MEGAN) processing
+    - wesely: Dry deposition calculations
+    - exo_coldens: Photolysis column densities
+
+    Build sequence:
+        # Layer 1 (base dependencies) - must exist
+        apptainer build --fakeroot wrf-chem_deps_almalinux9.sif wrf-chem_deps_almalinux9.def
+
+        # Layer 2 (WRF-Chem Preprocessing Utils) - must exist
+        apptainer build --fakeroot wrf-chem_preproc_almalinux9.sif wrf-chem_preproc_almalinux9.def
+
+        # Layer 3 (WRF-Chem) - this container
+        apptainer build --fakeroot wrf-chem_almalinux9.sif wrf-chem_almalinux9.def
+
+    Run interactively:
+        apptainer shell wrf-chem_almalinux9.sif
+
+    Run WRF:
+        apptainer exec wrf-chem_almalinux9.sif mpirun -np 4 wrf.exe
