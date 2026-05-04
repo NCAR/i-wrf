@@ -138,3 +138,5 @@ to secure access to and log in to Red Cloud.
         df -h ${mountPoint}
 
     The full output should be in ``/home/ubuntu/lulc_full_output``.
+
+  .. include:: lulc/common/metplus.rst

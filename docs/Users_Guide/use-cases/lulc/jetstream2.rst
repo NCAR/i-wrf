@@ -134,3 +134,5 @@ to secure access to and log in to Jetstream2.
         df -h ${mountPoint}
 
     The full output should be in ``/home/exouser/lulc_full_output``.
+
+  .. include:: lulc/common/metplus.rst
