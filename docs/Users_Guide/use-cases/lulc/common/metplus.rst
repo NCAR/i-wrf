@@ -1,44 +1,44 @@
 
 .. dropdown:: Run METplus
 
-   .. dropdown:: Define Environment Variables for METplus
+  .. dropdown:: Define Environment Variables for METplus
 
-      Set environment variables to define paths and Docker image names::
+     Set environment variables to define paths and Docker image names::
 
-          METPLUS_IMAGE=ncar/iwrf-metplus:latest
-          OBS_DATA_VOL=lulc-input-obs-d03
-          OBS_DATA_IMAGE=ncar/iwrf-data:${OBS_DATA_VOL}.docker
-          METPLUS_OUTPUT=~/metplus_out
-          METPLUS_CONFIG_DIR=~/i-wrf/use_cases/Land_Use_Land_Cover/METplus
-          PLOT_SCRIPT_DIR=~/i-wrf/use_cases/Land_Use_Land_Cover/Visualization
+         METPLUS_IMAGE=ncar/iwrf-metplus:latest
+         OBS_DATA_VOL=lulc-input-obs-d03
+         OBS_DATA_IMAGE=ncar/iwrf-data:${OBS_DATA_VOL}.docker
+         METPLUS_OUTPUT=~/metplus_out
+         METPLUS_CONFIG_DIR=~/i-wrf/use_cases/Land_Use_Land_Cover/METplus
+         PLOT_SCRIPT_DIR=~/i-wrf/use_cases/Land_Use_Land_Cover/Visualization
 
-      The path to the WRF data to be read into METplus depends on how WRF was
-      run in the previous steps.
-      Set the **WRF_TOP_DIR** environment variable using one of the following approaches:
+     The path to the WRF data to be read into METplus depends on how WRF was
+     run in the previous steps.
+     Set the **WRF_TOP_DIR** environment variable using one of the following approaches:
 
-      If the Control simulation was run, set::
+     If the Control simulation was run, set::
 
-         WRF_TOP_DIR=${WRF_OUTPUT}/ctl
+        WRF_TOP_DIR=${WRF_OUTPUT}/ctl
 
-      If the DFW 4x simulation was run, set::
+     If the DFW 4x simulation was run, set::
 
-         WRF_TOP_DIR=${WRF_OUTPUT}/dfw4x
+        WRF_TOP_DIR=${WRF_OUTPUT}/dfw4x
 
-      If the WRF simulation was not run and the output was obtained via Ceph, set::
+     If the WRF simulation was not run and the output was obtained via Ceph, set::
 
-         WRF_TOP_DIR=~/lulc_full_output
+        WRF_TOP_DIR=~/lulc_full_output
 
 
-   .. dropdown:: Get METplus Docker Images
+  .. dropdown:: Get METplus Docker Images
 
-      The METplus software and observation data are both available on DockerHub.
-      Run commands to pull the images and create the Docker data volume::
+     The METplus software and observation data are both available on DockerHub.
+     Run commands to pull the images and create the Docker data volume::
 
-          sudo docker pull ${METPLUS_IMAGE}
-          sudo docker pull ${OBS_DATA_IMAGE}
-          sudo docker create --name ${OBS_DATA_VOL} ${OBS_DATA_IMAGE}
+         sudo docker pull ${METPLUS_IMAGE}
+         sudo docker pull ${OBS_DATA_IMAGE}
+         sudo docker create --name ${OBS_DATA_VOL} ${OBS_DATA_IMAGE}
 
-  .. dropdown:: Run METplus
+  .. dropdown:: Run METplus Verification
 
     The LULC use case includes verification for two meteorological variables:
     accumulated precipitation and radar reflectivity.
