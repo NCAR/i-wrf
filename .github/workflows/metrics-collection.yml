@@ -19,15 +19,18 @@ jobs:
     steps:
       # Step 1: Checkout main branch to get the Python script
       - name: Checkout main branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: main
           path: main
+          sparse-checkout: |
+            .github/scripts/collect_metrics_github.py
+            .github/scripts/collect_metrics_dockerhub.py
 
       # Step 2: Try to checkout existing metrics branch
       - name: Checkout metrics branch
         id: checkout-metrics
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: metrics
           path: metrics
@@ -47,16 +50,22 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
-          python-version: '3.11'
+          python-version: '3.13'
+      - run: pip install requests
 
-      - name: Collect metrics
+      - name: Collect metrics from GitHub
         env:
           GH_TOKEN: ${{ secrets.METRICS_PAT }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           METRICS_DIR: ${{ github.workspace }}/metrics
-        run: python main/.github/scripts/collect_metrics.py
+        run: python main/.github/scripts/collect_metrics_github.py
+
+      - name: Collect metrics from DockerHub
+        env:
+          METRICS_DIR: ${{ github.workspace }}/metrics
+        run: python main/.github/scripts/collect_metrics_dockerhub.py
 
       - name: Commit and push metrics
         env:

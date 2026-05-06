@@ -7,7 +7,7 @@ and stores them in CSV files for historical tracking. It uses the GitHub CLI
 (gh) for authenticated API calls.
 
 Usage:
-    GH_TOKEN=<token> python collect_metrics.py
+    GH_TOKEN=<token> python collect_metrics_github.py
 
 Requirements:
     - GitHub CLI (gh) installed and available in PATH
