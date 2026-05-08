@@ -12,6 +12,13 @@ The integrated framework and container features is tested and validated on the l
 
 On the other end of the computational spectrum, these exact same containers serve as the vehicles for introducing students to numerical atmospheric simulations and output evaluation at WRF and METplus tutorials and in classroom curricula at universities.
 
+To get started, begin by reviewing the `User's Guide documentation <https://i-wrf.readthedocs.io/en/latest/Users_Guide/index.html>`_.
+
+User Support
+------------
+
+The `I-WRF GitHub Discussions Forum <https://github.com/NCAR/i-wrf/discussions>`_ is a place for questions, answers, and discussions concerning I-WRF. Users are encouraged to visit the Discussions Forum page to leave comments, ask I-WRF related questions, provide suggestions for future development, as well as report any bugs that are encountered when using the I-WRF framework.
+
 Acronyms
 --------
 
@@ -21,7 +28,15 @@ Acronyms
 * **RAL** - Research Applications Lab
 
 .. toctree::
-   :hidden:
-   :caption: I-WRF
+   :titlesonly:
+   :maxdepth: 2 
+   :numbered: 4
 
-   Users_Guide/index
+   Users_Guide/overview
+   Users_Guide/release-notes
+   Users_Guide/compute-platform 
+   Users_Guide/getting-started
+   Users_Guide/configuration
+   Users_Guide/use-cases/index
+   Users_Guide/customization
+   Users_Guide/references

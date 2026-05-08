@@ -46,6 +46,5 @@ Research Using an Integrated WRF Modeling, Visualization, and Verification Frame
    configuration
    use-cases/index
    customization
-   glossary
    references
 
