@@ -136,3 +136,18 @@ to secure access to and log in to Jetstream2.
     The full output should be in ``/home/exouser/lulc_full_output``.
 
   .. include:: lulc/common/metplus.rst
+
+  .. dropdown:: View the Plotted Simulation Results
+  
+    The METplus container also plots the results of the simulation, outputting them as PNG images.
+    To view these images:
+  
+    * Find the desktop shortcut "Files" on the left side of the desktop and click it to open a file browser.
+    * Double-click on the following folders in order: metplus_out, met_plot, and either apcp or refc.
+    * Double-click on the image files in the folder, which opens an image viewing application.
+    * Click the Maximize button in the upper right to increase the viewer to full size.
+    * Click the button in the middle of the right side of the image to advance to the next image.
+  
+  When you are finished running simulations and viewing their results,
+  you can close the web browser tab containing your Web Desktop.
+  Then, return to the Exosphere dashboard to manage your instance so it does not incur further charges.

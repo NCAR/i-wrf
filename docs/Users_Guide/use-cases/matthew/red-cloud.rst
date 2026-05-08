@@ -144,7 +144,18 @@ and then pasted into your web shell by right-clicking.
     These files contain tabular output that can be viewed in a text editor. Turn off word wrapping for better viewing.
     Refer to the MET User's Guide for more information about the
     `Point-Stat output <https://met.readthedocs.io/en/latest/Users_Guide/point-stat.html#point-stat-output>`_.
-    In the near future, this exercise will be extended to include instructions to visualize the results.
+
+  .. dropdown:: View the Plotted Simulation Results
+  
+    The METplus container also plots the results of the simulation, outputting them as PNG images.
+    To view these images:
+
+    * Disconnect from the instance and reconnect using SSH with X11 forwarding enabled by running ``ssh -X ubuntu@<instance-ip>``. The ``-X`` option enables X11 forwarding, which allows images to be displayed on your local screen. Note that you must also have an X server running on your local machine (XQuartz on macOS or Xming on Windows).
+    * Install the ``feh`` image viewer on the instance by running ``sudo apt update`` followed by ``sudo apt install feh``. This installation only needs to be done once.
+    * Navigate to the plots folder: ``cd ~/metplus_out/wrf/20161006_00/plots``.
+    * Open all the images in the folder by running ``feh .``.
+    * Press the right arrow key to advance to the next image or the left arrow key to go back.
+    * Press ``q`` to quit the viewer.
   
 Refer back to the **Managing a Red Cloud Instance** section of the :ref:`compute-platform-red-cloud`
 instructions to avoid unneccessary computing costs.
