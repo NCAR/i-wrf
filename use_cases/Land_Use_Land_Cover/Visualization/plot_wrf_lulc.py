@@ -960,6 +960,9 @@ def parse_args():
     out_dir_parent = pathlib.Path(out_dir_parent)
     nexrad_dir = pathlib.Path(nexrad_dir)
 
+    # Create output directory if necessary
+    out_dir_parent.mkdir(exist_ok=True, parents=True)
+
     if len(init_dt) != 11:
         print('ERROR! Incorrect length for positional argument init_dt. Exiting!')
         parser.print_help()
