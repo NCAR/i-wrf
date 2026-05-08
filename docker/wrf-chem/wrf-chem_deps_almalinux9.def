@@ -1,0 +1,261 @@
+Bootstrap: docker
+From: almalinux:9
+
+%labels
+    Author V. Weeks
+    Version 1.0
+    Description WRF-Chem dependencies layer for AlmaLinux 9 (HDF5 1.14.5, NetCDF-C 4.9.3, NetCDF-Fortran 4.6.2)
+
+%post
+    # ============================================================================
+    # System Prep
+    # Updates and initalizes packages
+    # ============================================================================
+
+    # Full system update
+    dnf -y update
+    dnf -y clean all
+
+    # Enable EPEL and CRB (CodeReady Builder) repositories
+    dnf -y install epel-release
+    dnf config-manager --set-enabled crb
+
+    # Install Development Tools group
+    dnf -y groupinstall "Development Tools"
+
+    # Install compilers
+    dnf -y install \
+        gcc \
+	gcc-gfortran \
+	gcc-c++
+
+    # Install build tools (--allowerasing replaces curl-minimal with full curl)
+    dnf -y install --allowerasing \
+        make \
+	cmake \
+	m4 \
+	perl \
+	csh tcsh \
+	git \
+	wget \
+	curl \
+	libcurl \
+	libcurl-devel \
+	time \
+        file \
+        which \
+        hostname
+
+    # Install development libraries
+    dnf -y install \
+        openmpi \
+        openmpi-devel \
+        jasper \
+	jasper-libs \
+        jasper-devel \
+        libpng \
+        libpng-devel \
+        zlib \
+        zlib-devel \
+	zlib-static \
+        libxml2 \
+        libxml2-devel \
+        flex \
+	libfl-static \
+        bison \
+	bison-devel \
+	bison-runtime \
+        byacc
+
+    # Install Python 3 with pip and scientific packages
+    dnf -y install python3 python3-pip python3-devel
+    pip3 install --upgrade pip
+    pip3 install numpy pyyaml
+
+    # Install additional packages
+    dnf -y install rsync
+
+    # Clean up
+    dnf clean all
+    rm -rf /var/cache/dnf/*
+    
+    # ============================================================================
+    # WRF Dependencies Layer
+    # Builds HDF5 and NetCDF libraries from source in /opt/wrf-deps
+    # ============================================================================
+
+    set -e
+
+    # Versions
+    HDF5_VERSION=1.14.5
+    NETCDF_C_VERSION=4.9.3
+    NETCDF_FORTRAN_VERSION=4.6.2
+
+    # Installation prefix
+    PREFIX=/opt/wrf-deps
+
+    # Build directory
+    BUILD_DIR=/tmp/build
+    mkdir -p $BUILD_DIR $PREFIX
+
+    # Setup environment for build
+    export PATH=/usr/lib64/openmpi/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/lib64/openmpi/lib:$LD_LIBRARY_PATH
+    export CC=gcc
+    export FC=gfortran
+    export F77=gfortran
+    export CXX=g++
+
+    # ============================================================================
+    # Build HDF5 1.14.5
+    # ============================================================================
+    echo "=========================================="
+    echo "Building HDF5 ${HDF5_VERSION}"
+    echo "=========================================="
+
+    cd $BUILD_DIR
+    wget -q https://github.com/HDFGroup/hdf5/releases/download/hdf5_${HDF5_VERSION}/hdf5-${HDF5_VERSION}.tar.gz
+    tar xzf hdf5-${HDF5_VERSION}.tar.gz
+    cd hdf5-${HDF5_VERSION}
+
+    ./configure \
+        --prefix=$PREFIX \
+        --enable-fortran \
+        --enable-shared \
+        --enable-static \
+        --enable-hl \
+        --with-zlib
+
+    make -j$(nproc)
+    make install
+
+    # Update environment for NetCDF build
+    export PATH=$PREFIX/bin:$PATH
+    export LD_LIBRARY_PATH=$PREFIX/lib:$LD_LIBRARY_PATH
+    export CPPFLAGS="-I$PREFIX/include"
+    export LDFLAGS="-L$PREFIX/lib"
+
+    # ============================================================================
+    # Build NetCDF-C 4.9.3
+    # ============================================================================
+    echo "=========================================="
+    echo "Building NetCDF-C ${NETCDF_C_VERSION}"
+    echo "=========================================="
+
+    cd $BUILD_DIR
+    wget -q https://downloads.unidata.ucar.edu/netcdf-c/${NETCDF_C_VERSION}/netcdf-c-${NETCDF_C_VERSION}.tar.gz
+    tar xzf netcdf-c-${NETCDF_C_VERSION}.tar.gz
+    cd netcdf-c-${NETCDF_C_VERSION}
+
+    ./configure \
+        --prefix=$PREFIX \
+        --enable-shared \
+        --enable-static \
+        --enable-netcdf-4 \
+        --disable-dap
+
+    make -j$(nproc)
+    make install
+
+    # ============================================================================
+    # Build NetCDF-Fortran 4.6.2
+    # ============================================================================
+    echo "=========================================="
+    echo "Building NetCDF-Fortran ${NETCDF_FORTRAN_VERSION}"
+    echo "=========================================="
+
+    cd $BUILD_DIR
+    wget -q https://downloads.unidata.ucar.edu/netcdf-fortran/${NETCDF_FORTRAN_VERSION}/netcdf-fortran-${NETCDF_FORTRAN_VERSION}.tar.gz
+    tar xzf netcdf-fortran-${NETCDF_FORTRAN_VERSION}.tar.gz
+    cd netcdf-fortran-${NETCDF_FORTRAN_VERSION}
+
+    ./configure \
+        --prefix=$PREFIX \
+        --enable-shared \
+        --enable-static
+
+    make -j$(nproc)
+    make install    
+
+    # ============================================================================
+    # Cleanup
+    # ============================================================================
+    rm -rf $BUILD_DIR
+    cd /
+
+    # Verify installation
+    echo "=========================================="
+    echo "Verifying installation"
+    echo "=========================================="
+    ls -la $PREFIX/lib/libhdf5* || echo "WARNING: HDF5 libraries not found"
+    ls -la $PREFIX/lib/libnetcdf* || echo "WARNING: NetCDF libraries not found"
+    $PREFIX/bin/nc-config --all || echo "WARNING: nc-config failed"
+    $PREFIX/bin/nf-config --all || echo "WARNING: nf-config failed"
+
+%environment
+    export LC_ALL=C
+    export LANG=C
+
+    # WRF Dependencies paths
+    export WRF_DEPS=/opt/wrf-deps
+    export PATH=$WRF_DEPS/bin:$PATH
+    export LD_LIBRARY_PATH=$WRF_DEPS/lib:$LD_LIBRARY_PATH
+
+    # HDF5
+    export HDF5=$WRF_DEPS
+    export HDF5_DIR=$WRF_DEPS
+
+    # NetCDF (combined C and Fortran)
+    export NETCDF=$WRF_DEPS
+    export NETCDF_DIR=$WRF_DEPS
+
+    # OpenMPI paths
+    export PATH=/usr/lib64/openmpi/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/lib64/openmpi/lib:$LD_LIBRARY_PATH
+    export MPI_ROOT=/usr/lib64/openmpi
+
+    # JasPer for GRIB2
+    export JASPERLIB=/usr/lib64
+    export JASPERINC=/usr/include/jasper
+
+    # YACC and flex (required for KPP)
+    export YACC='yacc -d'
+    export FLEX_LIB_DIR=/usr/lib64
+
+%runscript
+    echo "WRF-Chem Dependencies Container - AlmaLinux 9"
+    echo ""
+    echo "HDF5 version: 1.14.5"
+    echo "NetCDF-C version: 4.9.3"
+    echo "NetCDF-Fortran version: 4.6.2"
+    echo ""
+    echo "Environment variables set:"
+    echo "  NETCDF=$NETCDF"
+    echo "  HDF5=$HDF5"
+    echo "  YACC=$YACC"
+    echo "  FLEX_LIB_DIR=$FLEX_LIB_DIR"
+    exec /bin/bash "$@"
+
+%help
+    WRF-Chem Dependencies Container built on AlmaLinux 9
+
+    This container includes:
+    - Full system update with EPEL and CRB repositories
+
+    - Development Tools group
+    - GCC compilers (gcc, gfortran, g++)
+    - Build tools (make, cmake, m4, perl, tcsh, git, wget, curl)
+    - Development libraries (zlib, libpng, libcurl, jasper)
+    - Python 3 with pip, numpy, pyyaml   
+    
+    - HDF5 1.14.5 (with Fortran support)
+    - NetCDF-C 4.9.3
+    - NetCDF-Fortran 4.6.2
+    - OpenMPI (system package)
+    - JasPer, libpng, zlib (GRIB2 support)
+    - flex, bison, byacc (for KPP)
+
+    All libraries installed to: /opt/wrf-deps
+
+    Build with:
+        apptainer build --fakeroot wrf-chem_deps_almalinux9.sif wrf-chem_deps_almalinux9.def

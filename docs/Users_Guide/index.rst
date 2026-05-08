@@ -24,7 +24,10 @@ governing permissions and limitations under the License.
 
 **Citations**
 
-The citation for this User's Guide should be:
+Instructions for citing the use of this software can be found at
+
+https://zenodo.org/records/17834009
+
 
 **Acknowledgments**
 
@@ -33,24 +36,16 @@ Research Using an Integrated WRF Modeling, Visualization, and Verification Frame
 
 .. toctree::
    :titlesonly:
+   :maxdepth: 2 
    :numbered: 4
 
    overview
    release-notes
-   gettingstarted
+   compute-platform 
+   getting-started
    configuration
-   running
-   usecases
+   use-cases/index
    customization
    glossary
    references
 
-.. only:: html
-
-   Indices and tables
-   ==================
-
-   * :ref:`genindex`
-   * :ref:`search`
-
-      
