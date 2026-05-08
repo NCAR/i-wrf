@@ -51,7 +51,8 @@
           -v ${PLOT_SCRIPT_DIR}:/plot_scripts \
           -v ${WRF_TOP_DIR}:/data/input/wrf \
           -v ${METPLUS_OUTPUT}:/data/output ${METPLUS_IMAGE} \
-          /metplus/METplus/ush/run_metplus.py /config/GridStat_apcp_lulc.conf
+          /metplus/METplus/ush/run_metplus.py /config/GridStat_apcp_lulc.conf \
+          config.FCST_PCP_COMBINE_INPUT_TEMPLATE="wrfout_d03_{valid?fmt=%Y-%m-%d_%H:%M}:*"
 
     Run the reflectivity verification::
 
@@ -61,7 +62,8 @@
           -v ${PLOT_SCRIPT_DIR}:/plot_scripts \
           -v ${WRF_TOP_DIR}:/data/input/wrf \
           -v ${METPLUS_OUTPUT}:/data/output ${METPLUS_IMAGE} \
-          /metplus/METplus/ush/run_metplus.py /config/GridStat_refc_lulc.conf
+          /metplus/METplus/ush/run_metplus.py /config/GridStat_refc_lulc.conf \
+          config.FCST_GRID_STAT_INPUT_TEMPLATE="wrfout_d03_{valid?fmt=%Y-%m-%d_%H:%M}:*"
 
   .. dropdown:: View the Plotted Simulation Results
 
