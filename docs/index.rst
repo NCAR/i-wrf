@@ -30,7 +30,6 @@ Acronyms
 .. toctree::
    :titlesonly:
    :maxdepth: 2 
-   :numbered: 4
 
    Users_Guide/overview
    Users_Guide/release-notes
