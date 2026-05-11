@@ -31,6 +31,7 @@ Acronyms
    :titlesonly:
    :maxdepth: 2 
 
+   Users_Guide/index
    Users_Guide/overview
    Users_Guide/release-notes
    Users_Guide/compute-platform 
