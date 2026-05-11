@@ -28,7 +28,6 @@ Acronyms
 * **RAL** - Research Applications Lab
 
 .. toctree::
-   :titlesonly:
    :maxdepth: 2 
 
    Users_Guide/index

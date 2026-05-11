@@ -20,7 +20,7 @@ print(sys.path)
 project = 'i-wrf'
 author = 'UCAR/NCAR and Cornell University'
 author_list = 'Empty List'
-version = 'alpha'
+version = '0.3'
 verinfo = version
 release = f'{version}'
 release_year = '2023'
