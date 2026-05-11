@@ -138,3 +138,20 @@ to secure access to and log in to Red Cloud.
         df -h ${mountPoint}
 
     The full output should be in ``/home/ubuntu/lulc_full_output``.
+
+  .. include:: lulc/common/metplus.rst
+
+  .. dropdown:: View the Plotted Simulation Results
+  
+    The METplus container also plots the results of the simulation, outputting them as PNG images.
+    To view these images:
+
+    * Disconnect from the instance and reconnect using SSH with X11 forwarding enabled by running ``ssh -X ubuntu@<instance-ip>``. The ``-X`` option enables X11 forwarding, which allows images to be displayed on your local screen. Note that you must also have an X server running on your local machine (XQuartz on macOS or Xming on Windows).
+    * Install the ``feh`` image viewer on the instance by running ``sudo apt update`` followed by ``sudo apt install feh``. This installation only needs to be done once.
+    * Navigate to the plots folder: ``cd ~/metplus_out/met_plot/apcp`` or ``cd ~/metplus_out/met_plot/refc``.
+    * Open all the images in the folder by running ``feh .``.
+    * Press the right arrow key to advance to the next image or the left arrow key to go back.
+    * Press ``q`` to quit the viewer.
+
+Refer back to the **Managing a Red Cloud Instance** section of the :ref:`compute-platform-red-cloud`
+instructions to avoid unneccessary computing costs.
