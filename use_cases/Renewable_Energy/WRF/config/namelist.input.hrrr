@@ -97,6 +97,8 @@
  ra_sw_physics                       = 4,     4, 
  radt                                = 10,    10, 
  swint_opt                           = 2,
+ couple_farms                        = .true.,
+ ra_sw_eclipse                       = 1,
  slope_rad                           = 1,     1,     1,
  topo_shading                        = 1,     1,     1,
  topo_wind                           = 0,     0,     0,
