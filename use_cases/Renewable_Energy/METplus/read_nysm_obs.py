@@ -74,7 +74,7 @@ def dataframe_to_met_format(args: Namespace, df, message_type: str) -> Any:
     print_debug(args.debug, "Reformat and add columns to match MET format")
     df['typ'] = message_type
     df['lvl'] = 0
-    df['hgt'] = 0
+    df['hgt'] = df['elevation']
     df['qc'] = 'NYSM'
     df.rename(columns={
         'station': 'sid',
@@ -148,3 +148,4 @@ def read_station_file(station_file: str):
     return df
 
 point_data = main()
+print(f"Read {len(point_data)} observations")
