@@ -56,11 +56,11 @@ Now, set the input template for the input file, as well as the template for the 
 
 To avoid having this mask be overwritten each time the initialization time is incremented, add the **GEN_VX_MASK_SKIP_IF_OUTPUT_EXISTS** setting to the configuration file. This will allow GenVxMask to skip file creation if it detects that the mask file already exists. It should be set as follows:
 
-  **GEN_VX_MASK_SKIP_IF_OUTPUT_EXISTS = True**
+  **GEN_VX_MASK_SKIP_IF_OUTPUT_EXISTS** = *True*
 
 Now, add the latitude and longitude values of focus, as well as a proper **-type** flag so the GenVxMask tool knows what type of mask to create. This is completed through the **GEN_VX_MASK_OPTIONS** setting. The latitude and longitude bounds can be set as desired; for the purposes of this exercise, they are set to the following:
 
-  **GEN_VX_MASK_OPTIONS = -type lat,lon -thresh ge12&&le36, le-57&&ge-81**
+  **GEN_VX_MASK_OPTIONS** = *-type lat,lon -thresh ge12&&le36, le-57&&ge-81*
 
 This example restricts the masking region between latitude values of 12 and 36 degrees North, and longitude values of -57 and -81 degrees West. 
 
