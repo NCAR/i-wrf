@@ -70,3 +70,13 @@ Now run the use case as described. You should find that the WRF plots and METplu
 
 Currently this use case generates continuous statistics, as well as wind field statistics. By adding thresholds to any of the variable fields, categorical statistics can be requested. These statistics can provide new and insightful information on how the chosen category of forecast values performed against observational data, allowing fine-tuning of model runs.
 
+This customization would include the changes described below.
+
+Requesting that categorical output line types be created:
+
+  **POINT_STAT_OUTPUT_FLAG_CTC** = *BOTH*
+  **POINT_STAT_OUTPUT_FLAG_CTS** = *BOTH*
+  
+Specifying one or more categorical thresholds to be applied to both the forecast and observation temperature data in Kelvin:
+
+  **BOTH_VAR1_THRESH** = *>273.15,>285,>290*
