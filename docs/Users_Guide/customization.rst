@@ -16,13 +16,13 @@ Hurricane Matthew
 
 For this customized change, updating the physics suite will have a noticable impact on the final output of the use case. This is due to each physics suite having its own physics packages associated with it, and how those packages will ultimately influence the entire life cycle of the hurricane.
 
-In the "namelist.input" file, update 
+In the **use_cases/Hurricane_Matthew/WRF/namelist.input** file, update
 
-  physics_suite = 'CONUS'
+  **physics_suite** = *'CONUS'*
 
 to the following
 
-  physics_suite = 'tropical'
+  **physics_suite** = *'tropical'*
 
 After this adjustment, run the use case as described. You should find that the WRF plots and METplus statistical output has changed.
 
@@ -36,7 +36,8 @@ Hurricane Matthew
 
 1. Create A Mask For Regional Focus Using GenVxMask
 
-Currently, this use case utilizes the entire forecast domain area for verification. This can be seen in the setting
+Currently, this use case utilizes the entire forecast domain area for verification.
+In the **use_cases/Hurricane_Matthew/METplus/PointStat_matthew.conf** file, this can be seen in the setting
 
   POINT_STAT_MASK_GRID = FULL
 
@@ -44,7 +45,7 @@ Sometimes meaningful details in large-scale events like a hurricane can be lost 
 
 Begin by adding an instance of GenVxMask to the PROCESS_LIST, ensuring that it is added before any PointStat instances are run. It should look like the following:
 
-  PROCESS_LIST = MADIS2NC(metar), MADIS2NC(raob), **GenVxMask**, PointStat(surface), PointStat(upper_air), UserScript(wrf_plot), UserScript(metplotpy)
+  PROCESS_LIST = **GenVxMask**, MADIS2NC(metar), MADIS2NC(raob), PointStat(surface), PointStat(upper_air), UserScript(wrf_plot), UserScript(metplotpy)
 
 Now, set the input template for the input file, as well as the template for the mask file. Be sure to also create an output template for the resulting mask file. Since the mask will be created from latitude and longitude points, the mask file template is ignored by METplus (but must still exist!). The additions should look like this:
 
@@ -60,17 +61,21 @@ To avoid having this mask be overwritten each time the initialization time is in
 
 Now, add the latitude and longitude values of focus, as well as a proper **-type** flag so the GenVxMask tool knows what type of mask to create. This is completed through the **GEN_VX_MASK_OPTIONS** setting. The latitude and longitude bounds can be set as desired; for the purposes of this exercise, they are set to the following:
 
-  **GEN_VX_MASK_OPTIONS** = *-type lat,lon -thresh ge12&&le36,le-57&&ge-81*
+  **GEN_VX_MASK_OPTIONS** = *-type lat -thresh ge12&&le36 -type lon -thresh le-57&&ge-81 -name LATLON_MASK*
 
 This example restricts the masking region between latitude values of 12 and 36 degrees North, and longitude values of -57 and -81 degrees West. 
 
-Now run the use case as described. You should find that the WRF plots and METplus statistical output has changed. Changing the latitude and longitude bounds will result in different output; take some time to adjust the values to see the end result.
+Lastly, configure PointStat to use the masking region created by GenVxMask:
+
+  **POINT_STAT_MASK_POLY** = *{GEN_VX_MASK_OUTPUT_TEMPLATE}*
+
+Now run the METplus portion of the Hurricane Matthew use case as described. You should find that the METplus output files now also contain statistics for the **LATLON_MASK** region.
 
 2. Create Thresholds For TMP Variable For Categorical Statistics 
 
 Currently this use case generates continuous statistics, as well as wind field statistics. By adding thresholds to any of the variable fields, categorical statistics can be requested. These statistics can provide new and insightful information on how the chosen category of forecast values performed against observational data, allowing fine-tuning of model runs.
 
-This customization would include the changes described below.
+In the **use_cases/Hurricane_Matthew/METplus/PointStat_matthew.conf** file, this customization would include the following changes.
 
 Requesting that categorical output line types be created:
 
@@ -81,3 +86,5 @@ Requesting that categorical output line types be created:
 Specifying one or more categorical thresholds to be applied to both the forecast and observation temperature data in Kelvin:
 
   **BOTH_VAR1_THRESH** = *>273.15,>285,>290*
+
+Now run the METplus portion of the Hurricane Matthew use use case as described. You should find that the METplus statistical output now contains the **CTC** and **CTS** categorical line types.
