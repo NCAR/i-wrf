@@ -75,6 +75,7 @@ This customization would include the changes described below.
 Requesting that categorical output line types be created:
 
   **POINT_STAT_OUTPUT_FLAG_CTC** = *BOTH*
+
   **POINT_STAT_OUTPUT_FLAG_CTS** = *BOTH*
   
 Specifying one or more categorical thresholds to be applied to both the forecast and observation temperature data in Kelvin:

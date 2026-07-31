@@ -26,7 +26,7 @@ right corner and then pasted into your web shell by right-clicking.
     NCAR HPC systems use environment modules to manage software.
     Load the Apptainer module which provides the containerization software needed to run WRF and METplus::
 
-        module load charliecloud apptainer gcc cuda ncarcompilers
+        module load ncarenv/24.12 charliecloud apptainer gcc cuda ncarcompilers
 
   .. dropdown:: Define Working Directory
 
@@ -184,7 +184,7 @@ right corner and then pasted into your web shell by right-clicking.
     Once the interactive job has started,
     the run script can be called inside the container to run WRF::
 
-        module load charliecloud apptainer gcc cuda ncarcompilers
+        module load ncarenv/24.12 charliecloud apptainer gcc cuda ncarcompilers
         apptainer exec ${WORKING_DIR}/iwrf_latest.sif /tmp/hurricane_matthew/run.sh
 
 
