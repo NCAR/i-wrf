@@ -87,4 +87,4 @@ Specifying one or more categorical thresholds to be applied to both the forecast
 
   **BOTH_VAR1_THRESH** = *>273.15,>285,>290*
 
-Now run the METplus portion of the Hurricane Matthew use use case as described. You should find that the METplus statistical output now contains the **CTC** and **CTS** categorical line types.
+Now run the METplus portion of the Hurricane Matthew use case as described. You should find that the METplus statistical output now contains the **CTC** and **CTS** categorical line types.
