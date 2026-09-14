@@ -77,7 +77,8 @@ With your NCAR HPC account active and you logged in to the system, you can now s
 
         apptainer pull ${IWRF_WORK_DIR}/iwrf-metplus.sif docker://ncar/iwrf-metplus:latest
         apptainer pull ${IWRF_WORK_DIR}/data-lulc-input-obs.sif oras://registry-1.docker.io/ncar/iwrf-data:lulc-input-obs-d03.apptainer
-        apptainer pull ${IWRF_WORK_DIR}/data-lulc-input-wrf.sif oras://registry-1.docker.io/ncar/iwrf-data:lulc-input-wrf-d03.apptainer
+        apptainer pull ${IWRF_WORK_DIR}/data-lulc-input-wrf-dfw4x.sif oras://registry-1.docker.io/ncar/iwrf-data:lulc-input-wrf-dfw4x-d03.apptainer
+        apptainer pull ${IWRF_WORK_DIR}/data-lulc-input-wrf-ctl.sif oras://registry-1.docker.io/ncar/iwrf-data:lulc-input-wrf-ctl-d03.apptainer
 
     These commands download three container images: the METplus software, the observational data, and the WRF simulation data. Processing the METplus software can take up to 15 minutes and the data containers can take several minutes each.
 
@@ -94,12 +95,13 @@ With your NCAR HPC account active and you logged in to the system, you can now s
 
     Next, configure the Apptainer bind mounts. This environment variable tells Apptainer how to map local directories and container images to paths inside the running container::
 
-        export APPTAINER_BIND="${IWRF_WORK_DIR}/data-lulc-input-obs.sif:/data/input/obs:image-src=/,${LOCAL_METPLUS_CONFIG_DIR}:/config,${IWRF_WORK_DIR}/data-lulc-input-wrf.sif:/data/input/wrf:image-src=/,${LOCAL_OUTPUT_DIR}:/data/output,${LOCAL_PLOT_SCRIPT_DIR}:/plot_scripts,${APPTAINER_TMPDIR}:${APPTAINER_TMPDIR}"
+        export APPTAINER_BIND="${IWRF_WORK_DIR}/data-lulc-input-obs.sif:/data/input/obs:image-src=/,${LOCAL_METPLUS_CONFIG_DIR}:/config,${IWRF_WORK_DIR}/data-lulc-input-wrf-dfw4x.sif:/data/input/wrf/dfw4x:image-src=/,${IWRF_WORK_DIR}/data-lulc-input-wrf-ctl.sif:/data/input/wrf/ctl:image-src=/,${LOCAL_OUTPUT_DIR}:/data/output,${LOCAL_PLOT_SCRIPT_DIR}:/plot_scripts,${APPTAINER_TMPDIR}:${APPTAINER_TMPDIR}"
 
     This configuration provides the container with access to:
 
     * Observational data from the ``data-lulc-input-obs.sif`` container image at ``/data/input/obs``
-    * WRF simulation data from the ``data-lulc-input-wrf.sif`` container image at ``/data/input/wrf``
+    * WRF Dallas Fort Worth 4x simulation data from the ``data-lulc-input-wrf-dfw4x.sif`` container image at ``/data/input/wrf/dfw4x``
+    * WRF Control simulation data from the ``data-lulc-input-wrf-ctl.sif`` container image at ``/data/input/wrf/ctl``
     * METplus configuration files from the I-WRF repository at ``/config``
     * Visualization script files for generating plots at ``/plot_scripts``
     * Output directory for writing verification results at ``/data/output``
