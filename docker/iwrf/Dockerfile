@@ -59,20 +59,34 @@ RUN echo '*    soft    stack    unlimited' >> /etc/security/limits.conf
 # Download source
 RUN mkdir -p /opt/src
 WORKDIR /opt/src
-RUN wget https://www.wrfcloud.com/libs/cmake-3.25.0-rc3.tar.gz
-RUN wget https://www.wrfcloud.com/libs/eccodes-2.27.0.tar.gz
-RUN wget https://www.wrfcloud.com/libs/g2clib-1.6.0-patch.tar.gz
-RUN wget https://www.wrfcloud.com/libs/jasper-1.900.1.tar.gz
-RUN wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.10/src/hdf5-1.10.10.tar.gz
-RUN wget https://www.wrfcloud.com/libs/libaec-v1.0.6.tar.gz
-RUN wget https://www.wrfcloud.com/libs/libpng-1.2.50.tar.gz
-RUN wget https://www.wrfcloud.com/libs/ncview-2.1.7.tar.gz
-RUN wget https://www.wrfcloud.com/libs/netcdf-4.7.3.tar.gz
-RUN wget https://www.wrfcloud.com/libs/netcdf-cxx-4.3.1.tar.gz
-RUN wget https://www.wrfcloud.com/libs/netcdf-fortran-4.5.2.tar.gz
-RUN wget https://www.wrfcloud.com/libs/szip-2.1.1.tar.gz
-RUN wget https://www.wrfcloud.com/libs/zlib-1.2.11.tar.gz
-RUN wget https://downloads.unidata.ucar.edu/udunits/2.2.28/udunits-2.2.28.tar.gz
+RUN wget -q https://www.wrfcloud.com/libs/cmake-3.25.0-rc3.tar.gz && \
+    echo "780397ce9e721df560312dc03e78c00ce012e8c4f038730d9dce8f926e8732dc  cmake-3.25.0-rc3.tar.gz" | sha256sum -c -
+RUN wget -q https://www.wrfcloud.com/libs/eccodes-2.27.0.tar.gz && \
+    echo "ede5b3ffd503967a5eac89100e8ead5e16a881b7585d02f033584ed0c4269c99  eccodes-2.27.0.tar.gz" | sha256sum -c -
+RUN wget -q https://www.wrfcloud.com/libs/g2clib-1.6.0-patch.tar.gz && \
+    echo "ec79fb768ce9e45ca6c2c94fa4dfc99b30600d7f8f44d272cdb36ab542d59468  g2clib-1.6.0-patch.tar.gz" | sha256sum -c -
+RUN wget -q https://www.wrfcloud.com/libs/jasper-1.900.1.tar.gz && \
+    echo "5a7b15aa653280c3e2f0a5b03b26e42fab7b56afa9fef56f485138d9b72b3e19  jasper-1.900.1.tar.gz" | sha256sum -c -
+RUN wget -q https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.10/src/hdf5-1.10.10.tar.gz && \
+    echo "a6877ab7bd5d769d2d68618fdb54beb50263dcc2a8c157fe7e2186925cdb02db  hdf5-1.10.10.tar.gz" | sha256sum -c -
+RUN wget -q https://www.wrfcloud.com/libs/libaec-v1.0.6.tar.gz && \
+    echo "2675d26b24a081cdaaa48e0d085632e568e3f85f843f62b91fc51e1b3f5fe93f  libaec-v1.0.6.tar.gz" | sha256sum -c -
+RUN wget -q https://www.wrfcloud.com/libs/libpng-1.2.50.tar.gz && \
+    echo "7af08caebdb148604c302e2b2c645f68f2c53deb74e48131632d65f23a2cc58b  libpng-1.2.50.tar.gz" | sha256sum -c -
+RUN wget -q https://www.wrfcloud.com/libs/ncview-2.1.7.tar.gz && \
+    echo "a14c2dddac0fc78dad9e4e7e35e2119562589738f4ded55ff6e0eca04d682c82  ncview-2.1.7.tar.gz" | sha256sum -c -
+RUN wget -q https://www.wrfcloud.com/libs/netcdf-4.7.3.tar.gz && \
+    echo "05d064a2d55147b83feff3747bea13deb77bef390cb562df4f9f9f1ce147840d  netcdf-4.7.3.tar.gz" | sha256sum -c -
+RUN wget -q https://www.wrfcloud.com/libs/netcdf-cxx-4.3.1.tar.gz && \
+    echo "e3fe3d2ec06c1c2772555bf1208d220aab5fee186d04bd265219b0bc7a978edc  netcdf-cxx-4.3.1.tar.gz" | sha256sum -c -
+RUN wget -q https://www.wrfcloud.com/libs/netcdf-fortran-4.5.2.tar.gz && \
+    echo "0b05c629c70d6d224a3be28699c066bfdfeae477aea211fbf034d973a8309b49  netcdf-fortran-4.5.2.tar.gz" | sha256sum -c -
+RUN wget -q https://www.wrfcloud.com/libs/szip-2.1.1.tar.gz && \
+    echo "21ee958b4f2d4be2c9cabfa5e1a94877043609ce86fde5f286f105f7ff84d412  szip-2.1.1.tar.gz" | sha256sum -c -
+RUN wget -q https://www.wrfcloud.com/libs/zlib-1.2.11.tar.gz && \
+    echo "c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1  zlib-1.2.11.tar.gz" | sha256sum -c -
+RUN wget -q https://downloads.unidata.ucar.edu/udunits/2.2.28/udunits-2.2.28.tar.gz && \
+    echo "590baec83161a3fd62c00efa66f6113cec8a7c461e3f61a5182167e0cc5d579e  udunits-2.2.28.tar.gz" | sha256sum -c -
 
 #COPY WPS.patch /tmp/WPS.patch
 COPY build_wrf.sh /tmp/build_wrf.sh
