@@ -1,0 +1,23 @@
+GRIB1| Level| From |  To  | metgrid  |  metgrid | metgrid                                 |GRIB2|GRIB2|GRIB2|GRIB2|
+Param| Type |Level1|Level2| Name     |  Units   | Description                             |Discp|Catgy|Param|Level|
+-----+------+------+------+----------+----------+-----------------------------------------+-----------------------+
+ 223 |   1  |   0  |      | CANWAT   | kg m-2   | Plant Canopy Surface Water              |  2  |  0  | 196 |   1 |
+ 144 | 111  |   0  |      | SOILM000 | fraction | Soil Moist   0 cm below ground          |  2  |  0  | 192 | 106 | 
+ 144 | 111  |   1  |      | SOILM001 | fraction | Soil Moist   1 cm below ground          |  2  |  0  | 192 | 106 |
+ 144 | 111  |   4  |      | SOILM004 | fraction | Soil Moist   4 cm below ground          |  2  |  0  | 192 | 106 |
+ 144 | 111  |  10  |      | SOILM010 | fraction | Soil Moist  10 cm below ground          |  2  |  0  | 192 | 106 |
+ 144 | 111  |  30  |      | SOILM030 | fraction | Soil Moist  30 cm below ground          |  2  |  0  | 192 | 106 |
+ 144 | 111  |  60  |      | SOILM060 | fraction | Soil Moist  60 cm below ground          |  2  |  0  | 192 | 106 |
+ 144 | 111  | 100  |      | SOILM100 | fraction | Soil Moist 100 cm below ground          |  2  |  0  | 192 | 106 |
+ 144 | 111  | 160  |      | SOILM160 | fraction | Soil Moist 160 cm below ground          |  2  |  0  | 192 | 106 |
+ 144 | 111  | 300  |      | SOILM300 | fraction | Soil Moist 300 cm below ground          |  2  |  0  | 192 | 106 |
+  85 | 111  |   0  |      | SOILT000 | K        | Soil Temp    0 cm below ground          |  2  |  0  |  2  | 106 |
+  85 | 111  |   1  |      | SOILT001 | K        | Soil Temp    1 cm below ground          |  2  |  0  |  2  | 106 |
+  85 | 111  |   4  |      | SOILT004 | K        | Soil Temp    4 cm below ground          |  2  |  0  |  2  | 106 |
+  85 | 111  |  10  |      | SOILT010 | K        | Soil Temp   10 cm below ground          |  2  |  0  |  2  | 106 |
+  85 | 111  |  30  |      | SOILT030 | K        | Soil Temp   30 cm below ground          |  2  |  0  |  2  | 106 |
+  85 | 111  |  60  |      | SOILT060 | K        | Soil Temp   60 cm below ground          |  2  |  0  |  2  | 106 |
+  85 | 111  | 100  |      | SOILT100 | K        | Soil Temp  100 cm below ground          |  2  |  0  |  2  | 106 |
+  85 | 111  | 160  |      | SOILT160 | K        | Soil Temp  160 cm below ground          |  2  |  0  |  2  | 106 |
+  85 | 111  | 300  |      | SOILT300 | K        | Soil Temp  300 cm below ground          |  2  |  0  |  2  | 106 |
+-----+------+------+------+----------+----------+-----------------------------------------+-----------------------+
