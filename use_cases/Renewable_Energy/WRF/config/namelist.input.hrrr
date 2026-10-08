@@ -28,7 +28,7 @@
  debug_level                         = 0,
  ncd_nofill                          = .true.,
  nwp_diagnostics                     = 0,
- iofields_filename                   = "/glade/work/jaredlee/nsf_i-wrf/i-wrf/use_cases/Renewable_Energy/WRF/config/iofields.txt",
+ iofields_filename                   = "/tmp/renewable_energy/iofields.txt",
  ignore_iofields_warning             = .true.,
  io_form_auxhist22                   = 2,
  auxhist22_interval                  = 15,    60,

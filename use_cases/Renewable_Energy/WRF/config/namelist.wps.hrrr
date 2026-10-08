@@ -5,7 +5,7 @@
  end_date   = '2025-04-09_06:00:00',
  interval_seconds = 3600,
  io_form_geogrid = 2,
- opt_output_from_geogrid_path = '/glade/work/jaredlee/nsf_i-wrf/use_cases/renewable_energy/geogrid'
+ opt_output_from_geogrid_path = '/tmp/renewable_energy'
 /
 
 &geogrid
@@ -24,19 +24,19 @@
  truelat1  =  40.0,
  truelat2  =  46.0,
  stand_lon = -76.0,
- geog_data_path = '/glade/work/wrfhelp/WPS_GEOG/'
- opt_geogrid_tbl_path = '/glade/u/home/jaredlee/programs/WPS-4.6-dmpar-casper/geogrid'
+ geog_data_path = '/home/wrfuser/terrestrial_data/geog'
+ opt_geogrid_tbl_path = '/home/wrfuser/WPS/geogrid'
 /
 
 &ungrib
  out_format = 'WPS',
- prefix = '/glade/scratch/jaredlee/nsf_i-wrf/renewable_energy/wps/ungrib/20250407_06/HRRR_pres',
+ prefix = '/tmp/renewable_energy/HRRR_pres',
 /
 
 &metgrid
- fg_name = '/glade/scratch/jaredlee/nsf_i-wrf/renewable_energy/wps/ungrib/20250407_06/HRRR_pres',
- io_form_metgrid = 2, 
- constants_name = '/glade/work/wrfhelp/WPS_files/QNWFA_QNIFA_QNBCA_SIGMA_MONTHLY.dat', 'TAVGSFC',
- opt_output_from_metgrid_path = '/glade/scratch/jaredlee/nsf_i-wrf/renewable_energy/wps/metgrid/20250406_06',
- opt_metgrid_tbl_path = '/glade/u/home/jaredlee/programs/WPS-4.6-dmpar-casper/metgrid'
+ fg_name = '/tmp/renewable_energy/HRRR_pres',
+ io_form_metgrid = 2,
+ constants_name = '/home/wrfuser/terrestrial_data/wps_files/QNWFA_QNIFA_QNBCA_SIGMA_MONTHLY.dat', 'TAVGSFC',
+ opt_output_from_metgrid_path = '/tmp/renewable_energy',
+ opt_metgrid_tbl_path = '/home/wrfuser/WPS/metgrid'
 /
