@@ -148,7 +148,7 @@ and wind energy research.
     Set environment variable to bind directories to the container
     (this can also be accomplished by passing the value using ``--bind`` argument)::
 
-        export APPTAINER_BIND="${GEOG_DATA_DIR}:/home/wrfuser/terrestrial_data/geog,${WPS_FILES_DIR}:/home/wrfuser/terrestrial_data/wps_files,${HRRR_DATA_DIR}:/tmp/hrrr_data,${WRF_DATE_DIR}:/tmp/renewable_energy,/var/spool/pbs:/var/spool/pbs,${APPTAINER_TMPDIR}:${APPTAINER_TMPDIR}"
+        export APPTAINER_BIND="${GEOG_DATA_DIR}:/home/wrfuser/terrestrial_data/geog,${WPS_FILES_DIR}:/home/wrfuser/terrestrial_data/wps_files,${HRRR_DATA_DIR}:/tmp/hrrr_data,${WRF_DATE_DIR}:/tmp/renewable_energy,${WORKING_DIR}/i-wrf/use_cases/Renewable_Energy/WRF/config:/tmp/renewable_energy/config,/var/spool/pbs:/var/spool/pbs,${APPTAINER_TMPDIR}:${APPTAINER_TMPDIR}"
 
     The bindings provide:
 
@@ -163,6 +163,9 @@ and wind energy research.
 
     * WRF configuration files, intermediate files, and output:
       ``${WRF_DATE_DIR}`` -> ``/tmp/renewable_energy``
+
+    * Custom WPS Vtables from the i-wrf repository:
+      ``${WORKING_DIR}/i-wrf/use_cases/Renewable_Energy/WRF/config`` -> ``/tmp/renewable_energy/config``
 
     * Job queue information (required for mpirun):
       ``/var/spool/pbs`` -> ``/var/spool/pbs``
