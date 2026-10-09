@@ -17,7 +17,7 @@
   Download 49 hourly HRRR pressure-level files (f00 through f48) for the
   simulation period::
 
-      python ${WORKING_DIR}/i-wrf/download_hrrr_from_aws_or_gc.py \
+      python ${WORKING_DIR}/i-wrf/use_cases/Renewable_Energy/WRF/download_hrrr.py \
         -b 20250407_06 \
         -s 48 \
         -i 1 \
