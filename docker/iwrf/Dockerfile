@@ -59,20 +59,24 @@ RUN echo '*    soft    stack    unlimited' >> /etc/security/limits.conf
 # Download source
 RUN mkdir -p /opt/src
 WORKDIR /opt/src
-RUN wget https://www.wrfcloud.com/libs/cmake-3.25.0-rc3.tar.gz
-RUN wget https://www.wrfcloud.com/libs/eccodes-2.27.0.tar.gz
-RUN wget https://www.wrfcloud.com/libs/g2clib-1.6.0-patch.tar.gz
-RUN wget https://www.wrfcloud.com/libs/jasper-1.900.1.tar.gz
-RUN wget https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.10/src/hdf5-1.10.10.tar.gz
-RUN wget https://www.wrfcloud.com/libs/libaec-v1.0.6.tar.gz
-RUN wget https://www.wrfcloud.com/libs/libpng-1.2.50.tar.gz
-RUN wget https://www.wrfcloud.com/libs/ncview-2.1.7.tar.gz
-RUN wget https://www.wrfcloud.com/libs/netcdf-4.7.3.tar.gz
-RUN wget https://www.wrfcloud.com/libs/netcdf-cxx-4.3.1.tar.gz
-RUN wget https://www.wrfcloud.com/libs/netcdf-fortran-4.5.2.tar.gz
-RUN wget https://www.wrfcloud.com/libs/szip-2.1.1.tar.gz
-RUN wget https://www.wrfcloud.com/libs/zlib-1.2.11.tar.gz
-RUN wget https://downloads.unidata.ucar.edu/udunits/2.2.28/udunits-2.2.28.tar.gz
+RUN wget -q https://www.wrfcloud.com/libs/cmake-3.25.0-rc3.tar.gz
+RUN wget -q https://www.wrfcloud.com/libs/eccodes-2.27.0.tar.gz
+RUN wget -q https://www.wrfcloud.com/libs/g2clib-1.6.0-patch.tar.gz
+RUN wget -q https://www.wrfcloud.com/libs/jasper-1.900.1.tar.gz
+RUN wget -q https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.10/src/hdf5-1.10.10.tar.gz
+RUN wget -q https://www.wrfcloud.com/libs/libaec-v1.0.6.tar.gz
+RUN wget -q https://www.wrfcloud.com/libs/libpng-1.2.50.tar.gz
+RUN wget -q https://www.wrfcloud.com/libs/ncview-2.1.7.tar.gz
+RUN wget -q https://www.wrfcloud.com/libs/netcdf-4.7.3.tar.gz
+RUN wget -q https://www.wrfcloud.com/libs/netcdf-cxx-4.3.1.tar.gz
+RUN wget -q https://www.wrfcloud.com/libs/netcdf-fortran-4.5.2.tar.gz
+RUN wget -q https://www.wrfcloud.com/libs/szip-2.1.1.tar.gz
+RUN wget -q https://www.wrfcloud.com/libs/zlib-1.2.11.tar.gz
+RUN wget -q https://downloads.unidata.ucar.edu/udunits/2.2.28/udunits-2.2.28.tar.gz
+
+# Verify every download against the pinned SHA-256 checksums; fail early if any file changed upstream
+COPY checksums.sha256 /opt/src/checksums.sha256
+RUN sha256sum -c checksums.sha256
 
 #COPY WPS.patch /tmp/WPS.patch
 COPY build_wrf.sh /tmp/build_wrf.sh
