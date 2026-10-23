@@ -6,12 +6,7 @@ Renewable Energy Forecasting
 Objective
 ---------
 
-This use case demonstrates WRF simulations configured for renewable energy
-forecasting applications, including solar and wind energy research.
-WRF is initialized and forced at the boundaries using hourly HRRR
-(High-Resolution Rapid Refresh) data downloaded from the NOAA AWS archive.
-The physics configuration includes coupled farm radiation, topographic shading,
-and aerosol-aware microphysics suited for energy applications.
+Update section content to describe the scientific objective of this use case.
 
 Version Added
 -------------
@@ -21,11 +16,7 @@ Update section with the version of i-wrf this use case was added to.
 Datasets
 --------
 
-* **Initial and boundary conditions**: HRRR pressure-level GRIB2 files
-  (``wrfprsf*``) downloaded from the NOAA AWS public archive.
-* **Geographic data**: WPS_GEOG high-resolution mandatory dataset.
-* **Aerosol climatology**: QNWFA/QNIFA/QNBCA monthly climatology file
-  required for Thompson aerosol-aware microphysics.
+Update section content to describe the datasets used to run WRF and METplus.
 
 Running This I-WRF Use Case
 ---------------------------
