@@ -156,9 +156,8 @@ and wind energy research.
 
     To troubleshoot a step, you can run the container interactively on a
     compute node instead of submitting a batch job.  The ``develop`` queue
-    usually starts quickly but is limited to 1 node and 30 minutes, so
-    comment out the steps that have already completed in
-    ``${WRF_DATE_DIR}/run.sh`` before rerunning.
+    usually starts quickly but has a wall time limit of 6 hours and a maximum
+    of 256 cores.
 
     .. note::
 
