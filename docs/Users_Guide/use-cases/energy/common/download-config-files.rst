@@ -1,6 +1,6 @@
 .. dropdown:: Download Configuration Files
 
-  Both WRF and METplus require configuration files to direct their behavior.
+  WRF requires configuration files to direct its behavior.
   The commands below clone the I-WRF repository and copy the Renewable Energy
   use case configuration files into the WRF run folder.
 

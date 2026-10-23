@@ -10,17 +10,13 @@
 
       # Container images
       WRF_IMAGE=ncar/iwrf:latest
-      METPLUS_IMAGE=ncar/iwrf-metplus:latest
 
       # Working directories
       WRF_TOP_DIR=${WORKING_DIR}/wrf
       WRF_DATE_DIR=${WRF_TOP_DIR}/20250407_06
-      METPLUS_DIR=${WORKING_DIR}/metplus_out
 
       # Renewable Energy use case configuration
       WRF_CONFIG_DIR=${WORKING_DIR}/i-wrf/use_cases/Renewable_Energy/WRF/config
-      METPLUS_CONFIG_DIR=${WORKING_DIR}/i-wrf/use_cases/Renewable_Energy/METplus
-      PLOT_SCRIPT_DIR=${WORKING_DIR}/i-wrf/use_cases/Renewable_Energy/Visualization
 
       # HRRR input data
       HRRR_DATA_DIR=${WORKING_DIR}/hrrr_data

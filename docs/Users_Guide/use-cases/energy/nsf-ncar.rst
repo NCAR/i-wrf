@@ -83,10 +83,7 @@ and wind energy research.
         echo export WRF_IMAGE=${WRF_IMAGE} >> ${WORKING_DIR}/env_re_demo.sh
         echo export WRF_TOP_DIR=${WRF_TOP_DIR} >> ${WORKING_DIR}/env_re_demo.sh
         echo export WRF_DATE_DIR=${WRF_DATE_DIR} >> ${WORKING_DIR}/env_re_demo.sh
-        echo export METPLUS_DIR=${METPLUS_DIR} >> ${WORKING_DIR}/env_re_demo.sh
         echo export WRF_CONFIG_DIR=${WRF_CONFIG_DIR} >> ${WORKING_DIR}/env_re_demo.sh
-        echo export METPLUS_CONFIG_DIR=${METPLUS_CONFIG_DIR} >> ${WORKING_DIR}/env_re_demo.sh
-        echo export PLOT_SCRIPT_DIR=${PLOT_SCRIPT_DIR} >> ${WORKING_DIR}/env_re_demo.sh
         echo export HRRR_DATA_DIR=${HRRR_DATA_DIR} >> ${WORKING_DIR}/env_re_demo.sh
         echo export GEOG_DATA_DIR=${GEOG_DATA_DIR} >> ${WORKING_DIR}/env_re_demo.sh
         echo export WPS_FILES_DIR=${WPS_FILES_DIR} >> ${WORKING_DIR}/env_re_demo.sh
@@ -115,13 +112,66 @@ and wind energy research.
 
   .. include:: energy/common/download-wrf-data.rst
 
-  .. dropdown:: Gain Interactive Access To A Compute Node
+  .. dropdown:: Submit the WRF Job
 
-    Tasks that are resource intensive should not be run on the login nodes.
-    Submit an interactive job in the ``develop`` queue before starting WRF::
+    The full run (WPS and WRF) takes more than the 30 minutes allowed in the
+    ``develop`` queue, so submit it as a batch job to the ``main`` queue.
+    The job requests 2 nodes (256 cores) for 2 hours and runs ``run.sh``
+    inside the container.
+
+    Submit the job with your account key (set earlier as ``HPC_ACCOUNT``)::
 
         cd ${WORKING_DIR}
-        qsub -l select=2:ncpus=128:mpiprocs=128 -A ${HPC_ACCOUNT} -l walltime=02:00:00 -I -q main
+        qsub -A ${HPC_ACCOUNT} -v WORKING_DIR=${WORKING_DIR} ${WORKING_DIR}/i-wrf/use_cases/Renewable_Energy/WRF/submit.sh
+
+    .. note::
+
+      The account ``NERP0002`` is the default for this demo.  Replace it with
+      your own allocation by changing ``HPC_ACCOUNT`` above.
+
+    ``qsub`` prints a job ID.  Check the job status with::
+
+        qstat -u ${USER}
+
+    The ``S`` column shows ``Q`` while the job waits in the queue and ``R``
+    once it is running.  Queue wait times on ``main`` can be long.
+    You do not need to stay logged in while the job waits or runs.
+
+    The job log is written to ``${WORKING_DIR}/iwrf_re_demo.o<jobid>``.
+    You can follow it while the job is running::
+
+        tail -f ${WORKING_DIR}/iwrf_re_demo.o<jobid>
+
+  .. dropdown:: Check the WRF Output
+
+    The ``run.sh`` script runs WPS (geogrid, ungrib, avg_tsfc, metgrid) and
+    WRF (real, wrf).  When the job has finished, check that WRF output was created::
+
+        ls ${WRF_DATE_DIR}/wrfout_d01*
+
+    If these files exist, the WRF run was successful.  If not, check the job
+    log and the ``${WRF_DATE_DIR}/rsl.error.*`` files for errors.
+
+  .. dropdown:: Debugging: Run Interactively
+
+    To troubleshoot a step, you can run the container interactively on a
+    compute node instead of submitting a batch job.  The ``develop`` queue
+    usually starts quickly but is limited to 1 node and 30 minutes, so
+    comment out the steps that have already completed in
+    ``${WRF_DATE_DIR}/run.sh`` before rerunning.
+
+    .. note::
+
+      ``run.sh`` always runs every step it contains from the top; it does
+      not skip steps whose output already exists.
+
+  .. dropdown:: Debugging: Gain Interactive Access To A Compute Node
+
+    Tasks that are resource intensive should not be run on the login nodes.
+    Submit an interactive job in the ``develop`` queue::
+
+        cd ${WORKING_DIR}
+        qsub -l select=1:ncpus=128:mpiprocs=128 -A ${HPC_ACCOUNT} -l walltime=00:30:00 -I -q develop
 
     .. note::
 
@@ -129,21 +179,18 @@ and wind energy research.
       ``HPC_ACCOUNT`` variable above.  Replace it with your own allocation
       if needed.
 
-    This requests 2 nodes (256 MPI ranks total), which is needed for WRF to
-    complete within the 2-hour walltime.  WPS steps (geogrid, ungrib, metgrid)
-    will also run in this allocation.  The ``main`` queue is required because
-    WRF exceeds the 30-minute walltime limit of the ``develop`` queue.
+    This requests 1 node (128 cores) for 30 minutes, the maximum for ``develop``.
 
     When the interactive job starts, your prompt will change to something like
     ``user@decNNNN``. Once you see this new prompt, your interactive job is active.
 
-  .. dropdown:: Source Environment File
+  .. dropdown:: Debugging: Source Environment File
 
     Source the environment file that was created earlier::
 
         source ${WORKING_DIR}/env_re_demo.sh
 
-  .. dropdown:: Configure Container Data Bindings for WRF
+  .. dropdown:: Debugging: Configure Container Data Bindings for WRF
 
     Set environment variable to bind directories to the container
     (this can also be accomplished by passing the value using ``--bind`` argument)::
@@ -173,9 +220,9 @@ and wind energy research.
     * Apptainer temp directory:
       ``${APPTAINER_TMPDIR}`` -> ``${APPTAINER_TMPDIR}``
 
-  .. dropdown:: Running WRF In The Container
+  .. dropdown:: Debugging: Running WRF In The Container
 
-    Once the interactive job has started, run WRF inside the container::
+    Once the interactive job has started, run the script inside the container::
 
         module load apptainer
         apptainer exec ${WORKING_DIR}/iwrf_latest.sif /tmp/renewable_energy/run.sh
@@ -192,43 +239,8 @@ and wind energy research.
     If these files exist, the WRF run was successful. If not, check the
     ``${WRF_DATE_DIR}/rsl.error.*`` files for errors.
 
-  .. dropdown:: Source Environment File for METplus
-
-    After WRF completes, configure the environment for METplus verification.
-    Set up the environment file::
-
-        echo export WORKING_DIR=${WORKING_DIR} > ${WORKING_DIR}/env_re_metplus.sh
-        echo export WRF_TOP_DIR=${WRF_TOP_DIR} >> ${WORKING_DIR}/env_re_metplus.sh
-        echo export WRF_DATE_DIR=${WRF_DATE_DIR} >> ${WORKING_DIR}/env_re_metplus.sh
-        echo export METPLUS_DIR=${METPLUS_DIR} >> ${WORKING_DIR}/env_re_metplus.sh
-        echo export METPLUS_CONFIG_DIR=${METPLUS_CONFIG_DIR} >> ${WORKING_DIR}/env_re_metplus.sh
-        echo export PLOT_SCRIPT_DIR=${PLOT_SCRIPT_DIR} >> ${WORKING_DIR}/env_re_metplus.sh
-        echo export HRRR_DATA_DIR=${HRRR_DATA_DIR} >> ${WORKING_DIR}/env_re_metplus.sh
-        echo export APPTAINER_TMPDIR=${APPTAINER_TMPDIR} >> ${WORKING_DIR}/env_re_metplus.sh
-
-  .. dropdown:: Configure Container Data Bindings for METplus
-
-    Set up the Apptainer bind mounts for METplus::
-
-        export APPTAINER_BIND="${METPLUS_CONFIG_DIR}:/config,${WRF_TOP_DIR}:/data/input/wrf,${METPLUS_DIR}:/data/output,${PLOT_SCRIPT_DIR}:/plot_scripts,${APPTAINER_TMPDIR}:${APPTAINER_TMPDIR}"
-
-  .. dropdown:: Run METplus
-
-    Execute METplus verification::
-
-        apptainer exec ${WORKING_DIR}/iwrf-metplus.sif /metplus/METplus/ush/run_metplus.py /config/GridStat_re_demo.conf
-
-    METplus will generate statistical verification metrics and visualization plots.
-
-  .. dropdown:: Exit the Interactive Compute Node
+  .. dropdown:: Debugging: Exit the Interactive Compute Node
 
     Be sure to run ``exit`` when you are done to stop the compute node::
 
         exit
-
-  .. dropdown:: Examine the Plots
-
-    The images generated by METplus can be viewed using the ``display`` command
-    if X-window forwarding has been enabled::
-
-        display ${WORKING_DIR}/metplus_out/met_plot/line_T2_RMSE_BCMSE.png
