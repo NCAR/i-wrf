@@ -132,7 +132,7 @@ def main(cycle_dt_str, sim_hrs, out_dir_parent, icbc_fc_dt, now_time_beg, interv
     # Directory structure for HRRR data on AWS and Google Cloud
     # All dates have conus directory. Some later dates have other domain directories (e.g., alaska).
     # TODO: Someday, allow users to request HRRR domains other than conus
-    aws_dir_base = 'https://noaa-hrrr-bdp-pds.s3.amazonaws.com'
+    aws_dir_base = 'https://s3.amazonaws.com/noaa-hrrr-bdp-pds'
     gc_dir_base = 'https://storage.googleapis.com/high-resolution-rapid-refresh'
 
     # Loop over lead times
