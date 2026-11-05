@@ -16,7 +16,9 @@ This assumes that the full WRF files are in a directory called full/wrf and
 the stage/wrf directory already exists.
 Subdirectories under each called ctl and dfw4x should also exist to stage the WRF files for each simulation.
 
-### Subset hourly files to include RAINC, RAINNC, REFD_MAX, HAILNC, HAIL_MAX2D, and dimension variables
+On NCAR HPC, run `module load nco` to load the NCO module to use the ncks command.
+
+### Subset hourly files to include RAINC, RAINNC, REFD_MAX, HAILNC, HAIL_MAX2D, LU_INDEX, REFL_10CM, and dimension variables
 
 ```
 mkdir -p stage/wrf/ctl
@@ -25,20 +27,20 @@ mkdir stage/wrf/dfw4x
 # for ctl simulation
 for f in full/wrf/ctl/wrfout_d03_2017-07-0*00.morr*
 do
-    echo ncks -v Times,XLAT,XLONG,RAINC,RAINNC,REFD_MAX,HAILNC,HAIL_MAX2D $f stage${f:4}
-    ncks -v Times,XLAT,XLONG,RAINC,RAINNC,REFD_MAX,HAILNC,HAIL_MAX2D $f stage${f:4}
+    echo ncks -v Times,XLAT,XLONG,RAINC,RAINNC,REFD_MAX,HAILNC,HAIL_MAX2D,LU_INDEX,REFL_10CM $f stage${f:4}
+    ncks -v Times,XLAT,XLONG,RAINC,RAINNC,REFD_MAX,HAILNC,HAIL_MAX2D,LU_INDEX,REFL_10CM $f stage${f:4}
 done
 
 # for dfw4x simulation
 for f in full/wrf/dfw4x/wrfout_d03_2017-07-0*00.morr*
 do
-    echo ncks -v Times,XLAT,XLONG,RAINC,RAINNC,REFD_MAX,HAILNC,HAIL_MAX2D $f stage${f:4}
-    ncks -v Times,XLAT,XLONG,RAINC,RAINNC,REFD_MAX,HAILNC,HAIL_MAX2D $f stage${f:4}
+    echo ncks -v Times,XLAT,XLONG,RAINC,RAINNC,REFD_MAX,HAILNC,HAIL_MAX2D,LU_INDEX,REFL_10CM $f stage${f:4}
+    ncks -v Times,XLAT,XLONG,RAINC,RAINNC,REFD_MAX,HAILNC,HAIL_MAX2D,LU_INDEX,REFL_10CM $f stage${f:4}
 done
 
 ```
 
-### Subset 10 minute files to include RAINC, RAINNC, HAILNC, and dimension variables
+### Subset 10 minute files to include RAINC, RAINNC, HAILNC, LU_INDEX, REFL_10CM, and dimension variables
 
 ```
 # for ctl simulation
@@ -46,8 +48,8 @@ for minutes in 10 20 30 40 50
 do
     for f in full/wrf/ctl/wrfout_d03_2017-07-0*${minutes}.morr*
     do
-        echo ncks -v Times,XLAT,XLONG,RAINC,RAINNC,HAILNC $f stage${f:4}
-        ncks -v Times,XLAT,XLONG,RAINC,RAINNC,HAILNC $f stage${f:4}
+        echo ncks -v Times,XLAT,XLONG,RAINC,RAINNC,HAILNC,LU_INDEX,REFL_10CM $f stage${f:4}
+        ncks -v Times,XLAT,XLONG,RAINC,RAINNC,HAILNC,LU_INDEX,REFL_10CM $f stage${f:4}
     done
 done
 
@@ -56,8 +58,8 @@ for minutes in 10 20 30 40 50
 do
     for f in full/wrf/dfw4x/wrfout_d03_2017-07-0*${minutes}.morr*
     do
-        echo ncks -v Times,XLAT,XLONG,RAINC,RAINNC,HAILNC $f stage${f:4}
-        ncks -v Times,XLAT,XLONG,RAINC,RAINNC,HAILNC $f stage${f:4}
+        echo ncks -v Times,XLAT,XLONG,RAINC,RAINNC,HAILNC,LU_INDEX,REFL_10CM $f stage${f:4}
+        ncks -v Times,XLAT,XLONG,RAINC,RAINNC,HAILNC,LU_INDEX,REFL_10CM $f stage${f:4}
     done
 done
 ```
