@@ -39,14 +39,14 @@ def main(opts):
     # Which variables should be plotted?
     plot_TERRAIN = False  # terrain height [m]
     plot_LU_INDEX = True  # land use index (13=urban)
-    plot_T2 = True  # 2-m temperature [C]
-    plot_RH2 = True  # 2-m relative humidity [%]
-    plot_WS10 = True  # 10-m wind speed [m s-1]
+    plot_T2 = False  # 2-m temperature [C]
+    plot_RH2 = False  # 2-m relative humidity [%]
+    plot_WS10 = False  # 10-m wind speed [m s-1]
     plot_REFL = True  # simulated radar reflectivity [dBZ]
     plot_RAIN = True  # total accumulated rainfall during the simulation [mm]
 
     # Plot any overlays, like wind barbs?
-    plot_wind_barbs_sfc = True  # overlay 10-m wind barbs for selected plots
+    plot_wind_barbs_sfc = False  # overlay 10-m wind barbs for selected plots
     plot_wind_barbs_upr = True  # overlay upper-air wind barbs for selected plots
 
     # Default water color (generally use only in terrain plots)
@@ -210,8 +210,9 @@ def main(opts):
         # TODO: Double-check WRF directory/file naming convention when from inside container
         wrf_fname1 = 'wrfout_' + wrf_dom + '_' + valid_dt_wrf + '.morr300.nc'
         wrf_fname2 = 'wrfout_' + wrf_dom + '_' + valid_dt_wrf + '.morr300.' + exp_names[1] + '.nc'
-        wrf_file1 = wrf_dir1.joinpath(wrf_fname1)
-        wrf_file2 = wrf_dir2.joinpath(wrf_fname2)
+        wrf_fname = f"wrfout_{wrf_dom}_{valid_dt.strftime('%Y-%m-%d_%H:%M')}:00"
+        wrf_file1 = wrf_dir1.joinpath(wrf_fname)
+        wrf_file2 = wrf_dir2.joinpath(wrf_fname)
 
         try:
             wrf_file1.is_file()
@@ -376,10 +377,12 @@ def main(opts):
         # Maximum reflectivity
         if plot_REFL:
             print('   Reading maximum reflectivity')
-            da1_max_refl = wrf.getvar(ds_wrf_nc1, 'mdbz', squeeze=False)
-            da2_max_refl = wrf.getvar(ds_wrf_nc2, 'mdbz', squeeze=False)
-            #da1_max_refl = wrf.getvar(ds_wrf_nc1, 'REFD_MAX', squeeze=False)
-            #da2_max_refl = wrf.getvar(ds_wrf_nc2, 'REFD_MAX', squeeze=False)
+            #da1_max_refl = wrf.getvar(ds_wrf_nc1, 'REFL_10CM', squeeze=False)
+            #da2_max_refl = wrf.getvar(ds_wrf_nc2, 'REFL_10CM', squeeze=False)
+            #da1_max_refl = wrf.getvar(ds_wrf_nc1, 'mdbz', squeeze=False)
+            #da2_max_refl = wrf.getvar(ds_wrf_nc2, 'mdbz', squeeze=False)
+            da1_max_refl = wrf.getvar(ds_wrf_nc1, 'REFD_MAX', squeeze=False)
+            da2_max_refl = wrf.getvar(ds_wrf_nc2, 'REFD_MAX', squeeze=False)
             wrf1_max_refl = da1_max_refl.values[0, :, :]
             wrf2_max_refl = da2_max_refl.values[0, :, :]
 
