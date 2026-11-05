@@ -125,6 +125,10 @@ With your NCAR HPC account active and you logged in to the system, you can now s
 
     Both verification processes use GridStat, which computes grid-to-grid verification statistics. The tools generate comprehensive statistical output including bias, correlation, and skill scores that quantify the model's performance.
 
+    Run the WRF plotting script::
+
+        apptainer exec ${IWRF_WORK_DIR}/iwrf-metplus.sif python3 /plot_scripts/plot_wrf_lulc.py --wrf_dir_parent /data/input/wrf --out_dir_parent /data/output/wrf_plot --nexrad_dir /data/input/obs
+
   .. dropdown:: Verify Output Generation
 
     After both METplus runs complete successfully, you can verify that the output files were created properly.
