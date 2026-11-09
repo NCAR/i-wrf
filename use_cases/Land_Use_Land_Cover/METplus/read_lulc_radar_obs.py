@@ -59,8 +59,8 @@ def main():
     # flip data vertically
     met_data = data[::-1].copy()
 
-    nx = len(lon)
-    ny = len(lat)
+    # LAT and LON are 2D (south_north, west_east)
+    ny, nx = lat.shape
 
     # see https://dtcenter.org/sites/default/files/community-code/met/python-scripts/read_PostProcessed_WRF.py.txt
 
@@ -83,8 +83,10 @@ def main():
            'scale_lat_2': 39.0,
            'lat_pin': 32.82182,
            'lon_pin': -96.96198,
-           'x_pin': float(nx/2),
-           'y_pin': float(ny/2),
+           # lat/lon pin is the domain center, which is between grid points
+           # when nx/ny are even, matching how MET reads WRF grids
+           'x_pin': 0.5 * (nx - 1),
+           'y_pin': 0.5 * (ny - 1),
            'lon_orient': -96.9781,
            'd_km': 1.0,
            'r_km': 6371.2,
