@@ -376,14 +376,16 @@ def main(opts):
 
         # Maximum reflectivity
         if plot_REFL:
-            print('   Reading maximum reflectivity')
-            da1_max_refl = wrf.getvar(ds_wrf_nc1, 'REFL_10CM', squeeze=False)
-            da2_max_refl = wrf.getvar(ds_wrf_nc2, 'REFL_10CM', squeeze=False)
-            wrf1_max_refl = da1_max_refl.values[0, 0, :, :]
-            wrf2_max_refl = da2_max_refl.values[0, 0, :, :]
+            print('   Reading composite (column-max) reflectivity')
+            # Composite reflectivity: maximum of REFL_10CM in each column
+            # REFL_10CM dimensions are (Time, bottom_top, south_north, west_east)
+            da1_refl = wrf.getvar(ds_wrf_nc1, 'REFL_10CM', squeeze=False)
+            da2_refl = wrf.getvar(ds_wrf_nc2, 'REFL_10CM', squeeze=False)
+            wrf1_max_refl = da1_refl.values[0, :, :, :].max(axis=0)
+            wrf2_max_refl = da2_refl.values[0, :, :, :].max(axis=0)
 
             var_file = 'MAX_REFL'
-            var_name = 'Maximum Reflectivity'
+            var_name = 'Composite Reflectivity'
             var_unit = 'dBZ'
             wrf_var1 = wrf1_max_refl[:, :]
             wrf_var2 = wrf2_max_refl[:, :]
@@ -391,8 +393,6 @@ def main(opts):
             max_val1 = np.nanmax(wrf_var1)
             min_val2 = np.nanmin(wrf_var2)
             max_val2 = np.nanmax(wrf_var2)
-            #wrf_var1 = np.where(wrf_var1 == 0.0, -0.1, wrf_var1)
-            #wrf_var2 = np.where(wrf_var2 == 0.0, -0.1, wrf_var2)
             extend = 'max'
             refl_rgb = cmap_radar
             bounds = bounds_radar
