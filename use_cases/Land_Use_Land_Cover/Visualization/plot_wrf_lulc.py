@@ -377,14 +377,10 @@ def main(opts):
         # Maximum reflectivity
         if plot_REFL:
             print('   Reading maximum reflectivity')
-            #da1_max_refl = wrf.getvar(ds_wrf_nc1, 'REFL_10CM', squeeze=False)
-            #da2_max_refl = wrf.getvar(ds_wrf_nc2, 'REFL_10CM', squeeze=False)
-            #da1_max_refl = wrf.getvar(ds_wrf_nc1, 'mdbz', squeeze=False)
-            #da2_max_refl = wrf.getvar(ds_wrf_nc2, 'mdbz', squeeze=False)
-            da1_max_refl = wrf.getvar(ds_wrf_nc1, 'REFD_MAX', squeeze=False)
-            da2_max_refl = wrf.getvar(ds_wrf_nc2, 'REFD_MAX', squeeze=False)
-            wrf1_max_refl = da1_max_refl.values[0, :, :]
-            wrf2_max_refl = da2_max_refl.values[0, :, :]
+            da1_max_refl = wrf.getvar(ds_wrf_nc1, 'REFL_10CM', squeeze=False)
+            da2_max_refl = wrf.getvar(ds_wrf_nc2, 'REFL_10CM', squeeze=False)
+            wrf1_max_refl = da1_max_refl.values[0, 0, :, :]
+            wrf2_max_refl = da2_max_refl.values[0, 0, :, :]
 
             var_file = 'MAX_REFL'
             var_name = 'Maximum Reflectivity'
