@@ -186,9 +186,9 @@ def main(opts):
     n_nexrad_times = len(nexrad_dt)
 
     # Loop over valid times
+    files_read = False
     for vv in range(n_valid):
         valid_dt = valid_dt_all[vv]
-        valid_dt_wrf = valid_dt.strftime(fmt_wrf_date + '_' + fmt_hhmm)
         valid_dt_plot = valid_dt.strftime(fmt_time_plot)
         valid_dt_file = valid_dt.strftime(fmt_time_file)
         valid_time_plot = 'Valid: ' + valid_dt_plot
@@ -207,35 +207,27 @@ def main(opts):
         title_r_blank = ''
 
         # Read in both WRF files
-        # TODO: Double-check WRF directory/file naming convention when from inside container
-        wrf_fname1 = 'wrfout_' + wrf_dom + '_' + valid_dt_wrf + '.morr300.nc'
-        wrf_fname2 = 'wrfout_' + wrf_dom + '_' + valid_dt_wrf + '.morr300.' + exp_names[1] + '.nc'
-        wrf_fname = f"wrfout_{wrf_dom}_{valid_dt.strftime('%Y-%m-%d_%H:%M')}:00"
-        wrf_file1 = wrf_dir1.joinpath(wrf_fname)
-        wrf_file2 = wrf_dir2.joinpath(wrf_fname)
-
-        try:
-            wrf_file1.is_file()
-        except FileNotFoundError:
-            print('WARNING: File ' + str(wrf_file1) + ' not found. Continuing to the next valid time.')
+        # Files written by WRF are named wrfout_<domain>_YYYY-MM-DD_HH:MM:SS, and the seconds
+        # are not always 00, so match any seconds value
+        wrf_file1 = find_wrf_file(wrf_dir1, wrf_dom, valid_dt)
+        wrf_file2 = find_wrf_file(wrf_dir2, wrf_dom, valid_dt)
+        if wrf_file1 is None or wrf_file2 is None:
             continue
+
         print('Reading ' + str(wrf_file1))
         # Use NetCDF4-python to open a Dataset, as wrf-python doesn't yet take an xarray Dataset
         # wrf.getvar will return an xarray Dataset by default, though
         ds_wrf_nc1 = netCDF4.Dataset(wrf_file1, mode='r')
 
-        try:
-            wrf_file2.is_file()
-        except FileNotFoundError:
-            print('WARNING: File ' + str(wrf_file2) + ' not found. Continuing to the next valid time.')
-            continue
         print('Reading ' + str(wrf_file2))
-        # Use NetCDF4-python to open a Dataset, as wrf-python doesn't yet take an xarray Dataset
-        # wrf.getvar will return an xarray Dataset by default, though
         ds_wrf_nc2 = netCDF4.Dataset(wrf_file2, mode='r')
 
+        # Static fields and NEXRAD files only need to be read once, from the first valid time with WRF files
+        first_read = not files_read
+        files_read = True
+
         # Read NEXRAD file(s) if requested, but only need to read them once because they have all the times
-        if plot_nexrad and vv == 0:
+        if plot_nexrad and first_read:
             if plot_REFL:
                 nexrad_fname = 'RADAR_DFW22_NCR_20170703_' + wrf_dom + '_2017Jul03_2017Jul05.nc'
                 nexrad_refl_file = nexrad_dir.joinpath(nexrad_fname)
@@ -255,7 +247,7 @@ def main(opts):
                 nexrad_rain = da_nexrad_rain.values
 
         # Static fields only need to be read in once from one of the wrfout files
-        if vv == 0:
+        if first_read:
             # Latitude, Longitude
             da_lat = wrf.getvar(ds_wrf_nc1, 'lat', squeeze=False)
             da_lon = wrf.getvar(ds_wrf_nc1, 'lon', squeeze=False)
@@ -910,6 +902,19 @@ def main(opts):
                     map_opts['map_x_thin'] = 40
                     map_opts['map_y_thin'] = 40
                 map_funcs.map_plot_panels(map_opts)
+
+
+def find_wrf_file(wrf_dir, wrf_dom, valid_dt):
+    """Return the wrfout file in wrf_dir valid at valid_dt, matching any seconds value, or None if not found."""
+    pattern = f"wrfout_{wrf_dom}_{valid_dt.strftime('%Y-%m-%d_%H:%M')}:*"
+    matches = sorted(wrf_dir.glob(pattern))
+    if not matches:
+        print('WARNING: No file matching ' + str(wrf_dir.joinpath(pattern)) +
+              ' found. Continuing to the next valid time.')
+        return None
+    if len(matches) > 1:
+        print('WARNING: Multiple files match ' + str(wrf_dir.joinpath(pattern)) + ', using ' + str(matches[0]))
+    return matches[0]
 
 
 def parse_args():
