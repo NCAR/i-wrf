@@ -145,6 +145,8 @@ With your NCAR HPC account active and you logged in to the system, you can now s
 
     This should display a list of PNG image files containing plots and graphics that visualize the verification results. These plots provide graphical representations of the statistical comparisons between the I-WRF LULC simulations and observational data.
 
-  .. dropdown:: Visualize the Results
+    Check that the WRF plots were created locally::
 
-    In the near future, this exercise will be extended to include instructions to visualize the model output directly.
+        ls -1 ${LOCAL_OUTPUT_DIR}/wrf_plot/*.png
+
+    This should display a list of PNG image files containing maps that compare the Control and DFW 4x simulations with the NEXRAD observations.
