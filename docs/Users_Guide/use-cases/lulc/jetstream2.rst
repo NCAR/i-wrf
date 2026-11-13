@@ -144,6 +144,7 @@ to secure access to and log in to Jetstream2.
   
     * Find the desktop shortcut "Files" on the left side of the desktop and click it to open a file browser.
     * Double-click on the following folders in order: metplus_out, met_plot, and either apcp or refc.
+      For the WRF maps, double-click on metplus_out and then wrf_plot instead.
     * Double-click on the image files in the folder, which opens an image viewing application.
     * Click the Maximize button in the upper right to increase the viewer to full size.
     * Click the button in the middle of the right side of the image to advance to the next image.

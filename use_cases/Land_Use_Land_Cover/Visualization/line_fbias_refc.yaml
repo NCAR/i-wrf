@@ -27,12 +27,12 @@ dump_points_1: 'False'
 dump_points_2: 'False'
 event_equal: 'False'
 fcst_var_val_1:
-  REFD_MAX:
+  REFL_10CM:
   - FBIAS
 fcst_var_val_2: []
 fixed_vars_vals_input:
   fcst_lev:
-  - 0,*,*
+  - COLMAX
 grid_col: '#cccccc'
 grid_lty: 3
 grid_lwd: 1

@@ -1,7 +1,9 @@
 FROM debian:12-slim
 
-RUN mkdir -p /data/input/wrf
+ARG SIMULATION_ID=dfw4x
 
-COPY stage/wrf /data/input/wrf
+RUN mkdir -p /data/input/wrf/${SIMULATION_ID}
 
-VOLUME /data/input/wrf
+COPY stage/wrf/${SIMULATION_ID} /data/input/wrf/${SIMULATION_ID}
+
+VOLUME /data/input/wrf/${SIMULATION_ID}
